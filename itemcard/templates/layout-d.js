@@ -1,16 +1,15 @@
 import {
   BADGE_HEIGHT,
   BADGE_PADDING_X,
-  badgeWidthFromContent,
   fillBadgeBackground,
   getCommonTextColor,
   makeFont,
-  measureRun,
 } from "./badge-common.js";
 
 const FIRST_LINE_FONT = makeFont(65, "ShopeeNotoSans Regular");
 const SECOND_LINE_FONT = makeFont(45, "ShopeeNotoSans Regular");
 const SECOND_SYMBOL_FONT = makeFont(30, "ShopeeNotoSans Regular");
+const VISIBLE_LINE_GAP = 10;
 
 function tokenizeSecondLine(text) {
   const runs = [];
@@ -30,6 +29,131 @@ function tokenizeSecondLine(text) {
     runs.push({ symbol, text: current });
   }
   return runs;
+}
+
+function measureRun(context, run, font) {
+  context.font = font;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+  const metrics = context.measureText(run.text);
+
+  return {
+    ...run,
+    font,
+    advanceWidth: metrics.width,
+    inkLeft: -metrics.actualBoundingBoxLeft,
+    inkRight: metrics.actualBoundingBoxRight,
+    inkTop: -metrics.actualBoundingBoxAscent,
+    inkBottom: metrics.actualBoundingBoxDescent,
+    x: 0,
+    y: 0,
+  };
+}
+
+function horizontalBounds(runs) {
+  return {
+    left: Math.min(...runs.map((run) => run.x + run.inkLeft)),
+    right: Math.max(...runs.map((run) => run.x + run.inkRight)),
+  };
+}
+
+function boundaryGlyphInkBottom(context, run, fromStart) {
+  const glyphs = Array.from(run.text);
+  if (!fromStart) {
+    glyphs.reverse();
+  }
+
+  context.font = run.font;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+  for (const glyph of glyphs) {
+    const metrics = context.measureText(glyph);
+    if (
+      metrics.actualBoundingBoxLeft !== 0 ||
+      metrics.actualBoundingBoxRight !== 0 ||
+      metrics.actualBoundingBoxAscent !== 0 ||
+      metrics.actualBoundingBoxDescent !== 0
+    ) {
+      return metrics.actualBoundingBoxDescent;
+    }
+  }
+  return null;
+}
+
+function measureLayout(context, content) {
+  const firstLine = measureRun(
+    context,
+    { text: content.firstLine, symbol: false },
+    FIRST_LINE_FONT,
+  );
+  const secondLine = tokenizeSecondLine(content.secondLine).map((run) =>
+    measureRun(
+      context,
+      run,
+      run.symbol ? SECOND_SYMBOL_FONT : SECOND_LINE_FONT,
+    ),
+  );
+
+  let advanceX = 0;
+  for (const run of secondLine) {
+    run.x = advanceX;
+    run.y = 0;
+    advanceX += run.advanceWidth;
+  }
+
+  secondLine.forEach((run, index) => {
+    if (!run.symbol) {
+      return;
+    }
+    const isPrefixDollar = run.text === "$";
+    const isSuffixPercent = run.text === "%";
+    const adjacentRun = isPrefixDollar
+      ? secondLine[index + 1]
+      : isSuffixPercent
+        ? secondLine[index - 1]
+        : null;
+    if (adjacentRun?.symbol === false) {
+      const adjacentInkBottom = boundaryGlyphInkBottom(
+        context,
+        adjacentRun,
+        isPrefixDollar,
+      );
+      if (adjacentInkBottom !== null) {
+        run.y += adjacentInkBottom - run.inkBottom;
+      }
+    }
+  });
+
+  const secondInkTop = Math.min(
+    ...secondLine.map((run) => run.y + run.inkTop),
+  );
+  const secondLineY = firstLine.inkBottom + VISIBLE_LINE_GAP - secondInkTop;
+  secondLine.forEach((run) => {
+    run.y += secondLineY;
+  });
+
+  const firstBounds = horizontalBounds([firstLine]);
+  const secondBounds = horizontalBounds(secondLine);
+  const firstWidth = firstBounds.right - firstBounds.left;
+  const secondWidth = secondBounds.right - secondBounds.left;
+  const contentWidth = Math.max(firstWidth, secondWidth);
+  firstLine.x += (contentWidth - firstWidth) / 2 - firstBounds.left;
+  const secondOffsetX = (contentWidth - secondWidth) / 2 - secondBounds.left;
+  secondLine.forEach((run) => {
+    run.x += secondOffsetX;
+  });
+
+  const runs = [firstLine, ...secondLine];
+  const inkTop = Math.min(...runs.map((run) => run.y + run.inkTop));
+  const inkBottom = Math.max(...runs.map((run) => run.y + run.inkBottom));
+  const groupY = BADGE_HEIGHT / 2 - (inkTop + inkBottom) / 2;
+
+  return {
+    firstLine,
+    secondLine,
+    groupY,
+    width: Math.ceil(contentWidth + BADGE_PADDING_X * 2),
+  };
 }
 
 export function parseLayoutD(text) {
@@ -60,37 +184,22 @@ export function validateLayoutDContent(content) {
   return { firstLine: content.firstLine, secondLine: content.secondLine };
 }
 
-function measureSecondLine(context, text) {
-  return tokenizeSecondLine(text).reduce(
-    (width, run) => width + measureRun(context, run.text, run.symbol ? SECOND_SYMBOL_FONT : SECOND_LINE_FONT),
-    0,
-  );
-}
-
 export function measureLayoutD(context, content) {
-  return badgeWidthFromContent(
-    Math.max(
-      measureRun(context, content.firstLine, FIRST_LINE_FONT),
-      measureSecondLine(context, content.secondLine),
-    ),
-  );
+  return measureLayout(context, content).width;
 }
 
 export function drawLayoutD(context, badge, x, y, width) {
+  const layout = measureLayout(context, badge.content);
   fillBadgeBackground(context, x, y, width, badge.color);
   context.fillStyle = getCommonTextColor(badge.color);
-  context.textBaseline = "middle";
-  context.textAlign = "center";
-  context.font = FIRST_LINE_FONT;
-  context.fillText(badge.content.firstLine, x + width / 2, y + BADGE_HEIGHT * 0.3);
-
-  const runs = tokenizeSecondLine(badge.content.secondLine);
-  const totalWidth = measureSecondLine(context, badge.content.secondLine);
-  let cursor = x + (width - totalWidth) / 2;
+  context.textBaseline = "alphabetic";
   context.textAlign = "left";
-  for (const run of runs) {
-    context.font = run.symbol ? SECOND_SYMBOL_FONT : SECOND_LINE_FONT;
-    context.fillText(run.text, cursor, y + BADGE_HEIGHT * 0.72);
-    cursor += context.measureText(run.text).width;
+  for (const run of [layout.firstLine, ...layout.secondLine]) {
+    context.font = run.font;
+    context.fillText(
+      run.text,
+      x + BADGE_PADDING_X + run.x,
+      y + layout.groupY + run.y,
+    );
   }
 }

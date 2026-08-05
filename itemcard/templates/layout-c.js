@@ -1,18 +1,112 @@
 import {
   BADGE_HEIGHT,
   BADGE_PADDING_X,
-  badgeWidthFromContent,
   fillBadgeBackground,
-  getCommonTextColor,
   makeFont,
-  measureRun,
 } from "./badge-common.js";
 
-const LEFT_FONT = makeFont(40, "ShopeeNotoSans Medium");
-const VALUE_FONT = makeFont(78, "ShopeeNotoSans Bold");
-const COLUMN_GAP = 18;
+const LEFT_FONT = makeFont(48.5, "ShopeeNotoSans Medium");
+const NUMBER_FONT = makeFont(110, "ShopeeNotoSans Bold");
+const SYMBOL_FONT = makeFont(50, "ShopeeNotoSans Bold");
+const LEFT_COLOR = "#FFFFFF";
+const VALUE_COLOR = "#FFD200";
+const LINE_GAP = 50;
+const COLUMN_GAP = 10;
+const SYMBOL_GAP = 5;
 const FOUR_CHINESE = /^[\p{Script=Han}]{4}$/u;
 const VALUE_PATTERN = /^(?:\$\d+(?:\.\d+)?|\d+(?:\.\d+)?%?)$/u;
+
+function measureRun(context, text, font) {
+  context.font = font;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+  const metrics = context.measureText(text);
+  const inkLeft = -metrics.actualBoundingBoxLeft;
+  const inkRight = metrics.actualBoundingBoxRight;
+
+  return {
+    text,
+    font,
+    inkLeft,
+    inkRight,
+    inkTop: -metrics.actualBoundingBoxAscent,
+    inkBottom: metrics.actualBoundingBoxDescent,
+    inkWidth: inkRight - inkLeft,
+  };
+}
+
+function valueParts(valueText) {
+  const prefix = valueText.startsWith("$") ? "$" : "";
+  const suffix = valueText.endsWith("%") ? "%" : "";
+  return {
+    prefix,
+    number: valueText.slice(prefix.length, valueText.length - suffix.length),
+    suffix,
+  };
+}
+
+function measureLayout(context, content) {
+  const topLine = measureRun(context, content.leftText.slice(0, 2), LEFT_FONT);
+  const bottomLine = measureRun(context, content.leftText.slice(2), LEFT_FONT);
+  const leftColumnWidth = Math.max(topLine.inkWidth, bottomLine.inkWidth);
+
+  topLine.x = (leftColumnWidth - topLine.inkWidth) / 2 - topLine.inkLeft;
+  topLine.y = 0;
+  bottomLine.x =
+    (leftColumnWidth - bottomLine.inkWidth) / 2 - bottomLine.inkLeft;
+  bottomLine.y = LINE_GAP;
+
+  const leftTop = Math.min(
+    topLine.y + topLine.inkTop,
+    bottomLine.y + bottomLine.inkTop,
+  );
+  const leftBottom = Math.max(
+    topLine.y + topLine.inkBottom,
+    bottomLine.y + bottomLine.inkBottom,
+  );
+  const leftCenter = (leftTop + leftBottom) / 2;
+
+  const parts = valueParts(content.valueText);
+  const numberRun = measureRun(context, parts.number, NUMBER_FONT);
+  const symbolRun = parts.prefix || parts.suffix
+    ? measureRun(context, parts.prefix || parts.suffix, SYMBOL_FONT)
+    : null;
+  const numberCenter = (numberRun.inkTop + numberRun.inkBottom) / 2;
+  const valueBaseline = leftCenter - numberCenter;
+  let cursor = leftColumnWidth + COLUMN_GAP;
+  const valueRuns = [];
+
+  if (parts.prefix) {
+    symbolRun.x = cursor - symbolRun.inkLeft;
+    symbolRun.y = valueBaseline;
+    valueRuns.push(symbolRun);
+    cursor += symbolRun.inkWidth + SYMBOL_GAP;
+  }
+
+  numberRun.x = cursor - numberRun.inkLeft;
+  numberRun.y = valueBaseline;
+  valueRuns.push(numberRun);
+  cursor += numberRun.inkWidth;
+
+  if (parts.suffix) {
+    cursor += SYMBOL_GAP;
+    symbolRun.x = cursor - symbolRun.inkLeft;
+    symbolRun.y = valueBaseline;
+    valueRuns.push(symbolRun);
+    cursor += symbolRun.inkWidth;
+  }
+
+  const runs = [topLine, bottomLine, ...valueRuns];
+  const inkTop = Math.min(...runs.map((run) => run.y + run.inkTop));
+  const inkBottom = Math.max(...runs.map((run) => run.y + run.inkBottom));
+  const groupY = BADGE_HEIGHT / 2 - (inkTop + inkBottom) / 2;
+
+  return {
+    runs,
+    groupY,
+    width: Math.ceil(cursor + BADGE_PADDING_X * 2),
+  };
+}
 
 export function parseLayoutC(text) {
   if (typeof text !== "string" || /[\r\n]/u.test(text)) {
@@ -39,34 +133,23 @@ export function validateLayoutCContent(content) {
   return { leftText: content.leftText, valueText: content.valueText };
 }
 
-function leftWidth(context, content) {
-  return Math.max(
-    measureRun(context, content.leftText.slice(0, 2), LEFT_FONT),
-    measureRun(context, content.leftText.slice(2), LEFT_FONT),
-  );
-}
-
 export function measureLayoutC(context, content) {
-  return badgeWidthFromContent(
-    leftWidth(context, content) + COLUMN_GAP + measureRun(context, content.valueText, VALUE_FONT),
-  );
+  return measureLayout(context, content).width;
 }
 
 export function drawLayoutC(context, badge, x, y, width) {
+  const layout = measureLayout(context, badge.content);
   fillBadgeBackground(context, x, y, width, badge.color);
-  const color = getCommonTextColor(badge.color);
-  const leftColumnWidth = leftWidth(context, badge.content);
-  const leftCenter = x + BADGE_PADDING_X + leftColumnWidth / 2;
-  const valueX = x + BADGE_PADDING_X + leftColumnWidth + COLUMN_GAP;
-
-  context.fillStyle = color;
-  context.font = LEFT_FONT;
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText(badge.content.leftText.slice(0, 2), leftCenter, y + BADGE_HEIGHT * 0.31);
-  context.fillText(badge.content.leftText.slice(2), leftCenter, y + BADGE_HEIGHT * 0.69);
-
-  context.font = VALUE_FONT;
   context.textAlign = "left";
-  context.fillText(badge.content.valueText, valueX, y + BADGE_HEIGHT / 2);
+  context.textBaseline = "alphabetic";
+
+  for (const [index, run] of layout.runs.entries()) {
+    context.font = run.font;
+    context.fillStyle = index < 2 ? LEFT_COLOR : VALUE_COLOR;
+    context.fillText(
+      run.text,
+      x + BADGE_PADDING_X + run.x,
+      y + layout.groupY + run.y,
+    );
+  }
 }
