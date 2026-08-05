@@ -25,6 +25,17 @@ Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台
 
 Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來源；完整產品需求以 `docs/FSS_ItemCard_Requirement_Specification_v1.0.md` 為準。
 
+## Layout Visual Tuning
+
+Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整，並通過 Jamie 手動驗證：
+
+- Layout A：依各文字 run 的實際 bounds 計算寬度與置中位置，縮小的 $／% 依相鄰數字 ink bottom 動態對齊。
+- Layout B：依單行文字的實際 bounds 計算 Badge 寬度、左右 20px 可見留白及垂直置中。
+- Layout C：左側兩行、數字及 $／% 分別依正式字型規格呈現；左側與數值區間距為 10px，數字與 $／% 間距為 5px，整組依實際 bounds 置中。
+- Layout D：兩行可見 glyph 間距為 10px；前置 $ 與後置 % 分別依相鄰的第一個或最後一個可見 glyph 動態對齊，整組依實際 bounds 置中。
+
+所有 Layout 的 Badge 寬度、左右可見留白、超寬驗證與實際 Canvas 繪製均使用各 Layout 自己的量測結果；Layout 之間不共用辨識或排版規則。
+
 ## 第三方程式庫
 
 第三方程式庫固定存放於 `js/vendor/`，執行期間不連線 CDN：
@@ -39,8 +50,9 @@ Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來
 正式工單實際驗證結果：
 
 - 成功建立 5 張 Item Card、11 個 Badge。
-- Item Card 總寬依序為 305、682、1113、476、964 px，均未超過 1200 px。
+- Item Card 總寬依序為 314、670、1112、469、951 px，均未超過 1200 px。
 - Preview、1200 PNG 與 320 PNG 的輸出一致性驗證通過。
 - 1200 PNG 與 320 PNG 均確認為 72 dpi metadata。
 - Excel Atomic Import、JSON Restore、Badge 編輯與新增、超寬拒絕、匯出及重設 Regression Test 通過。
 - 全部 JavaScript 語法檢查與 `git diff --check` 通過。
+- Layout A、B、C、D Visual Tuning 均通過 Jamie 手動驗證。
