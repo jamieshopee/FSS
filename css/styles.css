@@ -1,6 +1,6 @@
 @font-face {
   font-family: "FSS Platform Sans";
-  src: url("../fonts/ShopeeNotoSans(content)-Regular.ttf") format("truetype");
+  src: url("../fonts/ShopeeNotoSans(content)-Regular.woff2") format("woff2");
   font-display: block;
   font-style: normal;
   font-weight: 400;
@@ -8,7 +8,7 @@
 
 @font-face {
   font-family: "FSS Platform Sans";
-  src: url("../fonts/ShopeeNotoSans(content)-Medium.ttf") format("truetype");
+  src: url("../fonts/ShopeeNotoSans(content)-Medium.woff2") format("woff2");
   font-display: block;
   font-style: normal;
   font-weight: 500;
@@ -16,7 +16,7 @@
 
 @font-face {
   font-family: "FSS Platform Sans";
-  src: url("../fonts/ShopeeNotoSans(content)-Bold.ttf") format("truetype");
+  src: url("../fonts/ShopeeNotoSans(content)-Bold.woff2") format("woff2");
   font-display: block;
   font-style: normal;
   font-weight: 700;
