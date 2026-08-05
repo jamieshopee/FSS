@@ -12,6 +12,14 @@ FSS Item Card Generator 已完成實作，並於 2026-08-05 通過 AI 自我驗�
 
 Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台 CSS 或 JavaScript；正式字型直接引用 FSS 根目錄的 ShopeeNotoSans Regular、Medium、Bold。
 
+## 正式字型資源
+
+正式 Web 字型使用 FSS 根目錄 `fonts/` 內的完整 WOFF2：Regular、Medium、Bold。CSS `@font-face` 均引用 `.woff2`，目的是降低 GitHub Pages 首次載入時間。
+
+本次只進行 TTF 至 WOFF2 的格式轉換，未做 Subset；`font-family`、`font-weight`、`font-style` 保持不變，Canvas、Layout、排版與功能亦無變更。
+
+對應 Code Commit：`d8c5b1545e0cf48f0c80c643582f61a137d5fee0`（`perf: replace TTF fonts with WOFF2`）。
+
 ## 已完成功能
 
 - 正式 Excel 工單三列製作區塊解析。

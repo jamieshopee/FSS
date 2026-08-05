@@ -94,6 +94,8 @@ Phase 4 調查後，選擇維護成本最低、且符合 Generator 獨立原則�
 - 字型載入失敗時，必須停止正式渲染並顯示錯誤。
 - 字型載入失敗時，不得繼續產生預覽或輸出 PNG。
 
+實作同步（2026-08-05）：專案正式 Web 字型已由 TTF 轉為完整 WOFF2，未做 Subset，以降低 GitHub Pages 首次載入時間。`font-family`、`font-weight`、`font-style`、Canvas、Layout、排版與功能均未變更。對應 Code Commit：`d8c5b1545e0cf48f0c80c643582f61a137d5fee0`（`perf: replace TTF fonts with WOFF2`）。
+
 ### 3.4 Excel Atomic Import
 
 Excel 匯入採 Atomic Import：
@@ -350,9 +352,9 @@ itemcard/
 │   └── layout-d.js
 ├── assets/
 │   └── fonts/                  ← 示意；僅在採用 Generator 自有字型副本時建立
-│       ├── Regular.ttf
-│       ├── Medium.ttf
-│       └── Bold.ttf
+│       ├── Regular.woff2
+│       ├── Medium.woff2
+│       └── Bold.woff2
 └── docs/
     └── 現有正式文件
 ```
