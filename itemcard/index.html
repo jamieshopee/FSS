@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d0f">
+    <title>FSS Item Card 生成器</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/vendor/xlsx.full.min.js" defer></script>
+    <script src="js/vendor/jszip.min.js" defer></script>
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <main class="generator-shell">
+      <section class="preview-column" aria-labelledby="page-title">
+        <header class="page-header">
+          <div>
+            <p class="eyebrow">FSS Generator</p>
+            <h1 id="page-title">Item Card</h1>
+          </div>
+          <p id="item-count" class="item-count">尚未匯入資料</p>
+        </header>
+
+        <div id="preview-grid" class="preview-grid" aria-live="polite">
+          <div id="empty-state" class="empty-state">
+            <p>匯入 Excel 工單或 JSON 暫存檔後，這裡會顯示全部 Item Card。</p>
+          </div>
+        </div>
+      </section>
+
+      <aside class="control-column" aria-label="Item Card 控制中心">
+        <section class="control-card import-card">
+          <h2>匯入資料</h2>
+          <label class="file-action">
+            <span>匯入工單 Excel</span>
+            <input id="excel-input" type="file" accept=".xlsx" disabled>
+          </label>
+          <label class="file-action secondary">
+            <span>匯入暫存檔</span>
+            <input id="json-input" type="file" accept="application/json,.json" disabled>
+          </label>
+          <p id="status-message" class="status-message" role="status">正在載入正式字型…</p>
+        </section>
+
+        <section class="control-card editor-card" aria-labelledby="editor-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">目前選取</p>
+              <h2 id="editor-title">尚未選取 Item Card</h2>
+            </div>
+          </div>
+          <p id="drag-hint" class="drag-hint" hidden>拖曳調整順序</p>
+          <div id="badge-editor" class="badge-editor">
+            <p class="editor-empty">請先匯入資料並選取 Item Card。</p>
+          </div>
+          <div id="add-badge-region"></div>
+        </section>
+
+        <section class="control-card download-card">
+          <button id="download-button" class="primary-button" type="button" disabled>下載完整專案</button>
+          <button id="reset-button" class="danger-button" type="button" disabled>重設工作區域</button>
+        </section>
+      </aside>
+    </main>
+  </body>
+</html>
