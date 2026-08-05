@@ -1,0 +1,777 @@
+# FSS Item Card－Phase 3 Proposal（修正版）
+
+狀態：待 Jamie 確認。  
+本次僅修正 Proposal 文字，未修改任何檔案、未開始 Coding。
+
+## 1. 現況
+
+- FSS 入口平台已完成基本結構：
+  - `index.html`
+  - `css/styles.css`
+  - `js/app.js`
+  - `tools.json`
+  - `啟動 FSS.command`
+- `tools.json` 已登記：
+  - 名稱：`Item Card`
+  - 路徑：`itemcard/`
+- 入口平台不需要增加或修改 Item Card 按鈕。
+- 根目錄已有 Regular、Medium、Bold 三套正式字型。
+- `itemcard/` 目前只有 `docs/` 與正式文件，尚無：
+  - Generator 頁面
+  - JavaScript
+  - CSS
+  - Excel 工單
+  - Layout 實作
+  - Generator 自有資產
+- 現在進入 `itemcard/` 時，沒有可執行的 Generator。
+- 現有專案沒有建置系統、套件管理器或後端服務，運作方式是由既有本機 HTTP Server 直接提供靜態檔案。
+- 工作目錄目前已有既存未提交內容；Phase 4 必須採明確路徑加入檔案，不得混入既有文件變更。
+
+## 2. Root Cause
+
+這是新 Generator 專案尚未實作，不是既有 Item Card 程式故障。
+
+直接原因是 `itemcard/` 缺少完整 Generator 結構及功能實作。入口平台與 Item Card 路徑設定已存在，因此 Root Cause 不在 FSS 入口平台。
+
+## 3. 最小修改方案
+
+### 3.1 修改範圍
+
+所有新實作都限制在 `itemcard/` 內。
+
+不修改入口平台、不建立後端、不導入套件管理器或建置流程、不重構根目錄程式。
+
+### 3.2 Generator 基本實作
+
+1. 建立獨立 Item Card Generator 頁面與專屬 CSS。
+2. 建立單一工作區狀態，保存：
+   - 全部 Item Card
+   - 編號
+   - Badge 數量與順序
+   - Layout
+   - 顏色
+   - 文字欄位
+   - Excel／新增來源
+   - 目前選取的 Item Card
+3. 匯入正式 Excel 工單後，依每一個已填寫的三列製作區塊建立 Item Card。
+4. A～D 使用四個獨立 Layout 模組：
+   - 不共用辨識規則。
+   - 不共用排版規則。
+   - 不互相轉換。
+   - 不猜測格式。
+   - 所有 Layout 行為只依 `Layout_ABCD_規格整理.txt`。
+5. 使用同一套 Canvas renderer 產生：
+   - 左側預覽
+   - 1200 × 1200 PNG
+6. 320 × 320 PNG 必須由完成的 1200 × 1200 Canvas 縮小，不重新排版。
+7. 右側編輯器只操作目前選取的 Item Card。
+8. JSON 匯入以 Atomic Restore 完整覆蓋工作區。
+9. 使用本機封裝的 Excel 解析與 ZIP 程式庫，不依賴執行期間的外部 CDN。
+10. 匯出時建立 Locked ZIP 結構，並為兩種 PNG 正確寫入 72 dpi metadata。
+
+Canvas 作為預覽與輸出的共同來源，避免另做一套匯出排版造成預覽與成品不一致。
+
+### 3.3 正式字型載入門檻
+
+Item Card 必須使用正式 ShopeeNotoSans Regular、Medium、Bold 字型。
+
+正式字型可採：
+
+- 引用既有正式字型；或
+- 建立 Generator 自有副本。
+
+Phase 4 調查後，選擇維護成本最低、且符合 Generator 獨立原則的方式。Proposal 不限制正式字型一定放在 `itemcard/assets/fonts/`。
+
+無論採用哪種方式：
+
+- Generator 不得依賴平台 CSS 或平台 JavaScript。
+- 若採共用既有正式字型，也不得因此產生 Generator 對平台 CSS 或平台 JavaScript 的執行期相依。
+- Generator 初始化時必須等待 Regular、Medium、Bold 三套正式字型全部載入成功。
+- 三套字型全部載入成功後，才能建立正式 Canvas 預覽。
+- 字型載入完成後，才能進行 Badge 寬度量測。
+- 字型載入完成後，才能進行 PNG 匯出。
+- 字型未載入完成前，不得使用 fallback font 產生成品。
+- 字型載入失敗時，必須停止正式渲染並顯示錯誤。
+- 字型載入失敗時，不得繼續產生預覽或輸出 PNG。
+
+### 3.4 Excel Atomic Import
+
+Excel 匯入採 Atomic Import：
+
+1. 將整份 Excel 讀入暫存資料結構。
+2. 完成整份 Excel 的欄位與資料驗證。
+3. 驗證所有列、所有 Badge、Layout、顏色、文字、編號及 Badge 寬度。
+4. 全部驗證通過後，才能一次建立或覆蓋工作區。
+
+任一列或任一 Badge 格式不符時：
+
+- 拒絕整次匯入。
+- 不建立部分 Item Card。
+- 不修改目前工作區。
+- 顯示錯誤所在的 Excel 列、欄位及原因。
+- 不自動修正。
+- 不略過錯誤資料。
+- 不猜測 Layout。
+- 不轉換 Layout。
+
+### 3.5 編號與輸出檔名驗證
+
+編號直接作為 Item Card 識別值及 PNG 檔名，因此 Excel Atomic Import 必須驗證：
+
+- 編號不得為空白。
+- 編號不得重複。
+- 編號不得包含無法安全作為 PNG 檔名或 ZIP entry name 的字元。
+- 系統不得自行修改、清理、截短或轉換編號。
+- 系統不得替編號增加後綴。
+- 系統不得以自動流水號或其他名稱取代原編號。
+
+任一編號不合格時：
+
+- 拒絕整次 Excel 匯入。
+- 不修改目前工作區。
+- 錯誤訊息必須指出所在 Excel 列與原因。
+
+### 3.6 Badge 實際寬度驗證
+
+Renderer 必須在正式字型載入完成後，依下列內容量測 Badge 實際寬度：
+
+- 正式字型。
+- 正式字級。
+- Layout 對數字與特殊符號的正式規則。
+- 實際文字內容。
+- 左右固定 Padding。
+
+寬度不得以字數或平均字寬粗估。
+
+一張 Item Card 的全部 Badge 總寬不得超過 1200 px。
+
+Excel 匯入資料超過上限時：
+
+- 拒絕整次 Excel 匯入。
+- 不建立部分 Item Card。
+- 不修改目前工作區。
+- 指出錯誤所在的 Excel 列與欄位。
+
+編輯既有 Badge 或新增 Badge 後超過上限時：
+
+- 不提交該次變更。
+- 工作區保留修改前狀態。
+- 預覽維持修改前狀態。
+
+所有超寬情況均不得：
+
+- 自動縮字。
+- 裁切。
+- 增加換行。
+- 壓縮 Padding。
+- 讓內容溢出畫布。
+- 自動轉換 Layout。
+
+### 3.7 JSON Atomic Restore
+
+JSON 匯入必須採 Atomic Restore：
+
+1. 將 JSON 讀入暫存資料結構。
+2. 在暫存資料結構中完成完整驗證及正規化。
+3. 驗證全部 Item Card、編號、Badge、順序、Layout、顏色、文字、來源、寬度及必要工作區內容。
+4. 只有全部驗證成功後，才能一次替換目前工作區。
+
+JSON 無效、版本不支援或內容不完整時：
+
+- 不清除目前工作區。
+- 不還原部分 Item Card。
+- 不留下空白或半完成工作區。
+- 不猜測缺少欄位。
+- 不自動補齊缺少資料。
+- 不自動轉換 Layout。
+
+匯入成功後仍維持：
+
+- 完全覆蓋目前工作區。
+- 不與目前資料合併。
+- 不追加 Item Card。
+- 不保留匯入前的修改。
+
+### 3.8 72 dpi PNG metadata
+
+PNG 匯出完成後，必須由前端本機程式將 PNG metadata 正確寫為 72 dpi。
+
+以下兩種輸出都必須符合 Requirement 的 72 dpi：
+
+- 1200 × 1200 PNG。
+- 320 × 320 PNG。
+
+不得只依賴：
+
+- Canvas 預設 DPI。
+- `canvas.toBlob()` 的預設輸出。
+- `canvas.toDataURL()` 的預設輸出。
+- 瀏覽器預設的 PNG metadata。
+
+驗證時必須直接解析兩種 PNG 的 metadata，確認兩種尺寸均為 72 dpi。不得只檢查像素尺寸，也不得只以圖片檢視器目測判定。
+
+實際採用何種前端實作方式，由 Phase 4 決定。Proposal 不限制必須使用哪一種 PNG metadata 修改方法。
+
+### 3.9 第三方程式庫版本鎖定
+
+瀏覽器端 Excel 解析採 SheetJS，ZIP 產生採 JSZip。[SheetJS standalone 文件](https://docs.sheetjs.com/docs/getting-started/installation/standalone/)、[JSZip generateAsync 文件](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html)。
+
+Phase 4 必須：
+
+- 鎖定 SheetJS 的實際版本。
+- 鎖定 JSZip 的實際版本。
+- 保存原始官方檔名、版本及 license。
+- 不使用未標明版本的 `latest` URL。
+- 不在執行期間連線 CDN。
+- Code Commit 回報列出實際使用版本與來源。
+- 第三方檔案只能放在 Proposal 列出的 vendor 路徑。
+
+不得因此加入：
+
+- 套件管理器。
+- 建置流程。
+- 後端服務。
+
+## 4. 修改檔案
+
+### 4.1 既有檔案
+
+本方案不需要修改任何既有程式檔案。
+
+尤其不修改：
+
+- `tools.json`：Item Card 路徑已存在。
+- FSS 入口 HTML、CSS、JavaScript。
+- 啟動器。
+- 正式文件。
+
+### 4.2 新增檔案
+
+| 檔案 | 職責 |
+|---|---|
+| `itemcard/index.html` | Generator 左右欄介面與必要控制項 |
+| `itemcard/css/styles.css` | Generator 專屬深色、Liquid Glass、預覽與編輯樣式 |
+| `itemcard/js/app.js` | 字型載入門檻、啟動程式、事件連接與主要流程協調 |
+| `itemcard/js/workspace.js` | 單一工作區狀態及具備提交／回復邊界的新增、刪除、排序、重設操作 |
+| `itemcard/js/import.js` | Excel Atomic Import、JSON Atomic Restore、驗證與正規化 |
+| `itemcard/js/editor.js` | 右側 Badge 編輯器、Layout 對應欄位、拖曳排序及變更前寬度驗證 |
+| `itemcard/js/preview.js` | Item Card Canvas、正式字型量測、預覽建立、選取與即時更新 |
+| `itemcard/js/export.js` | JSON、PNG、縮圖、PNG metadata、72 dpi 與 ZIP 匯出 |
+| `itemcard/forms/excel-schema.js` | Excel 欄位、下拉值、編號及 Atomic Import 的固定驗證對應 |
+| `itemcard/forms/FSS_ItemCard_工單.xlsx` | 正式工單；保留編號、第一格、第二格、第三格及規定下拉選項 |
+| `itemcard/templates/index.js` | 僅依已指定 Layout 路由至對應的獨立 Layout 模組 |
+| `itemcard/templates/badge-common.js` | 僅提供不涉及 Layout 文字規則的 Badge 共通常數與 Canvas 基礎工具 |
+| `itemcard/templates/layout-a.js` | Layout A 獨立呈現；自行處理 Layout A 的字色、數字、特殊符號及文字規則 |
+| `itemcard/templates/layout-b.js` | Layout B 獨立處理自己的正式規格 |
+| `itemcard/templates/layout-c.js` | Layout C 獨立處理自己的正式辨識與呈現規格 |
+| `itemcard/templates/layout-d.js` | Layout D 獨立處理自己的正式換行與呈現規格 |
+| 正式字型載入設定 | 使用正式 ShopeeNotoSans 字型；實際來源與路徑由 Phase 4 決定 |
+| `itemcard/assets/fonts/*`（條件式） | 僅在 Phase 4 決定建立 Generator 自有字型副本時建立 |
+| `itemcard/js/vendor/xlsx.full.min.js` | 鎖定版本的本機 SheetJS 官方檔案 |
+| `itemcard/js/vendor/jszip.min.js` | 鎖定版本的本機 JSZip 官方檔案 |
+| 對應 vendor license 檔案 | 保存第三方程式庫版本、來源及授權資訊 |
+
+Proposal 不限制正式字型一定放在 `itemcard/assets/fonts/`。若 Phase 4 決定引用既有正式字型，則不建立不需要的字型副本或空資料夾。
+
+不建立空資料夾或目前沒有用途的預留檔案。
+
+### 4.3 `badge-common.js` 共用邊界
+
+`itemcard/templates/badge-common.js` 允許提供：
+
+- Badge 固定高度。
+- 左右 Padding。
+- 背景色碼。
+- 非 Layout A 的共通字色查表。
+- Canvas 繪製所需、但不涉及 Layout 文字規則的基礎工具。
+
+`badge-common.js` 不得包含：
+
+- Layout 文字辨識。
+- Layout 文字拆分。
+- Layout 換行。
+- Layout 字型決策。
+- Layout 字級決策。
+- 跨 Layout 的文字排列。
+- 自動縮字。
+- 格式修正。
+- Layout 自動轉換。
+
+Layout A 的字色、數字、特殊符號及文字規則，全部由 `layout-a.js` 自行處理。
+
+Layout B、C、D 各自處理自己的正式規格。Layout 之間不得共用辨識或排版規則。
+
+## 5. 不修改檔案
+
+以下全部排除於 Phase 4 修改範圍：
+
+- `index.html`
+- `css/styles.css`
+- `js/app.js`
+- `tools.json`
+- `啟動 FSS.command`
+- 根目錄 `fonts/` 原始字型
+- `docs/架構說明.md`
+- `docs/開發流程.md`
+- `itemcard/docs/FSS_ItemCard_Requirement_Specification_v1.0.md`
+- `itemcard/docs/Layout_ABCD_規格整理.txt`
+- `itemcard/docs/Phase0_完整需求整理.txt`
+- `.gitignore`
+- BN 或其他 Generator 的任何檔案
+- Git 歷史、Tag 與 Release
+
+## 6. 建議資料夾結構
+
+```text
+itemcard/
+├── index.html
+├── css/
+│   └── styles.css
+├── js/
+│   ├── app.js
+│   ├── workspace.js
+│   ├── import.js
+│   ├── editor.js
+│   ├── preview.js
+│   ├── export.js
+│   └── vendor/
+│       ├── xlsx.full.min.js
+│       ├── jszip.min.js
+│       └── license files
+├── forms/
+│   ├── excel-schema.js
+│   └── FSS_ItemCard_工單.xlsx
+├── templates/
+│   ├── index.js
+│   ├── badge-common.js
+│   ├── layout-a.js
+│   ├── layout-b.js
+│   ├── layout-c.js
+│   └── layout-d.js
+├── assets/
+│   └── fonts/                  ← 示意；僅在採用 Generator 自有字型副本時建立
+│       ├── Regular.ttf
+│       ├── Medium.ttf
+│       └── Bold.ttf
+└── docs/
+    └── 現有正式文件
+```
+
+上述 `assets/fonts/` 路徑只是可能方案的示意，不是固定實作要求。
+
+Phase 4 可選擇：
+
+- 引用既有正式字型；或
+- 建立 Generator 自有字型副本。
+
+最終採用方式必須符合：
+
+- 維護成本最低。
+- 使用正式 ShopeeNotoSans 字型。
+- 不依賴平台 CSS。
+- 不依賴平台 JavaScript。
+- 符合 Generator 獨立原則。
+
+## 7. 建議沿用 FSS 平台的部分
+
+沿用：
+
+- 深色背景與 FSS 系列視覺方向。
+- Liquid Glass 卡片語言。
+- 既有重點色與文字層級方向。
+- `zh-Hant`、viewport、theme color 等頁面基本設定。
+- 正式 ShopeeNotoSans 字型。
+- focus、hover、active、reduced-motion 與響應式處理方式。
+- 既有 `啟動 FSS.command` 本機 HTTP Server。
+- `tools.json` 已存在的 Item Card 路徑。
+
+Generator 使用自己的 CSS 與 JavaScript，不直接載入根目錄平台 CSS 或 JavaScript。
+
+正式字型可引用既有正式字型，或建立 Generator 自有副本。Phase 4 調查後選擇維護成本最低、且符合 Generator 獨立原則的方式。
+
+若最終引用既有正式字型，也不得因此產生 Generator 對平台 CSS 或平台 JavaScript 的執行期相依。
+
+## 8. 主要資料與系統流程
+
+### 8.1 Generator 初始化
+
+```text
+載入 Generator
+→ 載入 Regular、Medium、Bold 正式字型
+→ 確認三套字型全部成功
+→ 啟用正式 Canvas renderer
+→ 允許 Excel／JSON 匯入及輸出
+```
+
+任一正式字型失敗時：
+
+```text
+停止正式渲染
+→ 顯示字型載入錯誤
+→ 不建立正式預覽
+→ 不允許 PNG 匯出
+```
+
+### 8.2 Excel Atomic Import
+
+```text
+選擇 Excel
+→ 讀入暫存資料結構
+→ 驗證整份欄位
+→ 驗證全部列與 Badge
+→ 驗證編號
+→ 依正式 Layout 規格解析
+→ 使用正式字型量測全部 Badge
+→ 驗證每張總寬不超過 1200 px
+→ 全部通過
+→ 一次建立或覆蓋工作區
+→ 建立全部 Canvas 預覽
+```
+
+任一驗證失敗：
+
+```text
+指出 Excel 列、欄位及原因
+→ 拒絕整次匯入
+→ 不建立部分 Item Card
+→ 不修改目前工作區
+```
+
+### 8.3 編輯流程
+
+```text
+選取 Item Card
+→ 在暫存變更中修改文字／新增 Badge／排序
+→ 使用正式字型重新量測
+→ 驗證全部 Badge 總寬
+→ 通過後一次提交變更
+→ 即時重繪對應預覽
+```
+
+超過 1200 px：
+
+```text
+拒絕該次變更
+→ 保留修改前工作區
+→ 保留修改前預覽
+```
+
+### 8.4 JSON Atomic Restore
+
+```text
+選擇 JSON
+→ 讀入暫存資料結構
+→ 驗證及正規化完整內容
+→ 驗證版本、Item Card、Badge、Layout、顏色、文字、順序及寬度
+→ 全部通過
+→ 一次替換目前工作區
+→ 重建全部預覽
+```
+
+任一驗證失敗：
+
+```text
+拒絕整次還原
+→ 不清除目前工作區
+→ 不還原部分 Item Card
+→ 不留下空白或半完成工作區
+```
+
+### 8.5 PNG 與 ZIP 匯出
+
+```text
+工作區
+→ 使用正式字型建立 1200 × 1200 Canvas
+→ 完成 1200 PNG 匯出
+→ 前端本機程式將 1200 PNG metadata 寫為 72 dpi
+→ 從 1200 Canvas 縮小建立 320 × 320 Canvas
+→ 完成 320 PNG 匯出
+→ 前端本機程式將 320 PNG metadata 寫為 72 dpi
+→ 建立完整 JSON
+→ 加入指定 ZIP 路徑
+→ 輸出 ItemCard_MMDD.zip
+```
+
+實際採用哪一種前端 PNG metadata 處理方式，由 Phase 4 決定。
+
+任何格式驗證只能判定符合或不符合，不得：
+
+- 自動修正。
+- 略過錯誤資料。
+- 猜測 Layout。
+- 轉換 Layout。
+- 自動修改編號。
+- 自動縮字。
+- 裁切。
+- 增加換行。
+- 壓縮 Padding。
+
+## 9. 驗證方式
+
+### 9.1 靜態與程式檢查
+
+- 所有 JavaScript 語法檢查。
+- 模組 import 路徑檢查。
+- HTML 結構檢查。
+- CSS 基本檢查。
+- 第三方檔案、固定版本及 license 存在性檢查。
+- 確認第三方檔案只存在於 Proposal 核准的 vendor 路徑。
+- 確認沒有套件管理器、建置流程或後端服務。
+- `git diff --check`。
+- `git status --short`。
+- 確認變更只出現在 Proposal 核准的 `itemcard/` 程式、工單及必要資產路徑。
+
+### 9.2 正式字型
+
+- 驗證 Regular、Medium、Bold 均載入正式 ShopeeNotoSans 字型。
+- 驗證實際字型來源及路徑符合 Phase 4 選定方案。
+- 若引用既有字型，確認沒有依賴平台 CSS 或平台 JavaScript。
+- 若建立 Generator 自有副本，確認字型內容與既有正式字型一致。
+- 驗證三套字型全部成功後才建立正式預覽。
+- 驗證字型完成後才量測 Badge。
+- 驗證字型完成後才允許匯出。
+- 模擬任一字型載入失敗。
+- 確認失敗時顯示錯誤。
+- 確認失敗時不使用 fallback font。
+- 確認失敗時不產生正式預覽或 PNG。
+
+### 9.3 入口平台 Regression
+
+- 使用既有 `啟動 FSS.command` 啟動。
+- FSS 入口頁正常載入。
+- `tools.json` 正常載入。
+- Item Card 按鈕正常進入 Generator。
+- 入口平台樣式與既有互動沒有變更。
+- 不修改或測試修復 BN；BN 現況不在本次範圍。
+
+### 9.4 Excel Atomic Import
+
+使用正式工單涵蓋：
+
+- 1、2、3 個 Badge。
+- Layout A、B、C、D。
+- 紅、綠、黃、藍。
+- 空白第二格／第三格。
+- 多筆 Item Card。
+- Layout C 符合與不符合格式的資料。
+- Layout D 恰好一個換行及不符合換行規則的資料。
+- 空白編號。
+- 重複編號。
+- 無法安全作為 PNG 檔名或 ZIP entry name 的編號。
+- 單一列錯誤。
+- 單一 Badge 錯誤。
+- Badge 總寬超過 1200 px。
+
+每一項錯誤案例都必須確認：
+
+- 拒絕整次匯入。
+- 不建立部分 Item Card。
+- 不修改目前工作區。
+- 顯示 Excel 列、欄位及原因。
+- 不自動修正。
+- 不略過資料。
+- 不猜測或轉換 Layout。
+- 不修改、截短或替換編號。
+
+### 9.5 Layout 與 Badge 寬度
+
+- 各 Layout 只依正式 Layout 文件逐項視覺核對。
+- Layout A 自行處理字色、數字、特殊符號及文字規則。
+- Layout B、C、D 各自處理自己的正式規格。
+- 確認 Layout 之間沒有共用辨識或排版規則。
+- 使用正式字型及正式字級量測寬度。
+- 驗證混合字級與特殊符號的實際量測結果。
+- 確認寬度不是依字數粗估。
+- 確認總寬上限為 1200 px。
+- 確認超寬時不縮字、不裁切、不換行、不壓縮 Padding、不溢出、不轉換 Layout。
+
+### 9.6 Preview 與編輯
+
+- 寬畫面一行至少 3 張。
+- 窄畫面響應式減少欄數。
+- 點擊微放大後恢復。
+- 選取外框持續存在。
+- 右側只編輯目前選取項目。
+- 文字、刪除、新增及拖曳均即時更新預覽。
+- Excel Badge 的 Layout／顏色不可修改。
+- 新增 Badge 總數不得超過 3。
+- 拖曳後順序與左下至右排列一致。
+- 編輯或新增造成超寬時，拒絕該次變更。
+- 超寬失敗後，工作區及預覽均維持修改前狀態。
+
+### 9.7 JSON Atomic Restore
+
+1. 匯入 Excel。
+2. 修改文字、排序、刪除及新增 Badge。
+3. 下載 JSON。
+4. 改變目前工作區。
+5. 匯入剛才的 JSON。
+6. 比對下載時狀態與還原後狀態完全一致。
+7. 確認成功時完全覆蓋，不合併、不追加。
+
+錯誤案例涵蓋：
+
+- 無效 JSON。
+- 不支援版本。
+- 缺少必要欄位。
+- 不完整 Item Card。
+- 不完整 Badge。
+- 無效 Layout 或顏色。
+- 無效順序。
+- 超過 1200 px。
+
+每一項錯誤都必須確認：
+
+- 不清除目前工作區。
+- 不還原部分 Item Card。
+- 不留下空白或半完成工作區。
+- 不猜測或補齊缺少資料。
+- 不轉換 Layout。
+
+### 9.8 ZIP、PNG 與 72 dpi metadata
+
+- ZIP 名稱符合 `ItemCard_MMDD.zip`。
+- JSON 名稱符合 `ItemCard_MMDD.json`。
+- ZIP 只有規定的兩個圖片資料夾及一個 JSON。
+- 每個編號各有一張 1200 PNG 和一張 320 PNG。
+- PNG 檔名直接使用原編號。
+- 1200 PNG 像素尺寸為 1200 × 1200。
+- 320 PNG 像素尺寸為 320 × 320。
+- 320 PNG 確實由同一張 1200 成品縮小。
+- 直接解析 1200 PNG 的 metadata。
+- 直接解析 320 PNG 的 metadata。
+- 確認兩種尺寸均為 72 dpi。
+- 不以像素尺寸代替 DPI 驗證。
+- 不以圖片檢視器目測代替 metadata 驗證。
+- 同日重複下載交由瀏覽器或作業系統處理。
+
+驗證只確認功能結果，不在 Proposal 階段限制 PNG metadata 的具體修改方法。
+
+### 9.9 重設
+
+- 按鈕位於下載完整專案下方。
+- 執行前只確認一次。
+- 取消時不清除。
+- 確認後清除所有 Item Card 及編輯結果。
+- 回到未匯入狀態。
+
+### 9.10 第三方程式庫
+
+- 確認 SheetJS 與 JSZip 使用明確固定版本。
+- 確認來源為正式來源。
+- 確認保存原始官方檔名、版本及 license。
+- 確認沒有使用 `latest` URL。
+- 中斷網路後，Generator 仍可由既有本機 Server 正常運作。
+- Code Commit 回報實際版本與來源。
+
+### 9.11 Jamie 手動驗證
+
+AI 完成全部適用檢查後，依《開發流程》回報：
+
+- 修改檔案。
+- 修改摘要。
+- 驗證結果。
+- 已知限制。
+- 尚未 Commit。
+- 尚未 Docs Update。
+- 尚未 Push。
+- 尚未建立 Tag／Release。
+
+再提供 Jamie 手動驗證步驟。
+
+Jamie 明確回覆 `PASS` 前，不 Commit、不更新文件、不 Push、不建立 Tag／Release。
+
+## 10. 是否需要更新文件
+
+- 目前 Proposal 階段不修改任何正式文件。
+- Code Commit 後依《開發流程》進行 Docs Update 調查。
+- Requirement Specification 與 Layout 正式文件原則上不修改。
+- Architecture Contract 只有在實作偏離既有架構時才需要處理；正常情況下不修改。
+- 若專案存在 CHANGELOG、AI-HANDOFF、README 或操作文件，只更新實際受影響且確有必要的文件。
+- 不得預先將目前未追蹤的 `itemcard/docs/` 混入 Code Commit。
+- Docs 是否需要更新，必須依 Code Commit 後的實際變更判斷，不得在 Proposal 階段直接假定完全不需要。
+
+Docs Update 仍須與 Code Commit 分開處理。
+
+## 11. 是否建議 Tag／Release
+
+建議保留以下 Proposal：
+
+- Tag：`itemcard-v1.0.0`
+- Release Title：`FSS Item Card v1.0.0`
+
+理由：這會是 FSS Item Card 第一個完整正式版本，符合《開發流程》中的「第一個正式版本」。
+
+但目前只是 Proposal 建議：
+
+- Phase 4 不得自動建立 Tag 或 Release。
+- Jamie 手動驗證 `PASS` 前不得建立。
+- Code Commit 前不得建立。
+- Docs Update 與必要的 Docs Commit 完成前不得建立。
+- Jamie Push 前不得建立。
+- 完成全部流程後，仍由 Jamie 最終決定是否建立。
+
+建議 Release Notes：
+
+- 新增 FSS Item Card 批次生成器。
+- 支援正式 Excel 工單 Atomic Import。
+- 支援 Layout A～D。
+- 支援必要 Badge 微調與寬度保護。
+- 支援完整 JSON Atomic Restore。
+- 支援 1200、320 PNG、72 dpi metadata 與完整 ZIP 匯出。
+
+Upload Checklist：
+
+- Jamie 已回覆 `PASS`。
+- Code Commit 已完成。
+- Docs Update 已完成。
+- 必要的 Docs Commit 已完成。
+- 所有必要 Commit 已由 Jamie Push。
+- Tag 指向最終確認的 Commit。
+- GitHub 上的 Item Card 頁面可正常開啟。
+- 不上傳 App、EXE、PKG、MSI；本版本是網頁 Generator。
+
+若 Jamie 最終決定建立，GitHub 操作如下：
+
+1. 確認最終 Commit 已 Push。
+2. 開啟 GitHub Repository 的 Releases。
+3. 選擇「Draft a new release」。
+4. 建立新 Tag `itemcard-v1.0.0`。
+5. Target 選擇最終確認的分支與 Commit。
+6. 輸入 Release Title 與 Release Notes。
+7. 最後再次確認後發布。
+
+## 12. Proposal 邊界與確認門檻
+
+- 不修改 Requirement。
+- 不修改 Architecture Contract。
+- 不修改 Layout A～D。
+- 不加入未要求功能。
+- 不建立自由設計能力。
+- 不修改 FSS 入口平台。
+- 不修改其他 Generator。
+- 不引入後端、套件管理器或建置系統。
+- Layout 之間不得共用辨識或排版規則。
+- 不得依賴 Canvas 預設 DPI。
+- PNG metadata 的具體前端實作方式由 Phase 4 決定。
+- Proposal 不限制正式字型的固定存放路徑。
+- 正式字型必須使用 ShopeeNotoSans，且不得因共用字型而依賴平台 CSS 或平台 JavaScript。
+- Excel 匯入必須是 Atomic Import。
+- JSON 匯入必須是 Atomic Restore。
+- 編號不得由系統修改或替換。
+- Badge 超寬不得以改變 Locked 規格的方式處理。
+- 正式字型未完成載入前不得渲染正式預覽或輸出。
+- 第三方程式庫必須固定版本並在本機使用。
+- Phase 4 只能建立本 Proposal 列出的檔案與功能。
+- Coding 發現必須超出本 Proposal 時，立即停止並交由 Jamie 決定。
+- Jamie 確認本 Proposal 後，才能進入 Phase 4。
+
+確認：
+
+- 僅修改 Proposal 文字。
+- 未修改任何檔案。
+- 未開始 Coding。
+- 未修改 Requirement Specification。
+- 未修改 Architecture Contract。
+- 未修改 Layout A～D。
+- 等待 Jamie 確認後才可進入 Phase 4。
