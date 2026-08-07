@@ -1,13 +1,13 @@
-# FSS Item Card Generator
+# FSS Overlay Image Generator
 
-FSS Item Card Generator 已完成實作，並於 2026-08-05 通過 AI 自我驗證與 Jamie 手動功能驗證。
+FSS Overlay Image Generator 已完成實作，並於 2026-08-05 通過 AI 自我驗證與 Jamie 手動功能驗證。
 
 ## 使用方式
 
 1. 由 FSS 根目錄啟動既有本機 HTTP Server。
-2. 從 FSS 入口平台進入 Item Card，或開啟 `itemcard/`。
-3. 匯入 `forms/FSS_ItemCard_工單.xlsx` 同格式的正式 Excel 工單。
-4. 檢查全部 Item Card，必要時編輯、調整順序或新增 Badge。
+2. 從 FSS 入口平台進入 Overlay Image，或開啟 `overlay-image/`。
+3. 匯入 `forms/FSS_OverlayImage_工單.xlsx` 同格式的正式 Excel 工單。
+4. 檢查全部 Overlay Image，必要時編輯、調整順序或新增 Badge。
 5. 下載完整專案 ZIP。
 
 Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台 CSS 或 JavaScript；正式字型直接引用 FSS 根目錄的 ShopeeNotoSans Regular、Medium、Bold。
@@ -31,7 +31,7 @@ Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台
 - 兩種 PNG 均寫入 72 dpi metadata。
 - ZIP 批次輸出與工作區重設。
 
-Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來源；完整產品需求以 `docs/FSS_ItemCard_Requirement_Specification_v1.0.md` 為準。
+Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來源；完整產品需求以 `docs/FSS_OverlayImage_Requirement_Specification_v1.0.md` 為準。
 
 ## Layout Visual Tuning
 
@@ -57,8 +57,8 @@ Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整
 
 正式工單實際驗證結果：
 
-- 成功建立 5 張 Item Card、11 個 Badge。
-- Item Card 總寬依序為 314、670、1112、469、951 px，均未超過 1200 px。
+- 成功建立 5 張 Overlay Image、11 個 Badge。
+- Overlay Image 總寬依序為 314、670、1112、469、951 px，均未超過 1200 px。
 - Preview、1200 PNG 與 320 PNG 的輸出一致性驗證通過。
 - 1200 PNG 與 320 PNG 均確認為 72 dpi metadata。
 - Excel Atomic Import、JSON Restore、Badge 編輯與新增、超寬拒絕、匯出及重設 Regression Test 通過。

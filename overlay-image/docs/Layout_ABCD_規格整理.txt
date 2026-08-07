@@ -1,4 +1,4 @@
-FSS Item Card - Layout 規格（討論版）
+FSS Overlay Image - Layout 規格（討論版）
 
   本文件僅整理目前已確認的 Layout A～D 規格。
   後續若有修改，以最新討論內容更新。

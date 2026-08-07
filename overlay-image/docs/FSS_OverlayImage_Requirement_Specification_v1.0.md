@@ -1,4 +1,4 @@
-# FSS Item Card 生成器－Requirement Specification v1.0
+# FSS Overlay Image 生成器－Requirement Specification v1.0
 
 > 階段：Phase 1－Requirement Specification
 > 狀態：待 Jamie 確認
@@ -11,7 +11,7 @@
 
 ### 1.1 文件定位
 
-本文件整理 FSS Item Card 生成器目前已確認的完整需求。本文件不是 Proposal，不包含 Coding、技術實作或資料結構設計。
+本文件整理 FSS Overlay Image 生成器目前已確認的完整需求。本文件不是 Proposal，不包含 Coding、技術實作或資料結構設計。
 
 Jamie 確認本文件後，才可依《開發流程》進入 Phase 2 專案調查；不得跳過需求確認直接進入 Proposal 或 Coding。
 
@@ -21,8 +21,8 @@ Jamie 確認本文件後，才可依《開發流程》進入 Phase 2 專案調�
 |---|---|
 | `docs/架構說明.md` | FSS 平台架構、生成器分離原則、資料夾職責與主要使用流程 |
 | `docs/開發流程.md` | Phase、責任分工、Proposal、Coding、驗證與 Git 流程 |
-| `itemcard/docs/Phase0_完整需求整理.txt` | 已確認的 FSS Item Card 產品、流程、資料、介面、操作與範圍需求 |
-| `itemcard/docs/Layout_ABCD_規格整理.txt` | **Layout A～D 的唯一正式規格來源** |
+| `overlay-image/docs/Phase0_完整需求整理.txt` | 已確認的 FSS Overlay Image 產品、流程、資料、介面、操作與範圍需求 |
+| `overlay-image/docs/Layout_ABCD_規格整理.txt` | **Layout A～D 的唯一正式規格來源** |
 
 Layout A～D 的適用情境、辨識、排版、字型、字級、字色、符號與換行等規格，全部直接引用 `Layout_ABCD_規格整理.txt`，本文件不重新定義。
 
@@ -45,17 +45,17 @@ Layout A～D 的適用情境、辨識、排版、字型、字級、字色、符�
 
 ### 2.1 產品名稱
 
-FSS Item Card 生成器。
+FSS Overlay Image 生成器。
 
 ### 2.2 產品定位
 
-FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全部 Item Card；「檢查」是主要流程，手動編輯只提供必要微調。
+FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生全部 Overlay Image；「檢查」是主要流程，手動編輯只提供必要微調。
 
 本產品不是完整設計編輯器，不提供自由設計。
 
 ### 2.3 產品主要流程
 
-匯入 Excel → 自動產生全部 Item Card 預覽 → 檢查 → 必要時微調 → 下載完整專案。
+匯入 Excel → 自動產生全部 Overlay Image 預覽 → 檢查 → 必要時微調 → 下載完整專案。
 
 ---
 
@@ -63,17 +63,17 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 | 名詞 | 定義 |
 |---|---|
-| Item Card | 單一成品項目；設計與預覽尺寸為 1200 × 1200 px。一個三列製作區塊產生一張 Item Card。 |
-| 編號 | Item Card 的識別值，同時直接作為該 Item Card 的 PNG 輸出檔名。 |
-| Badge | Item Card 上的一個訊息；一個訊息等於一個 Badge。每張 Item Card 最多 3 個 Badge。 |
+| Overlay Image | 單一成品項目；設計與預覽尺寸為 1200 × 1200 px。一個三列製作區塊產生一張 Overlay Image。 |
+| 編號 | Overlay Image 的識別值，同時直接作為該 Overlay Image 的 PNG 輸出檔名。 |
+| Badge | Overlay Image 上的一個訊息；一個訊息等於一個 Badge。每張 Overlay Image 最多 3 個 Badge。 |
 | 第一格／第二格／第三格 | Excel 既有欄位名稱，也是 Badge 當下由左至右的位置；不是 Badge 的永久身份。 |
 | Layout | Badge 的文字樣式與排版規則。現有選項為 A、B、C、D；正式規格只見 `Layout_ABCD_規格整理.txt`。 |
-| Excel 工單 | Item Card 的主要資料來源；一個三列製作區塊對應一張 Item Card，每個訊息只使用一個儲存格。 |
-| Generator | FSS Item Card 生成器介面，負責批次產生預覽及提供必要微調。 |
-| 預覽 | Generator 左側顯示的 1200 × 1200 px Item Card。 |
+| Excel 工單 | Overlay Image 的主要資料來源；一個三列製作區塊對應一張 Overlay Image，每個訊息只使用一個儲存格。 |
+| Generator | FSS Overlay Image 生成器介面，負責批次產生預覽及提供必要微調。 |
+| 預覽 | Generator 左側顯示的 1200 × 1200 px Overlay Image。 |
 | 暫存檔 | 保存下載當下完整工作區狀態的單一 JSON 檔案；不是只保存原始 Excel。 |
 | 完整專案 | 一個 ZIP，包含全部 1200 × 1200 PNG、全部 320 × 320 PNG，以及一個完整工作區 JSON 暫存檔。 |
-| 工作區 | Generator 目前載入的全部 Item Card、Badge 與所有編輯結果。 |
+| 工作區 | Generator 目前載入的全部 Overlay Image、Badge 與所有編輯結果。 |
 
 ---
 
@@ -82,21 +82,21 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 ### 4.1 FSS 平台關係
 
 - FSS 入口頁讀取 `tools.json` 動態產生生成器入口。
-- Item Card 位於獨立的 `itemcard/` 資料夾。
-- Item Card 應各自帶完整的 `js/`、`css/`、`forms/`、`templates/`、`assets/`，與其他生成器互不相依。
-- 入口平台只透過 `tools.json` 管理可用生成器，不直接依賴 Item Card 內部實作。
-- 正常情況下，新增、修改或移除 Item Card，不需要修改其他生成器的程式碼。
+- Overlay Image 位於獨立的 `overlay-image/` 資料夾。
+- Overlay Image 應各自帶完整的 `js/`、`css/`、`forms/`、`templates/`、`assets/`，與其他生成器互不相依。
+- 入口平台只透過 `tools.json` 管理可用生成器，不直接依賴 Overlay Image 內部實作。
+- 正常情況下，新增、修改或移除 Overlay Image，不需要修改其他生成器的程式碼。
 - 預覽項目由 Excel 工單資料動態建立，不在 HTML 寫死。
 
 ### 4.2 資料夾職責
 
 | 資料夾 | 職責 |
 |---|---|
-| `js/` | Item Card 的流程、Excel 解析、下載、暫存等程式邏輯；採功能拆分，避免巨型單一檔案。 |
-| `css/` | Item Card 生成器本身的介面樣式。 |
+| `js/` | Overlay Image 的流程、Excel 解析、下載、暫存等程式邏輯；採功能拆分，避免巨型單一檔案。 |
+| `css/` | Overlay Image 生成器本身的介面樣式。 |
 | `forms/` | Excel 欄位對應。 |
 | `templates/` | 各類成品版型與呈現規則，以及版型所需的固定樣式或資源。 |
-| `assets/` | Item Card 專案固定素材。 |
+| `assets/` | Overlay Image 專案固定素材。 |
 
 ### 4.3 支援平台界線
 
@@ -109,19 +109,19 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 ### 5.1 Excel 主流程
 
 1. 使用者匯入工單 Excel。
-2. Generator 依 Excel 每一個已填寫的三列製作區塊動態產生一張 Item Card，並顯示全部預覽。
-3. 使用者檢查全部 Item Card。
-4. 如有必要，使用者選取單張 Item Card，進行允許的 Badge 微調。
+2. Generator 依 Excel 每一個已填寫的三列製作區塊動態產生一張 Overlay Image，並顯示全部預覽。
+3. 使用者檢查全部 Overlay Image。
+4. 如有必要，使用者選取單張 Overlay Image，進行允許的 Badge 微調。
 5. 使用者下載完整專案 ZIP。
 
 ### 5.2 暫存還原流程
 
 1. 使用者匯入 JSON 暫存檔。
 2. Generator 清除目前工作區。
-3. Generator 依 JSON 完整還原全部 Item Card 與所有編輯狀態。
+3. Generator 依 JSON 完整還原全部 Overlay Image 與所有編輯狀態。
 4. 工作區回到該暫存檔下載當下的完整狀態。
 
-匯入暫存不與目前資料合併、不追加 Item Card，也不保留匯入前的修改。
+匯入暫存不與目前資料合併、不追加 Overlay Image，也不保留匯入前的修改。
 
 ### 5.3 重設流程
 
@@ -136,15 +136,15 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 ### 6.1 Excel 匯入後
 
-- 一個已填寫的三列製作區塊產生一張 Item Card。
-- Excel 帶入 Item Card 編號，以及每個 Badge 的原始 Layout、原始顏色、原始文字與初始順序。
-- 每張 Item Card 最多 3 個 Badge；未使用的格子留白。
-- 左側顯示全部 Item Card 預覽。
-- 右側同一時間只編輯目前選取的一張 Item Card。
+- 一個已填寫的三列製作區塊產生一張 Overlay Image。
+- Excel 帶入 Overlay Image 編號，以及每個 Badge 的原始 Layout、原始顏色、原始文字與初始順序。
+- 每張 Overlay Image 最多 3 個 Badge；未使用的格子留白。
+- 左側顯示全部 Overlay Image 預覽。
+- 右側同一時間只編輯目前選取的一張 Overlay Image。
 
 ### 6.2 編輯同步
 
-對目前選取 Item Card 進行下列操作時，左側對應預覽必須即時更新：
+對目前選取 Overlay Image 進行下列操作時，左側對應預覽必須即時更新：
 
 - 修改文字。
 - 刪除 Badge。
@@ -153,7 +153,7 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 ### 6.3 Badge 順序狀態
 
-- Badge 由 Item Card 左下開始，依序向右增加。
+- Badge 由 Overlay Image 左下開始，依序向右增加。
 - 多個 Badge 左右相連。
 - 由左至右依序為第一格、第二格、第三格。
 - 順序完全依目前位置決定，不依顏色、Layout 或文字長度重新排序。
@@ -170,11 +170,11 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 ### 7.1 基本結構
 
-- 一個三列製作區塊等於一張 Item Card。
+- 一個三列製作區塊等於一張 Overlay Image。
 - 編號位於 A 欄，跨該製作區塊的三列合併。
 - 欄位名稱維持「編號」「第一格」「第二格」「第三格」，不得改成 Item ID、Badge 1 或其他名稱。
 - 第一格、第二格、第三格的資料值分別位於 C、E、G 欄。
-- B、D、F 欄為固定標籤，不屬於 Item Card 資料。
+- B、D、F 欄為固定標籤，不屬於 Overlay Image 資料。
 - 每個 Badge 的資料於三列製作區塊中依序為：文字樣式、顏色、文字內容。
 - Excel 每個訊息永遠只使用一個儲存格。
 - 最多 3 個 Badge；不用的格子留白。
@@ -183,7 +183,7 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 編號用途只有：
 
-1. Item Card 識別。
+1. Overlay Image 識別。
 2. 輸出檔名。
 
 不另外增加輸出檔名欄位。
@@ -229,7 +229,7 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 ### 8.1 數量與尺寸
 
 - 一個訊息等於一個 Badge。
-- 一張 Item Card 最多 3 個 Badge。
+- 一張 Overlay Image 最多 3 個 Badge。
 - Badge 高度固定為 150 px。
 - Badge 左右 Padding 固定為 20 px。
 - Badge 寬度依文字內容自動伸縮。
@@ -267,7 +267,7 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 1. 匯入工單 Excel。
 2. 匯入暫存檔。
-3. 目前選取 Item Card 的 Badge 編輯區。
+3. 目前選取 Overlay Image 的 Badge 編輯區。
 4. 下載完整專案。
 5. 重設工作區域。
 
@@ -283,11 +283,11 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 ---
 
-## 10. Item Card Preview
+## 10. Overlay Image Preview
 
 ### 10.1 預覽尺寸與排列
 
-- 左側顯示所有 Item Card 預覽。
+- 左側顯示所有 Overlay Image 預覽。
 - 預覽只顯示 1200 × 1200 px。
 - 桌面寬度足夠時，一行 3 張起。
 - 視窗變窄時，響應式減少欄數。
@@ -295,18 +295,18 @@ FSS Item Card 是批次生成器。主要目的為透過 Excel 自動產生全�
 
 ### 10.2 選取回饋
 
-點擊 Item Card 時：
+點擊 Overlay Image 時：
 
 1. 預覽卡先短暫微放大。
 2. 預覽卡再回到原本大小。
 3. 被選取的預覽卡以重點色外框持續標示。
 
-微放大是短暫點擊回饋；顏色外框持續表示目前選取的 Item Card。
+微放大是短暫點擊回饋；顏色外框持續表示目前選取的 Overlay Image。
 
 ### 10.3 編輯關聯
 
-- 右側欄同一時間只編輯目前選取的一張 Item Card。
-- 文字修改、Badge 刪除、Badge 新增與 Badge 拖曳排序都必須即時反映到左側目前選取的 Item Card 預覽。
+- 右側欄同一時間只編輯目前選取的一張 Overlay Image。
+- 文字修改、Badge 刪除、Badge 新增與 Badge 拖曳排序都必須即時反映到左側目前選取的 Overlay Image 預覽。
 
 ---
 
@@ -329,7 +329,7 @@ Layout 與顏色僅作資訊顯示，不作可編輯控制項。
 
 ### 11.2 新增 Badge
 
-- 目前 Item Card 少於 3 個 Badge 時才允許新增。
+- 目前 Overlay Image 少於 3 個 Badge 時才允許新增。
 - 新增後仍不得超過 3 個 Badge。
 - 使用者自行選擇 Layout：A、B、C、D。
 - 使用者自行選擇顏色：紅、綠、黃、藍。
@@ -373,7 +373,7 @@ Layout C 的欄位讓使用者直接知道內容顯示區域，Generator 不需�
 
 Layout A～D 的全部規格直接引用：
 
-`itemcard/docs/Layout_ABCD_規格整理.txt`
+`overlay-image/docs/Layout_ABCD_規格整理.txt`
 
 本 Requirement Specification 不複製、不摘要、不重新定義 Layout A～D 的適用、辨識、排版、字型、字級、字色、符號或換行規格。
 
@@ -386,16 +386,16 @@ Layout A～D 的全部規格直接引用：
 ### 13.1 暫存格式與範圍
 
 - 暫存檔格式為 JSON。
-- 一個 JSON 暫存包含全部 Item Card，不是一張 Item Card 一個 JSON。
+- 一個 JSON 暫存包含全部 Overlay Image，不是一張 Overlay Image 一個 JSON。
 - 暫存不是只保存原始 Excel。
 
 ### 13.2 必須保存的完整狀態
 
 JSON 必須完整保存下載當下工作區的所有內容，包括：
 
-- 全部 Item Card。
-- 每張 Item Card 的編號。
-- 每張 Item Card 當下的 Badge 數量。
+- 全部 Overlay Image。
+- 每張 Overlay Image 的編號。
+- 每張 Overlay Image 當下的 Badge 數量。
 - Badge 當下的左右順序。
 - 每個 Badge 的 Layout。
 - 每個 Badge 的顏色。
@@ -415,10 +415,10 @@ JSON 必須完整保存下載當下工作區的所有內容，包括：
 - 匯入格式為 JSON。
 - 匯入後完全覆蓋目前工作區。
 - 不與目前資料合併。
-- 不追加 Item Card。
+- 不追加 Overlay Image。
 - 不保留匯入前的修改。
 
-流程固定為：清除目前工作區 → 依 JSON 完整還原全部 Item Card → 回到暫存檔下載當下的狀態。
+流程固定為：清除目前工作區 → 依 JSON 完整還原全部 Overlay Image → 回到暫存檔下載當下的狀態。
 
 ---
 
@@ -436,35 +436,35 @@ JSON 必須完整保存下載當下工作區的所有內容，包括：
 
 ### 14.2 ZIP 命名
 
-ZIP 檔名格式：`ItemCard_MMDD.zip`。
+ZIP 檔名格式：`OverlayImage_MMDD.zip`。
 
-例如：`ItemCard_0804.zip`。
+例如：`OverlayImage_0804.zip`。
 
 同一天可以重複下載；若發生同名，由瀏覽器或作業系統依預設方式處理。
 
 ### 14.3 ZIP 結構
 
 ```text
-ItemCard_MMDD.zip
+OverlayImage_MMDD.zip
 ├── 1200x1200/
 │   ├── 編號.png
 │   └── …
 ├── 320x320/
 │   ├── 編號.png
 │   └── …
-└── ItemCard_MMDD.json
+└── OverlayImage_MMDD.json
 ```
 
 - `1200x1200/` 存放全部 1200 × 1200 PNG。
 - `320x320/` 存放全部 320 × 320 PNG。
-- `ItemCard_MMDD.json` 保存下載當下全部工作區狀態。
+- `OverlayImage_MMDD.json` 保存下載當下全部工作區狀態。
 
 ---
 
 ## 15. 重設工作區域
 
 - 「重設工作區域」顯示於右側欄「下載完整專案」下方。
-- 重設後清除目前全部 Item Card。
+- 重設後清除目前全部 Overlay Image。
 - 清除所有文字修改。
 - 清除所有 Badge 排序。
 - 清除所有新增 Badge。
@@ -492,7 +492,7 @@ ItemCard_MMDD.zip
 | Layout A～D | `Layout_ABCD_規格整理.txt`；本文件 §12 僅引用 | Locked |
 | Excel 工單 | §7 | Locked |
 | Generator 整體介面 | §9 | Locked |
-| Item Card Preview | §10 | Locked |
+| Overlay Image Preview | §10 | Locked |
 | Excel 帶入 Badge 編輯 | §11.1 | Locked |
 | 新增 Badge | §11.2、§11.3 | Locked |
 | 刪除 Badge | §11.4 | Locked |
@@ -510,8 +510,8 @@ ItemCard_MMDD.zip
 ### 17.1 必要功能
 
 - 匯入工單 Excel。
-- 依已填寫的三列製作區塊數自動產生全部 Item Card 預覽。
-- 選取與檢查 Item Card。
+- 依已填寫的三列製作區塊數自動產生全部 Overlay Image 預覽。
+- 選取與檢查 Overlay Image。
 - 對 Excel Badge 修改文字、拖曳排序、刪除。
 - 未滿 3 個 Badge 時新增 Badge。
 - 匯入完整 JSON 暫存並覆蓋還原工作區。
@@ -543,7 +543,7 @@ ItemCard_MMDD.zip
 
 - 後續 Proposal 與 Coding 只能處理本文件確認的內容。
 - 必須遵循 FSS Architecture Contract，不重新設計平台架構。
-- Item Card 內部實作不得造成其他生成器相依或要求修改其他生成器程式碼；新增或移除生成器時僅同步更新 `tools.json`。
+- Overlay Image 內部實作不得造成其他生成器相依或要求修改其他生成器程式碼；新增或移除生成器時僅同步更新 `tools.json`。
 - Layout A～D 不在 Requirement Specification 重新定義；後續實作必須直接依 Layout 正式文件。
 - 只提供必要微調，不得擴大為自由編輯。
 - 不得順手重構或修改無關功能。
@@ -562,17 +562,17 @@ ItemCard_MMDD.zip
 
 ## 18. 完成標準
 
-FSS Item Card 只有在下列需求全部成立時，才符合本 Requirement Specification：
+FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requirement Specification：
 
 ### 18.1 批次產生與預覽
 
-- 工單每一個已填寫的三列製作區塊均動態產生對應 Item Card。
-- 每張 Item Card 正確保留編號、Badge 內容、Layout、顏色與初始順序。
+- 工單每一個已填寫的三列製作區塊均動態產生對應 Overlay Image。
+- 每張 Overlay Image 正確保留編號、Badge 內容、Layout、顏色與初始順序。
 - 左側顯示全部 1200 × 1200 預覽，並符合響應式排列、編號、點擊回饋與選取外框規則。
 
 ### 18.2 編輯
 
-- 右側只編輯目前選取 Item Card。
+- 右側只編輯目前選取 Overlay Image。
 - Excel Badge 只能修改文字、拖曳與整格刪除，不能修改 Layout 或顏色。
 - 少於 3 個 Badge 時可依既定選項與欄位新增 Badge，總數不得超過 3。
 - 拖曳、刪除、新增與文字修改均即時更新對應預覽。
@@ -581,15 +581,15 @@ FSS Item Card 只有在下列需求全部成立時，才符合本 Requirement Sp
 
 ### 18.3 暫存與還原
 
-- 下載產生的單一 JSON 包含全部 Item Card 及下載當下所有工作狀態。
+- 下載產生的單一 JSON 包含全部 Overlay Image 及下載當下所有工作狀態。
 - 匯入 JSON 後完全覆蓋目前工作區，並完整還原至下載當下狀態。
 
 ### 18.4 匯出
 
-- 一次下載產生一個 `ItemCard_MMDD.zip`。
+- 一次下載產生一個 `OverlayImage_MMDD.zip`。
 - ZIP 結構、資料夾名稱及 JSON 名稱符合本文件。
-- 每張 Item Card 均輸出 1200 × 1200、72 dpi PNG。
-- 每張 Item Card 均由 1200 版本自動縮小輸出 320 × 320、72 dpi PNG。
+- 每張 Overlay Image 均輸出 1200 × 1200、72 dpi PNG。
+- 每張 Overlay Image 均由 1200 版本自動縮小輸出 320 × 320、72 dpi PNG。
 - 所有 PNG 直接以編號命名。
 
 ### 18.5 重設與範圍
@@ -637,7 +637,7 @@ FSS Item Card 只有在下列需求全部成立時，才符合本 Requirement Sp
 | 九、Layout D | §11.3（僅編輯欄位）、§12（正式規格引用）、§17.2 |
 | 十、Excel 工單 | §7 |
 | 十一、Generator 整體介面 | §9.1 |
-| 十二、左側欄－Item Card 預覽 | §10 |
+| 十二、左側欄－Overlay Image 預覽 | §10 |
 | 十三、右側欄內容 | §9.2 |
 | 十四、Excel 帶入 Badge 的編輯規則 | §9.3、§11.1 |
 | 十五、新增 Badge | §11.2、§11.3 |
