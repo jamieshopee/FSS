@@ -56,7 +56,7 @@ function render(workspace, options = {}) {
     );
   }
   elements.itemCount.textContent =
-    workspace.items.length > 0 ? `共 ${workspace.items.length} 張 Item Card` : "尚未匯入資料";
+    workspace.items.length > 0 ? `共 ${workspace.items.length} 張 Overlay Image` : "尚未匯入資料";
   elements.downloadButton.disabled = workspace.items.length === 0;
   elements.resetButton.disabled = workspace.items.length === 0;
 }
@@ -76,13 +76,13 @@ async function loadOfficialFonts() {
 async function handleExcelImport(file) {
   const nextWorkspace = await parseExcelFile(file);
   replaceWorkspace(nextWorkspace);
-  setStatus(`已匯入 ${nextWorkspace.items.length} 張 Item Card。`, "success");
+  setStatus(`已匯入 ${nextWorkspace.items.length} 張 Overlay Image。`, "success");
 }
 
 async function handleJsonImport(file) {
   const nextWorkspace = parseWorkspaceJson(await file.text());
   replaceWorkspace(nextWorkspace);
-  setStatus(`已完整還原 ${nextWorkspace.items.length} 張 Item Card。`, "success");
+  setStatus(`已完整還原 ${nextWorkspace.items.length} 張 Overlay Image。`, "success");
 }
 
 elements.excelInput.addEventListener("change", async () => {

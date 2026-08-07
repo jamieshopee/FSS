@@ -1,4 +1,4 @@
-import { BADGE_HEIGHT, ITEM_CARD_SIZE } from "../templates/badge-common.js";
+import { BADGE_HEIGHT, OVERLAY_IMAGE_SIZE } from "../templates/badge-common.js";
 import { drawBadge, measureBadge } from "../templates/index.js";
 
 const measureCanvas = document.createElement("canvas");
@@ -18,24 +18,24 @@ export function getItemMeasurements(item) {
 
 export function assertItemFits(item) {
   const measurements = getItemMeasurements(item);
-  if (measurements.totalWidth > ITEM_CARD_SIZE) {
+  if (measurements.totalWidth > OVERLAY_IMAGE_SIZE) {
     throw new Error(`全部 Badge 總寬為 ${measurements.totalWidth}px，超過 1200px。`);
   }
   return measurements;
 }
 
 export function renderItemToCanvas(item, canvas) {
-  canvas.width = ITEM_CARD_SIZE;
-  canvas.height = ITEM_CARD_SIZE;
+  canvas.width = OVERLAY_IMAGE_SIZE;
+  canvas.height = OVERLAY_IMAGE_SIZE;
   const context = canvas.getContext("2d");
   if (!context) {
     throw new Error("瀏覽器無法建立 Canvas 繪製環境。");
   }
 
-  context.clearRect(0, 0, ITEM_CARD_SIZE, ITEM_CARD_SIZE);
+  context.clearRect(0, 0, OVERLAY_IMAGE_SIZE, OVERLAY_IMAGE_SIZE);
   const { widths } = assertItemFits(item);
   let x = 0;
-  const y = ITEM_CARD_SIZE - BADGE_HEIGHT;
+  const y = OVERLAY_IMAGE_SIZE - BADGE_HEIGHT;
   item.badges.forEach((badge, index) => {
     drawBadge(context, badge, x, y, widths[index]);
     x += widths[index];
@@ -54,7 +54,7 @@ export function renderPreviewGrid(container, workspace, onSelect) {
     const emptyState = document.createElement("div");
     emptyState.className = "empty-state";
     const text = document.createElement("p");
-    text.textContent = "匯入 Excel 工單或 JSON 暫存檔後，這裡會顯示全部 Item Card。";
+    text.textContent = "匯入 Excel 工單或 JSON 暫存檔後，這裡會顯示全部 Overlay Image。";
     emptyState.append(text);
     container.append(emptyState);
     return;
@@ -65,7 +65,7 @@ export function renderPreviewGrid(container, workspace, onSelect) {
     card.type = "button";
     card.className = "preview-card";
     card.dataset.identifier = item.identifier;
-    card.setAttribute("aria-label", `選取 Item Card ${item.identifier}`);
+    card.setAttribute("aria-label", `選取 Overlay Image ${item.identifier}`);
     if (workspace.selectedId === item.identifier) {
       card.classList.add("is-selected");
     }

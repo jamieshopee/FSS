@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#080d0f">
-    <title>FSS Item Card 生成器</title>
+    <title>FSS Overlay Image 生成器</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/vendor/xlsx.full.min.js" defer></script>
     <script src="js/vendor/jszip.min.js" defer></script>
@@ -16,19 +16,19 @@
         <header class="page-header">
           <div>
             <p class="eyebrow">FSS Generator</p>
-            <h1 id="page-title">Item Card</h1>
+            <h1 id="page-title">Overlay Image</h1>
           </div>
           <p id="item-count" class="item-count">尚未匯入資料</p>
         </header>
 
         <div id="preview-grid" class="preview-grid" aria-live="polite">
           <div id="empty-state" class="empty-state">
-            <p>匯入 Excel 工單或 JSON 暫存檔後，這裡會顯示全部 Item Card。</p>
+            <p>匯入 Excel 工單或 JSON 暫存檔後，這裡會顯示全部 Overlay Image。</p>
           </div>
         </div>
       </section>
 
-      <aside class="control-column" aria-label="Item Card 控制中心">
+      <aside class="control-column" aria-label="Overlay Image 控制中心">
         <section class="control-card import-card">
           <h2>匯入資料</h2>
           <label class="file-action">
@@ -46,12 +46,12 @@
           <div class="section-heading">
             <div>
               <p class="section-kicker">目前選取</p>
-              <h2 id="editor-title">尚未選取 Item Card</h2>
+              <h2 id="editor-title">尚未選取 Overlay Image</h2>
             </div>
           </div>
           <p id="drag-hint" class="drag-hint" hidden>拖曳調整順序</p>
           <div id="badge-editor" class="badge-editor">
-            <p class="editor-empty">請先匯入資料並選取 Item Card。</p>
+            <p class="editor-empty">請先匯入資料並選取 Overlay Image。</p>
           </div>
           <div id="add-badge-region"></div>
         </section>

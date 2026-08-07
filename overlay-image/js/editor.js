@@ -278,11 +278,11 @@ export function renderEditor(elements, workspace, actions) {
   elements.badgeEditor.replaceChildren();
 
   if (!item) {
-    elements.title.textContent = "尚未選取 Item Card";
+    elements.title.textContent = "尚未選取 Overlay Image";
     elements.dragHint.hidden = true;
     const empty = document.createElement("p");
     empty.className = "editor-empty";
-    empty.textContent = "請先匯入資料並選取 Item Card。";
+    empty.textContent = "請先匯入資料並選取 Overlay Image。";
     elements.badgeEditor.append(empty);
     elements.addRegion.replaceChildren();
     return;

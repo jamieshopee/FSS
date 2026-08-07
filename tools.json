@@ -4,7 +4,7 @@
     "path": "bn/"
   },
   {
-    "name": "Item Card",
-    "path": "itemcard/"
+    "name": "Overlay Image",
+    "path": "overlay-image/"
   }
 ]

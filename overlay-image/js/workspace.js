@@ -43,7 +43,7 @@ export function selectItem(identifier) {
 export function updateItem(identifier, updater, options = {}) {
   const itemIndex = workspace.items.findIndex((item) => item.identifier === identifier);
   if (itemIndex === -1) {
-    throw new Error("找不到目前選取的 Item Card。");
+    throw new Error("找不到目前選取的 Overlay Image。");
   }
 
   const nextItem = structuredClone(workspace.items[itemIndex]);

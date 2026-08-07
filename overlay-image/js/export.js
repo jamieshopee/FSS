@@ -99,7 +99,7 @@ export async function exportWorkspace(workspace) {
     throw new Error("ZIP 程式庫尚未載入。");
   }
   if (workspace.items.length === 0) {
-    throw new Error("目前沒有可下載的 Item Card。");
+    throw new Error("目前沒有可下載的 Overlay Image。");
   }
 
   workspace.items.forEach(assertItemFits);
@@ -135,7 +135,7 @@ export async function exportWorkspace(workspace) {
     null,
     2,
   );
-  zip.file(`ItemCard_${dateCode}.json`, json);
+  zip.file(`OverlayImage_${dateCode}.json`, json);
   const result = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
-  downloadBlob(result, `ItemCard_${dateCode}.zip`);
+  downloadBlob(result, `OverlayImage_${dateCode}.zip`);
 }

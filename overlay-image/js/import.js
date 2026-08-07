@@ -180,7 +180,7 @@ export async function parseExcelFile(file) {
   }
 
   if (items.length === 0 && errors.length === 0) {
-    errors.push("Excel 沒有任何 Item Card 資料。");
+    errors.push("Excel 沒有任何 Overlay Image 資料。");
   }
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
@@ -190,7 +190,7 @@ export async function parseExcelFile(file) {
 }
 
 function validateBadgeFromJson(badge, itemIndex, badgeIndex, errors) {
-  const label = `JSON 第 ${itemIndex + 1} 張 Item Card 的第 ${badgeIndex + 1} 個 Badge`;
+  const label = `JSON 第 ${itemIndex + 1} 張 Overlay Image 的第 ${badgeIndex + 1} 個 Badge`;
   if (badge === null || typeof badge !== "object") {
     errors.push(`${label}內容不完整。`);
     return null;
@@ -232,20 +232,20 @@ export function parseWorkspaceJson(text) {
 
   const errors = [];
   if (data?.format !== WORKSPACE_FORMAT) {
-    errors.push("JSON 不是 FSS Item Card 暫存檔。");
+    errors.push("JSON 不是 FSS Overlay Image 暫存檔。");
   }
   if (data?.version !== WORKSPACE_VERSION) {
     errors.push("JSON 版本不支援。");
   }
   if (!Array.isArray(data?.items) || data.items.length === 0) {
-    errors.push("JSON 缺少完整 Item Card 資料。");
+    errors.push("JSON 缺少完整 Overlay Image 資料。");
   }
 
   const identifiers = new Set();
   const items = Array.isArray(data?.items)
     ? data.items.map((item, itemIndex) => {
         if (item === null || typeof item !== "object" || !isSafeIdentifier(item.identifier)) {
-          errors.push(`JSON 第 ${itemIndex + 1} 張 Item Card 的編號無效。`);
+          errors.push(`JSON 第 ${itemIndex + 1} 張 Overlay Image 的編號無效。`);
           return null;
         }
         if (identifiers.has(item.identifier)) {
@@ -254,7 +254,7 @@ export function parseWorkspaceJson(text) {
         }
         identifiers.add(item.identifier);
         if (!Array.isArray(item.badges) || item.badges.length > MAX_BADGES) {
-          errors.push(`JSON 第 ${itemIndex + 1} 張 Item Card 的 Badge 數量無效。`);
+          errors.push(`JSON 第 ${itemIndex + 1} 張 Overlay Image 的 Badge 數量無效。`);
           return null;
         }
         const badges = item.badges
@@ -265,7 +265,7 @@ export function parseWorkspaceJson(text) {
           try {
             assertItemFits(normalized);
           } catch (error) {
-            errors.push(`JSON 第 ${itemIndex + 1} 張 Item Card：${error.message}`);
+            errors.push(`JSON 第 ${itemIndex + 1} 張 Overlay Image：${error.message}`);
           }
         }
         return normalized;
@@ -274,7 +274,7 @@ export function parseWorkspaceJson(text) {
 
   const selectedId = data?.selectedId;
   if (typeof selectedId !== "string" || !identifiers.has(selectedId)) {
-    errors.push("JSON 缺少有效的目前選取 Item Card。");
+    errors.push("JSON 缺少有效的目前選取 Overlay Image。");
   }
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
