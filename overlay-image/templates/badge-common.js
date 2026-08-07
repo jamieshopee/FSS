@@ -1,6 +1,7 @@
 export const BADGE_HEIGHT = 150;
 export const BADGE_PADDING_X = 20;
 export const OVERLAY_IMAGE_SIZE = 1200;
+export const MAX_BADGES_TOTAL_WIDTH = 1120;
 export const MAX_BADGES = 3;
 
 export const BACKGROUND_COLORS = Object.freeze({

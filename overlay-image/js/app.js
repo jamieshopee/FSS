@@ -1,7 +1,8 @@
-import { renderEditor } from "./editor.js";
+import { refreshEditorWidthWarning, renderEditor } from "./editor.js";
 import { ImportValidationError, parseExcelFile, parseWorkspaceJson } from "./import.js";
 import { exportWorkspace } from "./export.js";
-import { renderPreviewGrid } from "./preview.js";
+import { getItemMeasurements, renderPreviewGrid } from "./preview.js";
+import { MAX_BADGES_TOTAL_WIDTH } from "../templates/badge-common.js";
 import {
   getWorkspace,
   replaceWorkspace,
@@ -22,6 +23,7 @@ const elements = {
   badgeEditor: document.querySelector("#badge-editor"),
   addRegion: document.querySelector("#add-badge-region"),
   downloadButton: document.querySelector("#download-button"),
+  exportStatus: document.querySelector("#export-status-message"),
   resetButton: document.querySelector("#reset-button"),
 };
 
@@ -31,11 +33,34 @@ function setStatus(message, type = "neutral") {
   elements.status.classList.toggle("is-success", type === "success");
 }
 
+function setExportStatus(message, type = "neutral") {
+  elements.exportStatus.textContent = message;
+  elements.exportStatus.hidden = !message;
+  elements.exportStatus.classList.toggle("is-error", type === "error");
+  elements.exportStatus.classList.toggle("is-success", type === "success");
+}
+
 function formatError(error) {
   if (error instanceof ImportValidationError) {
     return error.errors.join("\n");
   }
   return error instanceof Error ? error.message : "發生未預期錯誤。";
+}
+
+function refreshExportWidthStatus(workspace) {
+  const warnings = workspace.items.flatMap((item) => {
+    const measurements = getItemMeasurements(item);
+    return measurements.isOverWidth
+      ? [
+          `編號 ${item.identifier}：Badge 總寬 ${measurements.totalWidth}px，超過 ${MAX_BADGES_TOTAL_WIDTH}px，請修改。`,
+        ]
+      : [];
+  });
+  if (warnings.length > 0) {
+    setExportStatus(warnings.join("\n"), "error");
+    return;
+  }
+  setExportStatus("");
 }
 
 function render(workspace, options = {}) {
@@ -55,6 +80,8 @@ function render(workspace, options = {}) {
       },
     );
   }
+  refreshEditorWidthWarning(elements.badgeEditor, workspace);
+  refreshExportWidthStatus(workspace);
   elements.itemCount.textContent =
     workspace.items.length > 0 ? `共 ${workspace.items.length} 張 Overlay Image` : "尚未匯入資料";
   elements.downloadButton.disabled = workspace.items.length === 0;
@@ -113,12 +140,12 @@ elements.jsonInput.addEventListener("change", async () => {
 
 elements.downloadButton.addEventListener("click", async () => {
   elements.downloadButton.disabled = true;
-  setStatus("正在建立完整專案…");
+  setExportStatus("正在建立完整專案…");
   try {
     await exportWorkspace(getWorkspace());
-    setStatus("完整專案已建立。", "success");
+    setExportStatus("完整專案已建立。", "success");
   } catch (error) {
-    setStatus(formatError(error), "error");
+    setExportStatus(formatError(error), "error");
   } finally {
     elements.downloadButton.disabled = getWorkspace().items.length === 0;
   }

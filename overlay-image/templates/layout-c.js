@@ -5,12 +5,12 @@ import {
   makeFont,
 } from "./badge-common.js";
 
-const LEFT_FONT = makeFont(48.5, "ShopeeNotoSans Medium");
-const NUMBER_FONT = makeFont(110, "ShopeeNotoSans Bold");
-const SYMBOL_FONT = makeFont(50, "ShopeeNotoSans Bold");
+const LEFT_FONT = makeFont(43.5, "ShopeeNotoSans Medium");
+const NUMBER_FONT = makeFont(98, "ShopeeNotoSans Bold");
+const SYMBOL_FONT = makeFont(45, "ShopeeNotoSans Bold");
 const LEFT_COLOR = "#FFFFFF";
 const VALUE_COLOR = "#FFD200";
-const LINE_GAP = 50;
+const LINE_GAP = 45;
 const COLUMN_GAP = 10;
 const SYMBOL_GAP = 5;
 const FOUR_CHINESE = /^[\p{Script=Han}]{4}$/u;

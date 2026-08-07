@@ -168,12 +168,6 @@ export async function parseExcelFile(file) {
       errors.push(`Excel 第 ${startRowNumber}～${startRowNumber + 2} 列：至少必須填寫一個 Badge。`);
     }
     const item = { identifier, badges };
-    try {
-      assertItemFits(item);
-    } catch (error) {
-      errors.push(`Excel 第 ${startRowNumber}～${startRowNumber + 2} 列「第一格～第三格」：${error.message}`);
-      continue;
-    }
     if (errors.length === blockErrorCount) {
       items.push(item);
     }

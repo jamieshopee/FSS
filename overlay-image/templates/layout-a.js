@@ -5,8 +5,8 @@ import {
   makeFont,
 } from "./badge-common.js";
 
-const TEXT_FONT = makeFont(58, "ShopeeNotoSans Medium");
-const NUMBER_FONT = makeFont(62, "ShopeeNotoSans Bold");
+const TEXT_FONT = makeFont(55, "ShopeeNotoSans Medium");
+const NUMBER_FONT = makeFont(60, "ShopeeNotoSans Bold");
 const SYMBOL_FONT = makeFont(25, "ShopeeNotoSans Bold");
 
 function tokenize(text) {

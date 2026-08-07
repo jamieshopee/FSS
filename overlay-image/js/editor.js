@@ -1,7 +1,7 @@
 import { COLOR_OPTIONS, LAYOUT_OPTIONS } from "../forms/excel-schema.js";
-import { MAX_BADGES } from "../templates/badge-common.js";
+import { MAX_BADGES, MAX_BADGES_TOTAL_WIDTH } from "../templates/badge-common.js";
 import { parseBadgeContent, validateBadgeContent } from "../templates/index.js";
-import { assertItemFits } from "./preview.js";
+import { getItemMeasurements } from "./preview.js";
 
 let addedBadgeSequence = 0;
 
@@ -69,7 +69,6 @@ function commitBadgeContent(item, badgeIndex, contentPatch, updateItem) {
         ...contentPatch,
       });
       draft.badges[badgeIndex].content = nextContent;
-      assertItemFits(draft);
     },
     { editor: false },
   );
@@ -259,9 +258,6 @@ function renderAddRegion(container, item, actions) {
           color: colorSelect.select.value,
           content: contentFromAddFields(layoutSelect.select.value, addFields.fields),
         };
-        const nextItem = structuredClone(item);
-        nextItem.badges.push(badge);
-        assertItemFits(nextItem);
         actions.updateItem(item.identifier, (draft) => draft.badges.push(badge));
       } catch (addError) {
         error.textContent = addError.message;
@@ -290,8 +286,32 @@ export function renderEditor(elements, workspace, actions) {
 
   elements.title.textContent = item.identifier;
   elements.dragHint.hidden = item.badges.length < 2;
+  const widthWarning = document.createElement("p");
+  widthWarning.className = "editor-width-warning";
+  widthWarning.hidden = true;
+  elements.badgeEditor.append(widthWarning);
   item.badges.forEach((badge, index) => {
     elements.badgeEditor.append(createBadgeCard(item, badge, index, actions));
   });
   renderAddRegion(elements.addRegion, item, actions);
+  refreshEditorWidthWarning(elements.badgeEditor, workspace);
+}
+
+export function refreshEditorWidthWarning(container, workspace) {
+  const warning = container.querySelector(".editor-width-warning");
+  if (!warning) {
+    return;
+  }
+
+  const item = workspace.items.find((candidate) => candidate.identifier === workspace.selectedId);
+  if (!item) {
+    warning.hidden = true;
+    return;
+  }
+
+  const measurements = getItemMeasurements(item);
+  warning.hidden = !measurements.isOverWidth;
+  warning.textContent = measurements.isOverWidth
+    ? `Badge 總寬 ${measurements.totalWidth}px，超過 ${MAX_BADGES_TOTAL_WIDTH}px，請修改內容。`
+    : "";
 }

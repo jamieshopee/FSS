@@ -223,6 +223,22 @@ h2 {
   white-space: nowrap;
 }
 
+.preview-width-warning {
+  position: absolute;
+  z-index: 1;
+  top: 10px;
+  right: 10px;
+  max-width: calc(100% - 28px);
+  padding: 5px 8px;
+  color: #ffe3a1;
+  background: rgb(83 49 0 / 88%);
+  border: 1px solid rgb(255 194 72 / 65%);
+  border-radius: 8px;
+  font-size: 11px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+
 .preview-card canvas {
   display: block;
   width: 100%;
@@ -335,6 +351,17 @@ h2 {
 .badge-editor {
   display: grid;
   gap: 12px;
+}
+
+.editor-width-warning {
+  margin: 0;
+  padding: 9px 10px;
+  color: #ffe3a1;
+  background: rgb(83 49 0 / 42%);
+  border: 1px solid rgb(255 194 72 / 38%);
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .badge-card {
