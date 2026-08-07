@@ -23,12 +23,14 @@ Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台
 ## 已完成功能
 
 - 正式 Excel 工單三列製作區塊解析。
-- Excel Atomic Import 與欄位、編號、Layout、顏色、內容及總寬驗證。
+- Excel Atomic Import 與欄位、編號、Layout、顏色及內容驗證；Badge 總寬超過 1120px 屬於可匯入的 Width Warning，不取消其他資料／格式錯誤的 Atomic Reject。
 - Layout A、B、C、D Canvas 預覽與 Badge 編輯。
 - Badge 新增、刪除及拖曳排序。
-- JSON 暫存檔完整還原與 Atomic Restore。
+- JSON 暫存檔完整還原與 Atomic Restore；Restore 資料本身超過 1120px 時維持 hard validation，整次拒絕且不修改目前工作區。
 - 1200 × 1200 PNG 與由其等比例縮小的 320 × 320 PNG。
 - 兩種 PNG 均寫入 72 dpi metadata。
+- Preview／Editor 即時顯示超寬 Warning，回到 1120px 以內後立即清除。
+- 工作區存在超寬 Overlay Image 時禁止建立 ZIP、PNG 與 JSON；下載按鈕下方依工作區順序逐行列出各超規編號與實際寬度，並與 Import／Restore status 分離。
 - ZIP 批次輸出與工作區重設。
 
 Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來源；完整產品需求以 `docs/FSS_OverlayImage_Requirement_Specification_v1.0.md` 為準。
@@ -37,12 +39,14 @@ Layout A～D 的正式定義以 `docs/Layout_ABCD_規格整理.txt` 為唯一來
 
 Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整，並通過 Jamie 手動驗證：
 
-- Layout A：依各文字 run 的實際 bounds 計算寬度與置中位置，縮小的 $／% 依相鄰數字 ink bottom 動態對齊。
+- Layout A：中文 55pt、數字 60pt、$／% 25pt；依各文字 run 的實際 bounds 計算寬度與置中位置，縮小的 $／% 依相鄰數字 ink bottom 動態對齊。
 - Layout B：依單行文字的實際 bounds 計算 Badge 寬度、左右 20px 可見留白及垂直置中。
-- Layout C：左側兩行、數字及 $／% 分別依正式字型規格呈現；左側與數值區間距為 10px，數字與 $／% 間距為 5px，整組依實際 bounds 置中。
+- Layout C：左側中文 43.5pt、baseline 距離 45pt、數字 98pt、$／% 45pt；左側與數值區間距為 10px，數字與 $／% 間距為 5px，整組依實際 bounds 置中。
 - Layout D：兩行可見 glyph 間距為 10px；前置 $ 與後置 % 分別依相鄰的第一個或最後一個可見 glyph 動態對齊，整組依實際 bounds 置中。
 
 所有 Layout 的 Badge 寬度、左右可見留白、超寬驗證與實際 Canvas 繪製均使用各 Layout 自己的量測結果；Layout 之間不共用辨識或排版規則。
+
+本次 Layout A／C 與 1120px Width Validation、Preview／Editor Warning、Export Guard 及下載區逐 Item Warning 更新，對應 Code Commit：`9719adc66630c99f974595ca2800e918f6c31e5a`（`feat(overlay-image): update layouts and width validation`）。
 
 ## 第三方程式庫
 
@@ -58,9 +62,9 @@ Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整
 正式工單實際驗證結果：
 
 - 成功建立 5 張 Overlay Image、11 個 Badge。
-- Overlay Image 總寬依序為 314、670、1112、469、951 px，均未超過 1200 px。
+- 正式工單全部 Overlay Image 的 Badge 總寬均未超過每張 1120 px 上限；Canvas 尺寸仍為 1200 × 1200 px。
 - Preview、1200 PNG 與 320 PNG 的輸出一致性驗證通過。
 - 1200 PNG 與 320 PNG 均確認為 72 dpi metadata。
-- Excel Atomic Import、JSON Restore、Badge 編輯與新增、超寬拒絕、匯出及重設 Regression Test 通過。
+- Excel Atomic Import Error／Width Warning 分流、JSON Atomic Restore hard validation、Badge 編輯與新增即時 Warning、超寬 Export Guard、下載區逐 Item Warning、匯出及重設 Regression Test 通過。
 - 全部 JavaScript 語法檢查與 `git diff --check` 通過。
 - Layout A、B、C、D Visual Tuning 均通過 Jamie 手動驗證。

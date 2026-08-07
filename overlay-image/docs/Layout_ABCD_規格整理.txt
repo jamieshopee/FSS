@@ -41,13 +41,13 @@ Layout A（單行｜數字放大）
 中文
 
 -   字型：ShopeeNotoSans(content)-Medium
--   字級：58pt
+-   字級：55pt
 -   顏色：#FFFFFF
 
 數字
 
 -   字型：ShopeeNotoSans(content)-Bold
--   字級：62pt
+-   字級：60pt
 -   顏色：#FFD200
 
 特殊符號（$、%）
@@ -116,20 +116,20 @@ Layout C（雙行｜左側四字＋右側大數字）
 左側兩行中文
 
 -   字型：ShopeeNotoSans(content)-Medium
--   字級：48.5pt
--   兩行 baseline 距離：50pt
+-   字級：43.5pt
+-   兩行 baseline 距離：45pt
 -   顏色：#FFFFFF
 
 右側數字
 
 -   字型：ShopeeNotoSans(content)-Bold
--   字級：110pt
+-   字級：98pt
 -   顏色：#FFD200
 
 特殊符號（$、%）
 
 -   字型：ShopeeNotoSans(content)-Bold
--   字級：50pt
+-   字級：45pt
 -   顏色：#FFD200
 
 水平間距

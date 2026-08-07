@@ -136,9 +136,12 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 
 ### 6.1 Excel 匯入後
 
+- Excel 匯入採 Atomic Import；Excel 結構、編號、Layout、顏色、Badge 格式或其他既有資料格式任一不符時，拒絕整次匯入，不建立部分 Overlay Image，也不修改目前工作區。
+- 每張 Overlay Image 內全部 Badge 實際量測總寬超過 1120 px 屬於 Width Warning，不是 Atomic Error；系統不因此拒絕 Excel 匯入。
 - 一個已填寫的三列製作區塊產生一張 Overlay Image。
 - Excel 帶入 Overlay Image 編號，以及每個 Badge 的原始 Layout、原始顏色、原始文字與初始順序。
 - 每張 Overlay Image 最多 3 個 Badge；未使用的格子留白。
+- 超過 1120 px 的 Overlay Image 與其他全部合法 Overlay Image 仍進入工作區，超規項目的 Preview 顯示 Width Warning，供使用者修改內容。
 - 左側顯示全部 Overlay Image 預覽。
 - 右側同一時間只編輯目前選取的一張 Overlay Image。
 
@@ -150,6 +153,8 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 - 刪除 Badge。
 - 新增 Badge。
 - 拖曳調整 Badge 順序。
+
+工作區成功建立或還原後，文字修改或新增 Badge 即使使該張 Overlay Image 的 Badge 總寬超過 1120 px，修改仍成立且不回復原值；Preview 與 Editor 必須顯示即時 Warning。修改文字或刪除 Badge 後重新量測，回到 1120 px 以內時 Warning 立即消失。
 
 ### 6.3 Badge 順序狀態
 
@@ -163,6 +168,11 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 ### 6.4 下載狀態
 
 下載完整專案時，系統以當下完整工作區產生全部尺寸 PNG 與 JSON 暫存。JSON 必須包含所有匯入資料與所有編輯結果。
+
+- 只要工作區存在任一 Badge 總寬超過 1120 px 的 Overlay Image，即不得下載完整專案。
+- 「下載完整專案」按鈕正下方不需先點擊即顯示全部超規項目；每張各列一行，依工作區原順序顯示 `編號 X：Badge 總寬 XXXXpx，超過 1120px，請修改。`，不依寬度重新排序。
+- 全部項目修正至 1120 px 以內後，超規清單立即消失；成功匯出後顯示「完整專案已建立。」
+- Import／Restore 的成功與錯誤訊息仍顯示在匯入資料區，不與 Export 狀態混用。
 
 ---
 
@@ -233,7 +243,7 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 - Badge 高度固定為 150 px。
 - Badge 左右 Padding 固定為 20 px。
 - Badge 寬度依文字內容自動伸縮。
-- 全部 Badge 總寬最多為 1200 px。
+- 每張 Overlay Image 內全部 Badge 的實際量測總寬最多為 1120 px；Badge 可為 1～3 個，此上限不是 1200 × 1200 Canvas 尺寸。
 
 ### 8.2 排列
 
@@ -271,7 +281,7 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 4. 下載完整專案。
 5. 重設工作區域。
 
-「下載完整專案」位於主要操作流程底部；「重設工作區域」位於「下載完整專案」下方。
+「下載完整專案」位於主要操作流程底部；Export 狀態顯示於按鈕正下方，「重設工作區域」位於 Export 狀態下方。
 
 ### 9.3 Badge 編輯卡片呈現
 
@@ -280,6 +290,7 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 - Layout 與顏色以純文字資訊顯示，例如「A／紅」。
 - 不將整張卡片做成紅、綠、黃、藍背景，避免右側欄顏色搶走左側預覽的視覺焦點。
 - 顯示一行提示：「拖曳調整順序」。
+- 目前選取 Overlay Image 的 Badge 總寬超過 1120 px 時，Editor 顯示該張實際總寬、1120 px 上限及請修改提示；回到上限內時立即消失。
 
 ---
 
@@ -302,6 +313,8 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 3. 被選取的預覽卡以重點色外框持續標示。
 
 微放大是短暫點擊回饋；顏色外框持續表示目前選取的 Overlay Image。
+
+Badge 總寬超過 1120 px 的 Overlay Image 仍建立預覽，並顯示該張實際 Badge 總寬、1120 px 上限及請修改提示。Width Warning 不取代目前選取項目的重點色外框。
 
 ### 10.3 編輯關聯
 
@@ -413,12 +426,15 @@ JSON 必須完整保存下載當下工作區的所有內容，包括：
 ### 13.3 匯入暫存
 
 - 匯入格式為 JSON。
+- JSON Restore 採 Atomic Restore；必須先在暫存資料結構中完成完整驗證及正規化，全部成功後才一次替換目前工作區。
+- Restore 資料任一 Overlay Image 的 Badge 總寬超過 1120 px 時，拒絕整次還原；不還原部分資料，也不修改目前工作區。
 - 匯入後完全覆蓋目前工作區。
 - 不與目前資料合併。
 - 不追加 Overlay Image。
 - 不保留匯入前的修改。
+- JSON schema 與 version 不變；Width Warning 為執行期間衍生狀態，不保存於 JSON。
 
-流程固定為：清除目前工作區 → 依 JSON 完整還原全部 Overlay Image → 回到暫存檔下載當下的狀態。
+流程固定為：在暫存資料結構中完整驗證及正規化 → 全部通過後一次替換目前工作區 → 回到暫存檔下載當下的狀態。
 
 ---
 
@@ -433,6 +449,8 @@ JSON 必須完整保存下載當下工作區的所有內容，包括：
 - 320 × 320 PNG：72 dpi。
 - 320 × 320 由 1200 × 1200 自動縮小，不另外設計版型。
 - 每張 PNG 的檔名直接使用 Excel 的「編號」。
+- 匯出前必須驗證整個工作區；只要任一 Overlay Image 的 Badge 總寬超過 1120 px，必須在建立 ZIP、PNG 或 JSON 前阻止匯出。
+- 全部 Overlay Image 均修正至 1120 px 以內後，才可下載完整專案。
 
 ### 14.2 ZIP 命名
 
@@ -577,12 +595,13 @@ FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requiremen
 - 少於 3 個 Badge 時可依既定選項與欄位新增 Badge，總數不得超過 3。
 - 拖曳、刪除、新增與文字修改均即時更新對應預覽。
 - Badge 的尺寸、總寬、排列與順序符合共通規格。
+- 工作區編輯造成 Badge 總寬超過 1120 px 時，修改保留且 Preview／Editor 顯示 Warning；回到上限內時 Warning 立即消失。
 - Layout 呈現完整符合唯一正式 Layout 文件，且未加入猜測、轉換或共用規則。
 
 ### 18.3 暫存與還原
 
 - 下載產生的單一 JSON 包含全部 Overlay Image 及下載當下所有工作狀態。
-- 匯入 JSON 後完全覆蓋目前工作區，並完整還原至下載當下狀態。
+- 合法 JSON 通過 Atomic Restore 後完全覆蓋目前工作區，並完整還原至下載當下狀態；含有 Badge 總寬超過 1120 px 的 JSON 必須整次拒絕。
 
 ### 18.4 匯出
 
@@ -591,6 +610,7 @@ FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requiremen
 - 每張 Overlay Image 均輸出 1200 × 1200、72 dpi PNG。
 - 每張 Overlay Image 均由 1200 版本自動縮小輸出 320 × 320、72 dpi PNG。
 - 所有 PNG 直接以編號命名。
+- 任何超過 1120 px 的 Overlay Image 均在 ZIP、PNG、JSON 建立前阻止完整專案匯出；下載區逐項列出超規編號與實際寬度，全部修正後清單立即消失並可正常匯出。
 
 ### 18.5 重設與範圍
 
