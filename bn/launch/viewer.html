@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="zh-Hant" data-fss-bn-viewer="true">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>樣式 A－01_DDcard BN 校稿</title>
+    <style>
+      @font-face {
+        font-family: "ShopeeNotoSans Medium";
+        src: url("../../fonts/ShopeeNotoSans(content)-Medium.woff2") format("woff2");
+        font-display: block;
+        font-style: normal;
+        font-weight: 500;
+      }
+
+      @font-face {
+        font-family: "ShopeeNotoSans Bold";
+        src: url("../../fonts/ShopeeNotoSans(content)-Bold.woff2") format("woff2");
+        font-display: block;
+        font-style: normal;
+        font-weight: 700;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        color: #17211f;
+        background: #f3f5f4;
+        font-family: system-ui, sans-serif;
+      }
+
+      main {
+        display: flex;
+        align-items: flex-start;
+        gap: 24px;
+      }
+
+      .controls {
+        width: 320px;
+      }
+
+      h1 {
+        margin: 0 0 20px;
+        font-size: 22px;
+      }
+
+      label {
+        display: block;
+        margin: 0 0 16px;
+        font-weight: 600;
+      }
+
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 9px 10px;
+        border: 1px solid #aeb8b5;
+        border-radius: 4px;
+        background: #ffffff;
+        font: 16px system-ui, sans-serif;
+      }
+
+      .overlay-control {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .overlay-control input {
+        margin: 0;
+      }
+
+      .preview {
+        position: relative;
+        flex: 0 0 531px;
+        width: 531px;
+        height: 792px;
+      }
+
+      canvas,
+      .alignment-overlay {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 531px;
+        height: 792px;
+      }
+
+      .alignment-overlay {
+        pointer-events: none;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .load-error {
+        color: #b42318;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="controls" aria-label="A－01 測試文字">
+        <h1>樣式 A－01_DDcard BN</h1>
+
+        <label for="headline-input">
+          主標
+          <input id="headline-input" type="text" autocomplete="off" value="商城優選無限免運" disabled />
+        </label>
+
+        <label for="subheadline-input">
+          副標
+          <input id="subheadline-input" type="text" autocomplete="off" value="宅配免運$490起" disabled />
+        </label>
+
+        <label for="protection-input">
+          保護文字
+          <input id="protection-input" type="text" autocomplete="off" value="免運優惠須依店家適用之物流為主" disabled />
+        </label>
+
+        <label class="overlay-control" for="overlay-toggle">
+          <input id="overlay-toggle" type="checkbox" disabled />
+          顯示對位圖
+        </label>
+
+        <p id="load-error" class="load-error" role="alert" hidden></p>
+      </section>
+
+      <div class="preview" aria-label="A－01 正式 Canvas 預覽">
+        <canvas id="preview-canvas" width="531" height="792"></canvas>
+        <img
+          id="alignment-overlay"
+          class="alignment-overlay"
+          src="../assets/A/對位/01_DDcard BN.png"
+          width="531"
+          height="792"
+          alt=""
+          hidden
+        />
+      </div>
+    </main>
+
+    <script type="module">
+      import {
+        renderDdcardBn,
+        waitForDdcardBnFonts,
+      } from "../templates/A/01-ddcard-bn.js";
+
+      const parameters = new URLSearchParams(window.location.search);
+      if (
+        parameters.get("type") !== "A" ||
+        parameters.get("bn") !== "01_DDcard BN"
+      ) {
+        throw new Error("目前 BN Viewer 只支援樣式 A／01_DDcard BN。");
+      }
+
+      const fields = [
+        { id: "headline", input: document.querySelector("#headline-input"), limit: 8 },
+        { id: "subheadline", input: document.querySelector("#subheadline-input"), limit: 7 },
+        { id: "protectionText", input: document.querySelector("#protection-input"), limit: 17 },
+      ];
+      const canvas = document.querySelector("#preview-canvas");
+      const overlay = document.querySelector("#alignment-overlay");
+      const overlayToggle = document.querySelector("#overlay-toggle");
+      const loadError = document.querySelector("#load-error");
+      const state = Object.fromEntries(fields.map((field) => [field.id, field.input.value]));
+      let backgroundImage = null;
+
+      function countTextUnits(value) {
+        let units = 0;
+        for (const character of String(value || "")) {
+          units += character.codePointAt(0) <= 0x7f ? 0.5 : 1;
+        }
+        return units;
+      }
+
+      function loadImage(source, label) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.addEventListener("load", () => resolve(image), { once: true });
+          image.addEventListener(
+            "error",
+            () => reject(new Error(`${label}載入失敗。`)),
+            { once: true },
+          );
+          image.src = source;
+        });
+      }
+
+      function render() {
+        renderDdcardBn(canvas, backgroundImage, state);
+      }
+
+      function bindField(field) {
+        let isComposing = false;
+        let lastValidValue = field.input.value;
+        let skipTrailingInputValue = null;
+
+        const commit = () => {
+          if (countTextUnits(field.input.value) > field.limit) {
+            field.input.value = lastValidValue;
+            return;
+          }
+
+          lastValidValue = field.input.value;
+          state[field.id] = field.input.value;
+          render();
+        };
+
+        field.input.addEventListener("compositionstart", () => {
+          isComposing = true;
+          skipTrailingInputValue = null;
+        });
+
+        field.input.addEventListener("compositionend", () => {
+          isComposing = false;
+          commit();
+          skipTrailingInputValue = field.input.value;
+        });
+
+        field.input.addEventListener("input", (event) => {
+          if (isComposing || event.isComposing) return;
+          if (
+            skipTrailingInputValue !== null &&
+            field.input.value === skipTrailingInputValue
+          ) {
+            skipTrailingInputValue = null;
+            return;
+          }
+          skipTrailingInputValue = null;
+          commit();
+        });
+      }
+
+      overlayToggle.addEventListener("change", () => {
+        overlay.hidden = !overlayToggle.checked;
+      });
+
+      try {
+        const backgroundUrl = new URL(
+          "../assets/A/底圖/01_DDcard BN.jpg",
+          import.meta.url,
+        );
+        [backgroundImage] = await Promise.all([
+          loadImage(backgroundUrl.href, "A－01 正式底圖"),
+          waitForDdcardBnFonts(),
+          overlay.decode().then(() => {
+            if (overlay.naturalWidth !== 531 || overlay.naturalHeight !== 792) {
+              throw new Error("A－01 正式對位圖必須為 531 × 792px。");
+            }
+          }),
+        ]);
+
+        render();
+        fields.forEach((field) => {
+          bindField(field);
+          field.input.disabled = false;
+        });
+        overlayToggle.disabled = false;
+      } catch (error) {
+        loadError.textContent = error instanceof Error ? error.message : String(error);
+        loadError.hidden = false;
+        throw error;
+      }
+    </script>
+  </body>
+</html>
