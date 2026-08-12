@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#080d0f">
+    <title>FSS BN Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="module" src="js/app.js"></script>
+  </head>
+  <body>
+    <main id="type-view" class="type-view" aria-labelledby="type-title">
+      <header class="type-header">
+        <p class="eyebrow">FSS Generator</p>
+        <h1 id="type-title">選擇 BN 樣式</h1>
+        <p class="type-intro">選擇本次工作使用的樣式，進入共用 BN 控制台。</p>
+      </header>
+
+      <div class="type-grid" aria-label="BN 樣式">
+        <button class="type-card" type="button" data-type="A">
+          <img class="type-image" src="../assets/A.jpg" alt="">
+          <span>樣式 A</span>
+        </button>
+        <button class="type-card" type="button" data-type="B">
+          <img class="type-image" src="../assets/B.jpg" alt="">
+          <span>樣式 B</span>
+        </button>
+        <button class="type-card" type="button" data-type="C">
+          <img class="type-image" src="../assets/C.jpg" alt="">
+          <span>樣式 C</span>
+        </button>
+        <button class="type-card" type="button" data-type="D">
+          <img class="type-image" src="../assets/D.jpg" alt="">
+          <span>樣式 D</span>
+        </button>
+      </div>
+    </main>
+
+    <main id="console-view" class="console-view" hidden>
+      <aside class="bn-column" aria-labelledby="bn-list-title">
+        <header class="column-header">
+          <p class="eyebrow">FSS BN</p>
+          <h1 id="bn-list-title">BN 版位</h1>
+          <p id="current-type" class="current-type"></p>
+        </header>
+        <nav id="bn-list" class="bn-list" aria-label="17 個 BN 版位"></nav>
+      </aside>
+
+      <section class="preview-column" aria-labelledby="preview-title">
+        <header class="preview-header">
+          <div>
+            <p class="eyebrow">目前預覽</p>
+            <h2 id="preview-title">BN Preview</h2>
+          </div>
+        </header>
+        <div id="preview" class="preview" aria-live="polite"></div>
+      </section>
+
+      <aside class="control-column" aria-label="BN 控制中心">
+        <section class="control-card">
+          <h2>匯入資料</h2>
+          <button class="action-button" type="button" disabled>匯入工單 Excel</button>
+          <button class="action-button secondary" type="button" disabled>匯入暫存檔</button>
+          <p class="unavailable-note">第一輪尚未可用</p>
+        </section>
+
+        <section class="control-card editor-card" aria-labelledby="editor-title">
+          <p class="section-kicker">目前選取</p>
+          <h2 id="editor-title"></h2>
+          <div id="editor" class="editor"></div>
+        </section>
+
+        <section class="control-card actions-card">
+          <button class="action-button primary" type="button" disabled>下載完整專案</button>
+          <p class="unavailable-note">第一輪尚未可用</p>
+          <button id="reset-button" class="action-button danger" type="button">重設工作區域</button>
+        </section>
+      </aside>
+    </main>
+  </body>
+</html>
