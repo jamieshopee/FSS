@@ -479,9 +479,27 @@ FSS/
 
 - 正式 Excel Import Engine 與各 Type Excel Mapping
 - 正式 Workspace Data／JSON Schema 與暫存 Restore
-- 共用 17 個正式 BN Templates、正式 Canvas Layout 與 Type 專用底圖
+- A－01 以外的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
 - Type C 額外文字正式欄位與 Type D Logo
 - `17_門檻表` 手動 Editor
 - ZIP／正式圖片 Export
 
 控制台中的「匯入工單 Excel」、「匯入暫存檔」與「下載完整專案」目前為停用入口，不代表上述架構部分已完成。
+
+## 19. A－01 正式 Template 實際落地狀態
+
+樣式 A／`01_DDcard BN` 已完成正式 Template、薄 Launch 驗證入口及 Safari／Chrome 手動視覺驗證，Jamie 已回覆 PASS。Code Commit 為 `38dc62303277e4d0c301ef46b22740ad4675a114`（`feat(bn): add A01 DDcard template`）。
+
+本次實際落地檔案為：
+
+- `bn/templates/A/01-ddcard-bn.js`：A－01 唯一正式 renderer。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前只支援 A－01。
+- `bn/launch/A/01_DDcard BN.command`：A－01 專用直接啟動入口。
+- `bn/assets/A/底圖/01_DDcard BN.jpg`：A－01 正式 runtime 底圖。
+- `bn/assets/A/對位/01_DDcard BN.png`：只供 Launch 視覺校稿的正式對位圖。
+
+A－01 renderer 維持 531 × 792px 正式 Canvas 與三個 Locked 文字框，字級直接使用 Photoshop 原始 `pt`：主標 Medium 30pt、副標 Bold 45pt、`$`／`%` Bold 37pt、保護文字 Medium 18pt。主標與保護文字另以 2× local temporary Canvas rasterization 高品質縮回正式尺寸，僅調整 Medium 的 rasterization 視覺；不改字型、字級、顏色、opacity、文字框或座標，不使用 UA／瀏覽器分支或 `geometricPrecision`，也不影響 Bold 副標、`$`／`%`、底圖或其他內容。Chromium／Chrome 路線與 Safari 均已通過 Jamie 實際視覺驗證，主標與保護文字更接近 Photoshop 完成參考圖，未見明顯跨瀏覽器字重差異或副標等其他內容 regression。
+
+Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套 Generator 或正式控制台。Jamie 可直接雙擊 A－01 `.command`，不必先手動啟動根目錄 `啟動 FSS.command`；入口會確認或啟動 `127.0.0.1:4173`、開啟共用 Viewer 的 A－01 route，並沿用已存在的正確服務。遇到不相符的既有服務時會停止並提示，不自行切換 port 或終止程序。Viewer 提供 A－01 三欄測試文字、IME-safe、既有字數規則與超限 rollback，以及對位圖顯示／隱藏。
+
+既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01 正式 Template。A－02～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；A－01 目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
