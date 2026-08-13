@@ -190,9 +190,22 @@
         overlaySource = "../assets/A/對位/03_Coin page BN.png";
         renderTemplate = template.renderCoinPageBn;
         waitForFonts = template.waitForCoinPageBnFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "04_Loyalty BN"
+      ) {
+        const template = await import("../templates/A/04-loyalty-bn.js");
+        viewerTitle = "樣式 A－04_Loyalty BN";
+        viewerLabel = "A－04";
+        width = 702;
+        height = 208;
+        backgroundSource = "../assets/A/底圖/04_Loyalty BN.png";
+        overlaySource = "../assets/A/對位/04_Loyalty BN.png";
+        renderTemplate = template.renderLoyaltyBn;
+        waitForFonts = template.waitForLoyaltyBnFonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN 與 03_Coin page BN。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN 與 04_Loyalty BN。",
         );
       }
 
