@@ -77,9 +77,7 @@
 
       .preview {
         position: relative;
-        flex: 0 0 531px;
-        width: 531px;
-        height: 792px;
+        flex: 0 0 auto;
       }
 
       canvas,
@@ -87,8 +85,6 @@
         position: absolute;
         inset: 0;
         display: block;
-        width: 531px;
-        height: 792px;
       }
 
       .alignment-overlay {
@@ -107,8 +103,8 @@
   </head>
   <body>
     <main>
-      <section class="controls" aria-label="A－01 測試文字">
-        <h1>樣式 A－01_DDcard BN</h1>
+      <section id="controls" class="controls" aria-label="A－01 測試文字">
+        <h1 id="viewer-heading">樣式 A－01_DDcard BN</h1>
 
         <label for="headline-input">
           主標
@@ -133,14 +129,11 @@
         <p id="load-error" class="load-error" role="alert" hidden></p>
       </section>
 
-      <div class="preview" aria-label="A－01 正式 Canvas 預覽">
+      <div id="preview" class="preview" aria-label="A－01 正式 Canvas 預覽">
         <canvas id="preview-canvas" width="531" height="792"></canvas>
         <img
           id="alignment-overlay"
           class="alignment-overlay"
-          src="../assets/A/對位/01_DDcard BN.png"
-          width="531"
-          height="792"
           alt=""
           hidden
         />
@@ -148,26 +141,82 @@
     </main>
 
     <script type="module">
-      import {
-        renderDdcardBn,
-        waitForDdcardBnFonts,
-      } from "../templates/A/01-ddcard-bn.js";
-
       const parameters = new URLSearchParams(window.location.search);
+      let viewerTitle;
+      let viewerLabel;
+      let width;
+      let height;
+      let backgroundSource;
+      let overlaySource;
+      let renderTemplate;
+      let waitForFonts;
+
       if (
-        parameters.get("type") !== "A" ||
-        parameters.get("bn") !== "01_DDcard BN"
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "01_DDcard BN"
       ) {
-        throw new Error("目前 BN Viewer 只支援樣式 A／01_DDcard BN。");
+        const template = await import("../templates/A/01-ddcard-bn.js");
+        viewerTitle = "樣式 A－01_DDcard BN";
+        viewerLabel = "A－01";
+        width = 531;
+        height = 792;
+        backgroundSource = "../assets/A/底圖/01_DDcard BN.jpg";
+        overlaySource = "../assets/A/對位/01_DDcard BN.png";
+        renderTemplate = template.renderDdcardBn;
+        waitForFonts = template.waitForDdcardBnFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "02_MALL HBN"
+      ) {
+        const template = await import("../templates/A/02-mall-hbn.js");
+        viewerTitle = "樣式 A－02_MALL HBN";
+        viewerLabel = "A－02";
+        width = 1200;
+        height = 360;
+        backgroundSource = "../assets/A/底圖/02_MALL HBN.jpg";
+        overlaySource = "../assets/A/對位/02_MALL HBN.png";
+        renderTemplate = template.renderMallHbn;
+        waitForFonts = template.waitForMallHbnFonts;
+      } else {
+        throw new Error("目前 BN Viewer 只支援樣式 A／01_DDcard BN 與 02_MALL HBN。");
       }
+
+      if (
+        typeof renderTemplate !== "function" ||
+        typeof waitForFonts !== "function"
+      ) {
+        throw new Error(`${viewerLabel} Template module 不完整。`);
+      }
+
+      document.title = `${viewerTitle} 校稿`;
+      document.querySelector("#viewer-heading").textContent = viewerTitle;
+      document
+        .querySelector("#controls")
+        .setAttribute("aria-label", `${viewerLabel} 測試文字`);
+
+      const preview = document.querySelector("#preview");
+      preview.style.width = `${width}px`;
+      preview.style.height = `${height}px`;
+      preview.setAttribute("aria-label", `${viewerLabel} 正式 Canvas 預覽`);
+
+      const canvas = document.querySelector("#preview-canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+
+      const overlay = document.querySelector("#alignment-overlay");
+      overlay.src = new URL(overlaySource, import.meta.url).href;
+      overlay.width = width;
+      overlay.height = height;
+      overlay.style.width = `${width}px`;
+      overlay.style.height = `${height}px`;
 
       const fields = [
         { id: "headline", input: document.querySelector("#headline-input"), limit: 8 },
         { id: "subheadline", input: document.querySelector("#subheadline-input"), limit: 7 },
         { id: "protectionText", input: document.querySelector("#protection-input"), limit: 17 },
       ];
-      const canvas = document.querySelector("#preview-canvas");
-      const overlay = document.querySelector("#alignment-overlay");
       const overlayToggle = document.querySelector("#overlay-toggle");
       const loadError = document.querySelector("#load-error");
       const state = Object.fromEntries(fields.map((field) => [field.id, field.input.value]));
@@ -195,7 +244,7 @@
       }
 
       function render() {
-        renderDdcardBn(canvas, backgroundImage, state);
+        renderTemplate(canvas, backgroundImage, state);
       }
 
       function bindField(field) {
@@ -245,15 +294,20 @@
 
       try {
         const backgroundUrl = new URL(
-          "../assets/A/底圖/01_DDcard BN.jpg",
+          backgroundSource,
           import.meta.url,
         );
         [backgroundImage] = await Promise.all([
-          loadImage(backgroundUrl.href, "A－01 正式底圖"),
-          waitForDdcardBnFonts(),
+          loadImage(backgroundUrl.href, `${viewerLabel} 正式底圖`),
+          waitForFonts(),
           overlay.decode().then(() => {
-            if (overlay.naturalWidth !== 531 || overlay.naturalHeight !== 792) {
-              throw new Error("A－01 正式對位圖必須為 531 × 792px。");
+            if (
+              overlay.naturalWidth !== width ||
+              overlay.naturalHeight !== height
+            ) {
+              throw new Error(
+                `${viewerLabel} 正式對位圖必須為 ${width} × ${height}px。`,
+              );
             }
           }),
         ]);
