@@ -203,9 +203,22 @@
         overlaySource = "../assets/A/對位/04_Loyalty BN.png";
         renderTemplate = template.renderLoyaltyBn;
         waitForFonts = template.waitForLoyaltyBnFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "05_MSBN"
+      ) {
+        const template = await import("../templates/A/05-msbn.js");
+        viewerTitle = "樣式 A－05_MSBN";
+        viewerLabel = "A－05";
+        width = 1200;
+        height = 400;
+        backgroundSource = "../assets/A/底圖/05_MSBN.png";
+        overlaySource = "../assets/A/對位/05_MSBN.png";
+        renderTemplate = template.renderMsbn;
+        waitForFonts = template.waitForMsbnFonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN 與 04_Loyalty BN。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN 與 05_MSBN。",
         );
       }
 
