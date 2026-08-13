@@ -479,7 +479,7 @@ FSS/
 
 - 正式 Excel Import Engine 與各 Type Excel Mapping
 - 正式 Workspace Data／JSON Schema 與暫存 Restore
-- A－04～17、B／C／D 的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
+- A－05～17、B／C／D 的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
 - Type C 額外文字正式欄位與 Type D Logo
 - `17_門檻表` 手動 Editor
 - ZIP／正式圖片 Export
@@ -493,7 +493,7 @@ FSS/
 本次實際落地檔案為：
 
 - `bn/templates/A/01-ddcard-bn.js`：A－01 唯一正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03、A－04。
 - `bn/launch/A/01_DDcard BN.command`：A－01 專用直接啟動入口。
 - `bn/assets/A/底圖/01_DDcard BN.jpg`：A－01 正式 runtime 底圖。
 - `bn/assets/A/對位/01_DDcard BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -502,7 +502,7 @@ A－01 renderer 維持 531 × 792px 正式 Canvas 與三個 Locked 文字框，�
 
 Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套 Generator 或正式控制台。Jamie 可直接雙擊 A－01 `.command`，不必先手動啟動根目錄 `啟動 FSS.command`；入口會確認或啟動 `127.0.0.1:4173`、開啟共用 Viewer 的 A－01 route，並沿用已存在的正確服務。遇到不相符的既有服務時會停止並提示，不自行切換 port 或終止程序。Viewer 提供 A－01 三欄測試文字、IME-safe、既有字數規則與超限 rollback，以及對位圖顯示／隱藏。
 
-既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01、A－02、A－03 正式 Template。A－04～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
+既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01～04 正式 Template。A－05～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
 
 ## 20. A－02 正式 Template 實際落地狀態
 
@@ -511,7 +511,7 @@ Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套
 本次實際落地檔案為：
 
 - `bn/templates/A/02-mall-hbn.js`：A－02 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03 route。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03、A－04 route。
 - `bn/launch/A/02_MALL HBN.command`：A－02 專用直接啟動入口，維持 executable mode。
 - `bn/assets/A/底圖/02_MALL HBN.jpg`：A－02 正式 runtime 底圖。
 - `bn/assets/A/對位/02_MALL HBN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -520,7 +520,7 @@ A－02 renderer 維持 1200 × 360px 正式 Canvas。三個文字框均靠左，
 
 字級直接使用 Photoshop 原始 `pt`：主標 Medium 30pt、副標 Bold 45pt、`$`／`%` Bold 37pt、保護文字 Medium 18pt。主標與保護文字經實際 Investigation 後採 A－02 local 2× temporary Canvas rasterization，再高品質縮回正式尺寸；底圖、Bold 副標及 `$`／`%` 仍在正式 Canvas 以 1× 繪製。此方法是 A－02 經實際驗證的版位特定 workaround，不構成所有 BN、所有 Medium 或其他 Type 的全域規則。
 
-A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%20HBN`。Viewer 的 A－02 Canvas／Preview／overlay 為 1200 × 360；對位 PNG 使用原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。三個測試 input 沿用 IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限與超限 rollback。Viewer 仍只是開發／校稿工具，不是第二套 Generator，既有控制台仍未正式接入 A－01、A－02、A－03 renderer。
+A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%20HBN`。Viewer 的 A－02 Canvas／Preview／overlay 為 1200 × 360；對位 PNG 使用原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。三個測試 input 沿用 IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限與超限 rollback。Viewer 仍只是開發／校稿工具，不是第二套 Generator，既有控制台仍未正式接入 A－01～04 renderer。
 
 ## 21. A－03 正式 Template 實際落地狀態
 
@@ -529,7 +529,7 @@ A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%
 本次實際落地檔案為：
 
 - `bn/templates/A/03-coin-page-bn.js`：A－03 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03 route。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02、A－03、A－04 route。
 - `bn/launch/A/03_Coin page BN.command`：A－03 直接啟動入口，使用既有 `127.0.0.1:4173` 流程且 Git mode 為 `100755`。
 - `bn/assets/A/底圖/03_Coin page BN.jpg`：A－03 正式 runtime 底圖。
 - `bn/assets/A/對位/03_Coin page BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -538,10 +538,34 @@ A－03 正式 Canvas 為 1200 × 391px。三個文字框均靠左並共同使用
 
 文字字級直接使用 Photoshop 原始 `pt`：主標 Medium 37pt、副標 Bold 50pt、同一副標欄位中的 `$`／`%` Bold 40pt、保護文字 Medium 21pt。三組文字不水平置中、不垂直置中；字數限制沿用 8／7／17，ASCII = 0.5、非 ASCII = 1。
 
-Jamie 在 A－03 Phase 3／Phase 4 前已批准第一版正式 Coding 直接採版位內 local 2× Medium rendering。Renderer 建立 2400 × 782 temporary Canvas，只讓 Medium 37pt 主標與 Medium 21pt 保護文字經 2× rasterization 及 high-quality downsample；正式底圖、Bold 50pt 副標與 Bold 40pt `$`／`%` 維持正式 1×。此行為不改正式 pt、座標、frame、actual metrics、baseline、advance width、glyph geometry、顏色或 opacity，且只屬 A－03 已驗證行為，不是所有 BN、所有 Medium、A－04～17 或 B／C／D 的全域規則。
+Jamie 在 A－03 Phase 3／Phase 4 前已批准第一版正式 Coding 直接採版位內 local 2× Medium rendering。Renderer 建立 2400 × 782 temporary Canvas，只讓 Medium 37pt 主標與 Medium 21pt 保護文字經 2× rasterization 及 high-quality downsample；正式底圖、Bold 50pt 副標與 Bold 40pt `$`／`%` 維持正式 1×。此行為不改正式 pt、座標、frame、actual metrics、baseline、advance width、glyph geometry、顏色或 opacity，且只屬 A－03 已驗證行為，不是所有 BN、所有 Medium、A－05～17 或 B／C／D 的全域規則。A－04 採用同型方法是經其獨立 Investigation 與 Jamie 批准，不是自動套用 A－03。
 
 Phase 5 實測保護文字 actual ink height 約 26.124px，相對 25px frame 約多 1.124px；renderer 沒有縮字、修改 `top`／`height`、增加 baseline offset 或其他 workaround。Jamie 已透過 Chrome／Safari 肉眼驗證接受並正式 PASS，因此這是已驗證接受的實際 Canvas metrics 差異，不是未解阻擋，正式 frame height 仍為 25px。
 
 A－03 route 為 `viewer.html?type=A&bn=03_Coin%20page%20BN`。Canvas、Preview 與對位 overlay 均為 1200 × 391；對位 PNG 以原始 Alpha、同原點及原尺寸 1:1 疊加。Viewer 沿用三個測試 input、即時更新、IME-safe、字數限制、超限 rollback 與 overlay toggle，仍只是開發／校稿工具。Phase 5、正式對位、三組 `left: 92px`、local 2× Medium、Bold mixed runs、Chromium／Chrome、Jamie Chrome／Safari，以及 A－01／A－02 regression 均 PASS；Code Commit 前 `git diff --check` PASS。
 
-目前正式完成的樣式 A Template 為 A－01、A－02、A－03。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這三個 renderer；A－04～17 與 B／C／D 仍未落地。
+## 22. A－04 正式 Template 實際落地狀態
+
+樣式 A／`04_Loyalty BN` 已完成獨立正式 renderer、共用薄 Viewer 的 A－04 route、直接 Launch、正式 runtime assets、Phase 5 AI 自我驗證及 Jamie Chrome／Safari 手動驗證。Code Commit 為 `2ff78e993a714ef420229f6816fe078bdbe43677`（`feat(bn): add A04 Loyalty BN template`）。
+
+Code Commit 精確包含：
+
+- `bn/templates/A/04-loyalty-bn.js`：A－04 獨立正式 renderer。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－04 route，現支援 A－01～04。
+- `bn/launch/A/04_Loyalty BN.command`：A－04 直接啟動入口，Git mode 為 `100755`。
+- `bn/assets/A/底圖/04_Loyalty BN.png`：A－04 正式 runtime 底圖。
+- `bn/assets/A/對位/04_Loyalty BN.png`：只供 Launch 視覺校稿的正式對位圖。
+
+A－04 正式 Canvas 為 702 × 208px。三個 runtime frame 均靠左並共同使用 `left: 32px`：主標 `32,52,245,30`、副標 `32,88,350,45`、保護文字 `32,139,350,16`。原始 Photoshop 工作區座標為主標 `834,139,245,30`、副標 `834,175,350,45`、保護文字 `834,226,350,16`；Phase 2 依正式對位 PNG Alpha component 確認其一致 local 轉換為 `xLocal = xPhotoshop - 802`、`yLocal = yPhotoshop - 87`，因此 `834px` 不是 runtime `left`。
+
+字級直接使用 Photoshop 原始 `pt`：主標 Medium 24pt、副標 Bold 35pt、同一副標欄位中的 `$`／`%` Bold 30pt、保護文字 Medium 12pt；顏色依序為 `#ffffff`、`#fff285`、`#fff285`、`#a6f4e6`，文字 opacity 均為 100%。Renderer 使用 actual bounding metrics、靠左 ink positioning 與 frame validation，正式 compositing 為 `globalAlpha = 1`、`source-over`；不使用水平／垂直置中、固定 offset、自動縮字、換行、裁切、字距補償或 scale-to-fit。
+
+Jamie 在 A－04 第一版 Phase 3／4 前已批准版位 local 2× Medium rendering。Renderer 建立 1404 × 416 temporary Canvas，只讓 Medium 24pt 主標與 Medium 12pt 保護文字經 2× rasterization 及 high-quality smoothing 縮回正式 702 × 208；正式底圖、Bold 35pt 副標與 Bold 30pt `$`／`%` 維持正式 1×。此行為不改正式 pt、frame、座標、metrics、baseline、advance、glyph geometry、顏色或 opacity，只屬 A－04 經獨立調查、批准及驗證的版位特定行為，不是所有 BN、所有 Medium 或其他 Type 的 shared／global 規則。
+
+A－04 route 為 `viewer.html?type=A&bn=04_Loyalty%20BN`。Canvas、Preview 與 overlay 均為 702 × 208；對位 PNG 以原始 Alpha、同原點、原尺寸 1:1、CSS opacity 1 疊加，不合成進正式 Canvas。Viewer 沿用三個 input、即時 render、IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限、超限 rollback 與 overlay toggle。
+
+A－04 `.command` 固定使用 `127.0.0.1:4173`。正確 Viewer service 已存在時沿用；遇到不相符的外部 service 時停止提示，不換 port、不 kill 外部 process，且只停止自己啟動的 server。
+
+A－04 Phase 5 AI、正式對位 PNG 1:1、Chromium／Chrome、Medium 24pt／12pt 最終粗細與銳利度、Bold mixed `$`／`%`、輸入限制與 rollback，以及 A－01～03 regression 均 PASS；Jamie Chrome／Safari 手動驗證 PASS。Code Commit 前與 Commit 後 whitespace check 均 PASS。
+
+目前正式完成的樣式 A Template 為 A－01～04。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這四個 renderer；A－05～17 與 B／C／D 仍未落地。此現況不建立 Registry、Framework、shared/common/base renderer，也不改變既有共用 Generator 架構邊界。
