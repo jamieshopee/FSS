@@ -479,7 +479,7 @@ FSS/
 
 - 正式 Excel Import Engine 與各 Type Excel Mapping
 - 正式 Workspace Data／JSON Schema 與暫存 Restore
-- A－01 以外的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
+- A－03～17、B／C／D 的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
 - Type C 額外文字正式欄位與 Type D Logo
 - `17_門檻表` 手動 Editor
 - ZIP／正式圖片 Export
@@ -493,7 +493,7 @@ FSS/
 本次實際落地檔案為：
 
 - `bn/templates/A/01-ddcard-bn.js`：A－01 唯一正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前只支援 A－01。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01、A－02。
 - `bn/launch/A/01_DDcard BN.command`：A－01 專用直接啟動入口。
 - `bn/assets/A/底圖/01_DDcard BN.jpg`：A－01 正式 runtime 底圖。
 - `bn/assets/A/對位/01_DDcard BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -502,4 +502,22 @@ A－01 renderer 維持 531 × 792px 正式 Canvas 與三個 Locked 文字框，�
 
 Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套 Generator 或正式控制台。Jamie 可直接雙擊 A－01 `.command`，不必先手動啟動根目錄 `啟動 FSS.command`；入口會確認或啟動 `127.0.0.1:4173`、開啟共用 Viewer 的 A－01 route，並沿用已存在的正確服務。遇到不相符的既有服務時會停止並提示，不自行切換 port 或終止程序。Viewer 提供 A－01 三欄測試文字、IME-safe、既有字數規則與超限 rollback，以及對位圖顯示／隱藏。
 
-既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01 正式 Template。A－02～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；A－01 目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
+既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01、A－02 正式 Template。A－03～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
+
+## 20. A－02 正式 Template 實際落地狀態
+
+樣式 A／`02_MALL HBN` 已完成獨立正式 renderer、共用薄 Viewer 的 A－02 route、直接 Launch、正式 runtime assets，以及 Phase 5 AI 與 Jamie Chrome／Safari 手動視覺驗證。Code Commit 為 `7fea431dbf1ea769ae383f51d2547ef083578545`（`feat(bn): add A02 MALL HBN template`）。
+
+本次實際落地檔案為：
+
+- `bn/templates/A/02-mall-hbn.js`：A－02 獨立正式 renderer。
+- `bn/launch/viewer.html`：共用薄 Viewer，保留 A－01 並最小增加 A－02 route。
+- `bn/launch/A/02_MALL HBN.command`：A－02 專用直接啟動入口，維持 executable mode。
+- `bn/assets/A/底圖/02_MALL HBN.jpg`：A－02 正式 runtime 底圖。
+- `bn/assets/A/對位/02_MALL HBN.png`：只供 Launch 視覺校稿的正式對位圖。
+
+A－02 renderer 維持 1200 × 360px 正式 Canvas。三個文字框均靠左，正式座標分別為主標 `98,153,351,37`、副標 `98,200,445,57`、保護文字 `98,273,445,22`。最初 Photoshop CSS 的 `left: 693px` 已由 Jamie 依正式對位 PNG 與 Photoshop 完成參考圖批准更正為 `98px`，不得再作為正式座標。
+
+字級直接使用 Photoshop 原始 `pt`：主標 Medium 30pt、副標 Bold 45pt、`$`／`%` Bold 37pt、保護文字 Medium 18pt。主標與保護文字經實際 Investigation 後採 A－02 local 2× temporary Canvas rasterization，再高品質縮回正式尺寸；底圖、Bold 副標及 `$`／`%` 仍在正式 Canvas 以 1× 繪製。此方法是 A－02 經實際驗證的版位特定 workaround，不構成所有 BN、所有 Medium 或其他 Type 的全域規則。
+
+A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%20HBN`。Viewer 的 A－02 Canvas／Preview／overlay 為 1200 × 360；對位 PNG 使用原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。三個測試 input 沿用 IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限與超限 rollback。Viewer 仍只是開發／校稿工具，不是第二套 Generator，既有控制台仍未正式接入 A－01、A－02 renderer。
