@@ -177,8 +177,23 @@
         overlaySource = "../assets/A/對位/02_MALL HBN.png";
         renderTemplate = template.renderMallHbn;
         waitForFonts = template.waitForMallHbnFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "03_Coin page BN"
+      ) {
+        const template = await import("../templates/A/03-coin-page-bn.js");
+        viewerTitle = "樣式 A－03_Coin page BN";
+        viewerLabel = "A－03";
+        width = 1200;
+        height = 391;
+        backgroundSource = "../assets/A/底圖/03_Coin page BN.jpg";
+        overlaySource = "../assets/A/對位/03_Coin page BN.png";
+        renderTemplate = template.renderCoinPageBn;
+        waitForFonts = template.waitForCoinPageBnFonts;
       } else {
-        throw new Error("目前 BN Viewer 只支援樣式 A／01_DDcard BN 與 02_MALL HBN。");
+        throw new Error(
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN 與 03_Coin page BN。",
+        );
       }
 
       if (
