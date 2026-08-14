@@ -255,9 +255,22 @@
         overlaySource = "../assets/A/對位/08_SPX TVBN_1.png";
         renderTemplate = template.renderSpxTvbn1;
         waitForFonts = template.waitForSpxTvbn1Fonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "09_SPX TVBN_2"
+      ) {
+        const template = await import("../templates/A/09-spx-tvbn-2.js");
+        viewerTitle = "樣式 A－09_SPX TVBN_2";
+        viewerLabel = "A－09";
+        width = 1599;
+        height = 1080;
+        backgroundSource = "../assets/A/底圖/09_SPX TVBN_2.jpg";
+        overlaySource = "../assets/A/對位/09_SPX TVBN_2.png";
+        renderTemplate = template.renderSpxTvbn2;
+        waitForFonts = template.waitForSpxTvbn2Fonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST 與 08_SPX TVBN_1。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1 與 09_SPX TVBN_2。",
         );
       }
 
