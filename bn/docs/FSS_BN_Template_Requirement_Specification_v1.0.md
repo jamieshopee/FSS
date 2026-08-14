@@ -4,7 +4,7 @@
 >
 > 文件範圍：固定 17 個正式 BN Templates 與 A／B／C／D Type 真正存在的差異
 >
-> 狀態：A－01、A－02、A－03、A－04、A－05、A－06、A－07 已完成並經 Jamie 手動驗證 PASS；其他版位依確認狀態追加
+> 狀態：A－01、A－02、A－03、A－04、A－05、A－06、A－07、A－08 已完成並經 Jamie 手動驗證 PASS；其他版位依確認狀態追加
 >
 > 整理日期：2026-08-12
 >
@@ -19,6 +19,10 @@
 > A－05 落地狀態同步日期：2026-08-13
 >
 > A－06 落地狀態同步日期：2026-08-14
+>
+> A－07 落地狀態同步日期：2026-08-14
+>
+> A－08 落地狀態同步日期：2026-08-14
 
 ## 1. 文件目的
 
@@ -48,18 +52,18 @@
 
 目前已確認並納入完整 Requirement 的對象為：
 
-> 樣式 A／內部 Type A 的正式 `01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG` 與 `07_FB POST` Template。
+> 樣式 A／內部 Type A 的正式 `01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST` 與 `08_SPX TVBN_1` Template。
 
 目前只定義：
 
-- A－01、A－02、A－03、A－04、A－05、A－06、A－07 的正式版位與視覺規格。
-- A－01、A－02、A－03、A－04、A－05、A－06、A－07 正式 Template 使用底圖與對位圖的需求。
-- A－01、A－02、A－03、A－04、A－05、A－06、A－07 透過 `bn/launch/A/` 對應入口直接查看與進行視覺驗證的產品需求。
+- A－01～08 的正式版位與視覺規格。
+- A－01～08 正式 Template 使用底圖與對位圖的需求。
+- A－01～08 透過 `bn/launch/A/` 對應入口直接查看與進行視覺驗證的產品需求。
 - 既有 BN 控制台維持不變、正式 Template 接入控制台移至後續獨立開發階段的邊界。
 
-目前不處理 A－08～17、樣式 B／C／D 或其他生成器功能，也不為它們建立空章節、TODO、placeholder 或未確認規格表格。
+目前不處理 A－09～17、樣式 B／C／D 或其他生成器功能，也不為它們建立空章節、TODO、placeholder 或未確認規格表格。
 
-正式 BN Template 採逐樣式、逐版位製作與驗證；目前已完成「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」與「樣式 A → `07_FB POST`」。後續版位仍須由 Jamie 逐一確認，不因 A－01～07 完成而預填或製作其他版位。
+正式 BN Template 採逐樣式、逐版位製作與驗證；目前已完成「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」、「樣式 A → `07_FB POST`」與「樣式 A → `08_SPX TVBN_1`」。後續版位仍須由 Jamie 逐一確認，不因 A－01～08 完成而預填或製作其他版位。
 
 ## 3. 既有 Locked 架構
 
@@ -267,7 +271,7 @@ A－01 是第一個已完成的正式 BN Template。Jamie 已完成 Safari／Chr
 
 A－01 `.command` 可由 Jamie 直接雙擊，不必先手動啟動根目錄 `啟動 FSS.command`；它會確認或啟動 `127.0.0.1:4173` 並開啟共用 Viewer 的 A－01 route。正確服務已存在時沿用，若該 port 是不相符的服務則停止並提示，不自行改 port，也不終止既有程序。Launch Viewer 提供三欄測試文字即時編輯、IME-safe、ASCII 0.5／非 ASCII 1 計數、超限 rollback，以及正式對位圖顯示／隱藏；A－02、A－03、A－04、A－05、A－06、A－07 亦沿用這些共用薄校稿能力。
 
-既有 BN 控制台仍維持 placeholder Preview，尚未接入 A－01～07 正式 Template。A－08～17 與 B／C／D 均未製作；目前的 Type A 路徑與 Viewer 實作不預先決定其他 Type 的 Template 共用方式，也不建立 Registry、Framework 或未經確認的抽象化。
+既有 BN 控制台仍維持 placeholder Preview，尚未接入 A－01～08 正式 Template。A－09～17 與 B／C／D 均未製作；目前的 Type A 路徑與 Viewer 實作不預先決定其他 Type 的 Template 共用方式，也不建立 Registry、Framework 或未經確認的抽象化。
 
 #### 5.1.2 `02_MALL HBN`
 
@@ -401,7 +405,7 @@ A－03 使用共用薄校稿頁 `bn/launch/viewer.html`。Route 為 `type=A&bn=0
 
 Viewer 的 A－03 Canvas、Preview 與 overlay 均為 1200 × 391；對位 PNG 使用原始 Alpha、相同原點及原尺寸 1:1 疊加，不額外設定 opacity、不 Resize、不位移，也不合成進正式 Canvas。三個測試 input 沿用即時更新、IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限、超限 rollback 與 overlay toggle。
 
-A－03 `.command` 沿用既有 `127.0.0.1:4173` Launch 流程，開啟上述 route，Git executable mode 為 `100755`。Viewer 仍是共用薄校稿工具，不是第二套 Generator；既有正式 BN 控制台尚未接入 A－01～07 renderer。
+A－03 `.command` 沿用既有 `127.0.0.1:4173` Launch 流程，開啟上述 route，Git executable mode 為 `100755`。Viewer 仍是共用薄校稿工具，不是第二套 Generator；既有正式 BN 控制台尚未接入 A－01～08 renderer。
 
 ##### 5.1.3.7 正式落地與驗證狀態
 
@@ -735,6 +739,90 @@ Code Commit 是在 Jamie Chrome／Safari 手動 PASS 後建立，Hash 為 `0a0b2
 - `bn/assets/A/底圖/07_FB POST.jpg`
 - `bn/assets/A/對位/07_FB POST.png`
 
+#### 5.1.8 `08_SPX TVBN_1`
+
+##### 5.1.8.1 正式版位規格
+
+| 項目 | 正式需求 |
+|---|---|
+| 正式名稱 | `08_SPX TVBN_1` |
+| 樣式／內部 Type | 樣式 A／Type A |
+| 分類 | 主視覺 Resize |
+| Canvas | 1080 × 1920px |
+| 正式 renderer | `bn/templates/A/08-spx-tvbn-1.js` |
+| 共用 Viewer | `bn/launch/viewer.html` |
+| 直接 Launch | `bn/launch/A/08_SPX TVBN_1.command` |
+| 正式底圖 | `bn/assets/A/底圖/08_SPX TVBN_1.jpg`，intrinsic 1080 × 1920px |
+| 正式對位圖 | `bn/assets/A/對位/08_SPX TVBN_1.png`，1080 × 1920px RGBA |
+
+正式 JPEG 底圖只以 `x: 0px; y: 0px; width: 1080px; height: 1920px` 原尺寸 1:1、正式 1× 繪製，不 Resize、不 Stretch、不 Crop、不補邊、不 Scale-to-fit，也不加入 placement offset。正式對位 PNG 只供 Viewer 校稿，使用原始 Alpha、相同原點及 1080 × 1920 原尺寸 1:1 疊加，CSS opacity 為 1，不合成進正式 Canvas。
+
+##### 5.1.8.2 文字需求與定位
+
+| 欄位 | 字型／字重 | 字級 | 顏色 | 正式 runtime frame | 對齊 | 字數上限 |
+|---|---|---|---|---|---|---|
+| 主標 | `ShopeeNotoSans(content)-Medium` | 70pt | `#ffffff` | `left: 167px; top: 507px; width: 745px; height: 87px` | 完整 actual ink bbox 水平＋垂直置中 | 8 |
+| 副標一般文字 | `ShopeeNotoSans(content)-Bold` | 90pt | `#fff285` | `left: 94px; top: 619px; width: 890px; height: 114px` | mixed-run group 完整 actual ink bbox 水平＋垂直置中 | 7 |
+| 副標 `$`／`%` | `ShopeeNotoSans(content)-Bold` | 75pt | `#fff285` | 同一副標文字框 | 同一 mixed-run group | 同副標欄位 |
+| 保護文字 | `ShopeeNotoSans(content)-Medium` | 40pt | `#a6f4e6` | `left: 94px; top: 759px; width: 890px; height: 51px` | 完整 actual ink bbox 水平＋垂直置中 | 17 |
+
+三組文字均為 100% opacity。Renderer 使用 `measureText()` 的 `actualBoundingBoxLeft`、`actualBoundingBoxRight`、`actualBoundingBoxAscent` 與 `actualBoundingBoxDescent` 計算完整 actual ink bbox，將完整 bbox 水平及垂直置中於正式 frame；不使用單純 `textAlign: center`、固定 baseline、top-left positioning 或 fixed offset 取代 actual ink 計算。
+
+Canvas 2D `font` 直接使用 Photoshop 原始 `70pt`、`90pt`、`75pt` 與 `40pt`，不建立人工 `pt → px` 換算規則。
+
+副標 ordinary text 與 `$`／`%` 先 token 化，ordinary 使用 Bold 90pt、symbols 使用 Bold 75pt，依 advance width 排成連續 mixed-run group。Symbols 使用相鄰 ordinary glyph actual ink-bottom baseline 邏輯；所有 runs 合併為完整 actual ink bbox 後，將整組水平＋垂直置中，再逐 run 繪製。`$`／`%` 不是獨立 Editor 欄位，不使用 fixed symbol offset、字距補償、自動縮字、換行或裁切。
+
+##### 5.1.8.3 Photoshop 工作區座標與 runtime local frame
+
+A－08 原始 Photoshop 工作區 frame 為主標 `1047,507,745,87`、副標 `974,619,890,114`、保護文字 `974,759,890,51`。Phase 2 依正式對位 PNG Alpha components 確認一致轉換：
+
+- `xLocal = xPhotoshop - 880`
+- `yLocal = yPhotoshop`
+
+因此 renderer 只使用正式 runtime local frame：主標 `167,507,745,87`、副標 `94,619,890,114`、保護文字 `94,759,890,51`；Photoshop 工作區原始座標不得作為 runtime frame。
+
+##### 5.1.8.4 A－08 local Medium 2× rendering
+
+A－08 經自身 Phase 1／2、Phase 3 Proposal 與 Jamie 批准，從第一版正式 Coding 採版位內 local `MEDIUM_RENDER_SCALE = 2`。Renderer 建立 2160 × 3840 transparent temporary Canvas，context 使用 `scale(2, 2)`，只將 Medium 70pt 主標與 Medium 40pt 保護文字依原始 pt、正式 runtime frames 及相同完整 actual ink bbox 水平＋垂直置中邏輯繪製，再以 `imageSmoothingEnabled = true`、`imageSmoothingQuality = "high"` high-quality downsample 回正式 1080 × 1920 Canvas。
+
+正式 JPEG 底圖、Bold 90pt ordinary subtitle 與 Bold 75pt `$`／`%` 均維持正式 1×。正式繪製順序是底圖 1×、transparent Medium layer 2× 縮回合成、Bold mixed subtitle 1×。2× 不改變正式 pt、frame、座標、metrics、baseline、advance width、glyph geometry、顏色或 opacity。這是 A－08 經獨立調查、批准及 Chrome／Safari 驗證 PASS 的版位特定 rendering 行為，不是所有 BN、所有 Medium 或其他 Type 的 shared／global 規則，也不因此建立 shared helper 或 base renderer。
+
+##### 5.1.8.5 Renderer validation 與 compositing
+
+Renderer 使用 actual bounding metrics 計算三組完整 ink bbox，並回傳 ink width、height、left、top、right、bottom、`fitsWidth` 與 `fitsHeight`。正式 compositing 維持 `globalAlpha = 1` 與 `source-over`。Renderer 不使用 fixed offset、字距補償、自動縮字、換行、裁切或 scale-to-fit。
+
+##### 5.1.8.6 對位 PNG 額外 Alpha component 與已接受差異
+
+正式對位 PNG 除三個文字 frame 外，另有 `(147,364)–(932,476)`、尺寸 785 × 112 的 Alpha component。該 component 只屬正式 overlay 校稿內容，維持原圖不變；它不是第四個文字欄位，不建立第四個 input、Editor field、runtime frame 或 renderer layer。
+
+保護文字正式 frame 維持 `94,759,890,51`；正式對位 PNG 的高 Alpha component 為 `(94,760)–(984,810)`、尺寸 890 × 50。這個 1px 差異沒有被改寫成 frame、offset、baseline 或其他 workaround。Jamie 已在 Chrome／Safari 實際視覺驗證後接受並明確 PASS；它是已知且已接受的校稿差異，不是 unresolved blocker。
+
+##### 5.1.8.7 Launch／Viewer
+
+A－08 使用共用薄校稿頁 `bn/launch/viewer.html`，route 為：
+
+`viewer.html?type=A&bn=08_SPX%20TVBN_1`
+
+`URLSearchParams` 解碼後為 `type=A`、`bn=08_SPX TVBN_1`。Viewer 載入 `../templates/A/08-spx-tvbn-1.js`；Canvas、Preview 與 overlay 均為 1080 × 1920，底圖為 `../assets/A/底圖/08_SPX TVBN_1.jpg`，對位圖為 `../assets/A/對位/08_SPX TVBN_1.png`。正式對位圖使用原始 Alpha、同原點、原尺寸 1:1、CSS opacity 1 疊加，不合成進正式 Canvas。
+
+Viewer 沿用三個測試 input、合法內容即時 render、IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限、超限 rollback、overlay toggle、dynamic dimensions，以及圖片 decode／intrinsic dimension guard。
+
+A－08 `.command` 開啟 `http://127.0.0.1:4173/bn/launch/viewer.html?type=A&bn=08_SPX%20TVBN_1`。正確 Viewer service 已存在時沿用；遇到不相符的外部 service 占用固定 port 4173 時停止提示，不換 port、不 kill 外部 process，必要時使用 `/usr/bin/python3 -m http.server`，且只停止自己啟動的 server。Filesystem permission 為 755，Code Commit 中 Git executable mode 為 `100755`。
+
+##### 5.1.8.8 正式落地與驗證狀態
+
+Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片 dimensions／Alpha components、定位公式、local 2× 分層、mixed-run 結構、frame-fit validation、deterministic mock、A－01～07 靜態 regression、whitespace 與 Git Scope 等當時環境可執行的靜態／模擬驗證。因 Chrome extension／native host 當時不可用，Codex 沒有取得或宣稱真實 Chrome Canvas ShopeeNotoSans font metrics、Console、overlay／Photoshop 視覺、Medium rasterization 或真實 mixed baseline PASS；mock metrics 不是 Browser actual font metrics。
+
+之後 Jamie 已由 Finder 雙擊 A－08 `.command`，在 Chrome／Safari 完成真實 Canvas、overlay、文字定位、Medium 70pt／40pt 粗細與銳利度、Bold 90pt／75pt mixed baseline、不同位置的 `$`／`%`、已知 1px 對位差異、輸入限制／rollback、中文 IME、Console 與 A－01～07 regression 的人工驗證，並明確回覆 PASS。因此 A－08 已完成並通過人工驗收，不是 unresolved blocker。
+
+Code Commit 是在 Jamie Chrome／Safari 手動 PASS 後建立，Hash 為 `feb2a5b38952b365f1c84daf768dd762f147316d`（`feat(bn): add A08 SPX TVBN 1 template`），`git diff --check HEAD^ HEAD` PASS，精確包含：
+
+- `bn/templates/A/08-spx-tvbn-1.js`
+- `bn/launch/viewer.html`
+- `bn/launch/A/08_SPX TVBN_1.command`（Git mode `100755`）
+- `bn/assets/A/底圖/08_SPX TVBN_1.jpg`
+- `bn/assets/A/對位/08_SPX TVBN_1.png`
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：
@@ -752,13 +840,13 @@ bn/
 
 `bn/launch/` 的用途只限正式 BN Template 的開發／視覺驗證入口。Launch 只負責讓指定 Type 與 BN 版位可以直接開啟及查看；它不是第二套 Generator、第二套 Template 系統、四套獨立正式 Template 實作或 68 份互相複製的正式 Layout 程式。Launch 必須呈現共用正式 Template 系統中的同一份正式 Template，不得複製正式 Template 程式。
 
-Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～07 Launch 只提供三個測試文字欄位、即時 Canvas 更新及對位圖顯示／隱藏；不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
+Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～08 Launch 只提供三個測試文字欄位、即時 Canvas 更新及對位圖顯示／隱藏；不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
 
-目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG` 與 `07_FB POST` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
+目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST` 與 `08_SPX TVBN_1` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
 
 Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query parameter、wrapper、共用 viewer 或其他技術形式，也不建立任何 Launch 檔案。具體方式必須留待 Phase 2 Investigation，再由 Phase 3 Proposal 提出最小修改方案。
 
-不要求一次建立 68 個空啟動檔，也不預建 A－08～17、B－01～17、C－01～17、D－01～17 的空 Template 或空 Launcher。後續入口仍須逐版位經過正式 Phase 流程，不得因未來全部需要而提前 Coding 未完成版位。
+不要求一次建立 68 個空啟動檔，也不預建 A－09～17、B－01～17、C－01～17、D－01～17 的空 Template 或空 Launcher。後續入口仍須逐版位經過正式 Phase 流程，不得因未來全部需要而提前 Coding 未完成版位。
 
 ## 7. 共通完成邊界
 
@@ -792,7 +880,7 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 
 本輪不得處理：
 
-- A－08～A－12 Templates。
+- A－09～A－12 Templates。
 - 樣式 B、C、D Templates。
 - 13～17 Templates。
 - Excel Import、Excel Mapping／Schema。
@@ -816,7 +904,7 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 - Launch 字型、字重、字級、顏色、座標、文字框、對齊、opacity、Resize 或 Template 樣式調整功能。
 - 對位圖 Resize、位移、重新生成、內容修改、額外 opacity／globalAlpha、透明度 Slider 或自動淡化。
 - 對位圖進入正式 Template、BN 控制台、Editor、Workspace 或 Export 成品。
-- A－08～17 的空啟動檔或未使用入口。
+- A－09～17 的空啟動檔或未使用入口。
 - B－01～17、C－01～17、D－01～17 的空 Template、空 Launcher 或正式 Layout 程式。
 - 一次建立 68 個啟動檔或 68 份正式 Template 程式。
 
