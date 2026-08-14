@@ -229,9 +229,22 @@
         overlaySource = "../assets/A/對位/06_IG.png";
         renderTemplate = template.renderIg;
         waitForFonts = template.waitForIgFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "07_FB POST"
+      ) {
+        const template = await import("../templates/A/07-fb-post.js");
+        viewerTitle = "樣式 A－07_FB POST";
+        viewerLabel = "A－07";
+        width = 1200;
+        height = 630;
+        backgroundSource = "../assets/A/底圖/07_FB POST.jpg";
+        overlaySource = "../assets/A/對位/07_FB POST.png";
+        renderTemplate = template.renderFbPost;
+        waitForFonts = template.waitForFbPostFonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN 與 06_IG。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG 與 07_FB POST。",
         );
       }
 
