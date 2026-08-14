@@ -479,7 +479,7 @@ FSS/
 
 - 正式 Excel Import Engine 與各 Type Excel Mapping
 - 正式 Workspace Data／JSON Schema 與暫存 Restore
-- A－10～17、B／C／D 的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
+- A－11～17、B／C／D 的正式 BN Templates、正式 Canvas Layout 與各 Type 專用底圖
 - Type C 額外文字正式欄位與 Type D Logo
 - `17_門檻表` 手動 Editor
 - ZIP／正式圖片 Export
@@ -493,7 +493,7 @@ FSS/
 本次實際落地檔案為：
 
 - `bn/templates/A/01-ddcard-bn.js`：A－01 唯一正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～10。
 - `bn/launch/A/01_DDcard BN.command`：A－01 專用直接啟動入口。
 - `bn/assets/A/底圖/01_DDcard BN.jpg`：A－01 正式 runtime 底圖。
 - `bn/assets/A/對位/01_DDcard BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -502,7 +502,7 @@ A－01 renderer 維持 531 × 792px 正式 Canvas 與三個 Locked 文字框，�
 
 Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套 Generator 或正式控制台。Jamie 可直接雙擊 A－01 `.command`，不必先手動啟動根目錄 `啟動 FSS.command`；入口會確認或啟動 `127.0.0.1:4173`、開啟共用 Viewer 的 A－01 route，並沿用已存在的正確服務。遇到不相符的既有服務時會停止並提示，不自行切換 port 或終止程序。Viewer 提供 A－01 三欄測試文字、IME-safe、既有字數規則與超限 rollback，以及對位圖顯示／隱藏。
 
-既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01～09 正式 Template。A－10～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
+既有 BN 控制台仍使用 placeholder Preview，尚未整合 A－01～10 正式 Template。A－11～17、B／C／D、正式控制台整合及其餘正式輸出架構仍未實作；目前的 Type A 路徑不預先決定 B／C／D 的 Template 共用方式，也不構成新增 Registry、Framework 或未確認抽象化的依據。
 
 ## 20. A－02 正式 Template 實際落地狀態
 
@@ -511,7 +511,7 @@ Launch 仍只屬正式 Template 的開發／視覺校稿工具，不是第二套
 本次實際落地檔案為：
 
 - `bn/templates/A/02-mall-hbn.js`：A－02 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～09 route。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～10 route。
 - `bn/launch/A/02_MALL HBN.command`：A－02 專用直接啟動入口，維持 executable mode。
 - `bn/assets/A/底圖/02_MALL HBN.jpg`：A－02 正式 runtime 底圖。
 - `bn/assets/A/對位/02_MALL HBN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -520,7 +520,7 @@ A－02 renderer 維持 1200 × 360px 正式 Canvas。三個文字框均靠左，
 
 字級直接使用 Photoshop 原始 `pt`：主標 Medium 30pt、副標 Bold 45pt、`$`／`%` Bold 37pt、保護文字 Medium 18pt。主標與保護文字經實際 Investigation 後採 A－02 local 2× temporary Canvas rasterization，再高品質縮回正式尺寸；底圖、Bold 副標及 `$`／`%` 仍在正式 Canvas 以 1× 繪製。此方法是 A－02 經實際驗證的版位特定 workaround，不構成所有 BN、所有 Medium 或其他 Type 的全域規則。
 
-A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%20HBN`。Viewer 的 A－02 Canvas／Preview／overlay 為 1200 × 360；對位 PNG 使用原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。三個測試 input 沿用 IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限與超限 rollback。Viewer 仍只是開發／校稿工具，不是第二套 Generator，既有控制台仍未正式接入 A－01～09 renderer。
+A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%20HBN`。Viewer 的 A－02 Canvas／Preview／overlay 為 1200 × 360；對位 PNG 使用原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。三個測試 input 沿用 IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限與超限 rollback。Viewer 仍只是開發／校稿工具，不是第二套 Generator，既有控制台仍未正式接入 A－01～10 renderer。
 
 ## 21. A－03 正式 Template 實際落地狀態
 
@@ -529,7 +529,7 @@ A－02 `.command` 使用 `127.0.0.1:4173` 開啟 `viewer.html?type=A&bn=02_MALL%
 本次實際落地檔案為：
 
 - `bn/templates/A/03-coin-page-bn.js`：A－03 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～09 route。
+- `bn/launch/viewer.html`：共用薄 Viewer，目前支援 A－01～10 route。
 - `bn/launch/A/03_Coin page BN.command`：A－03 直接啟動入口，使用既有 `127.0.0.1:4173` 流程且 Git mode 為 `100755`。
 - `bn/assets/A/底圖/03_Coin page BN.jpg`：A－03 正式 runtime 底圖。
 - `bn/assets/A/對位/03_Coin page BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -551,7 +551,7 @@ A－03 route 為 `viewer.html?type=A&bn=03_Coin%20page%20BN`。Canvas、Preview 
 Code Commit 精確包含：
 
 - `bn/templates/A/04-loyalty-bn.js`：A－04 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，現支援 A－01～10。
 - `bn/launch/A/04_Loyalty BN.command`：A－04 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/04_Loyalty BN.png`：A－04 正式 runtime 底圖。
 - `bn/assets/A/對位/04_Loyalty BN.png`：只供 Launch 視覺校稿的正式對位圖。
@@ -575,7 +575,7 @@ A－04 Phase 5 AI、正式對位 PNG 1:1、Chromium／Chrome、Medium 24pt／12p
 Code Commit 精確包含：
 
 - `bn/templates/A/05-msbn.js`：A－05 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－05 route，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－05 route，現支援 A－01～10。
 - `bn/launch/A/05_MSBN.command`：A－05 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/05_MSBN.png`：A－05 正式 runtime 底圖，intrinsic 1200 × 360。
 - `bn/assets/A/對位/05_MSBN.png`：只供 Launch 視覺校稿的 1200 × 400 正式對位圖。
@@ -603,7 +603,7 @@ A－05 Phase 5 AI、底圖 `0,20` placement、上下各 20px transparent 區域�
 Code Commit 精確包含：
 
 - `bn/templates/A/06-ig.js`：A－06 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－06 route，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－06 route，現支援 A－01～10。
 - `bn/launch/A/06_IG.command`：A－06 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/06_IG.jpg`：A－06 正式 900 × 1600 runtime 底圖。
 - `bn/assets/A/對位/06_IG.png`：只供 Launch 視覺校稿的 900 × 1600 正式對位圖。
@@ -620,7 +620,7 @@ A－06 `.command` 固定使用 `127.0.0.1:4173`。正確 Viewer service 已存�
 
 Codex Phase 5 當時因 Chrome Browser 實例不可用，沒有宣稱已自動完成真實 Chrome Canvas、Console、overlay 或 font metrics 驗證；已完成 renderer／Viewer 語法、尺寸、frames、pt、顏色、2×／1× 分層、底圖 guard、mixed-run 結構、overlay dimensions／Alpha components、HTTP resources、Launch 語法與 mode、A－01～05 檔案 regression 及 whitespace 等可執行的靜態／模擬驗證。其後 Jamie 已由 Finder 雙擊 A－06 `.command`，在 Chrome／Safari 完成最終實機手動驗證並明確 PASS，因此 A－06 已完成並通過人工驗收，不是 unresolved blocker。Code Commit 後 `git diff --check HEAD^ HEAD` PASS。
 
-目前共用 Viewer 支援 A－01～09。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這九個獨立 renderer；A－10～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+目前共用 Viewer 支援 A－01～10。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十個獨立 renderer；A－11～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
 
 ## 25. A－07 正式 Template 實際落地狀態
 
@@ -629,7 +629,7 @@ Codex Phase 5 當時因 Chrome Browser 實例不可用，沒有宣稱已自動�
 Code Commit 精確包含：
 
 - `bn/templates/A/07-fb-post.js`：A－07 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－07 route，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－07 route，現支援 A－01～10。
 - `bn/launch/A/07_FB POST.command`：A－07 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/07_FB POST.jpg`：A－07 正式 1200 × 630 runtime 底圖。
 - `bn/assets/A/對位/07_FB POST.png`：只供 Launch 視覺校稿的 1200 × 630 RGBA 正式對位圖。
@@ -650,7 +650,7 @@ Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片
 
 其後 Jamie 已由 Finder 雙擊 A－07 `.command`，在 Chrome／Safari 完成真實視覺、文字定位、Medium 39pt／22.5pt 粗細與銳利度、Bold 49pt／41pt mixed baseline、`$`／`%`、Overlay、輸入限制／rollback、中文 IME、Console 與 A－01～06 regression 的人工驗證，並明確回覆 PASS。因此 A－07 已完成並通過人工驗收，不是 unresolved blocker。Code Commit 的 `git diff --check HEAD^ HEAD` PASS。
 
-目前共用 Viewer 支援 A－01～09。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這九個獨立 renderer；A－10～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+目前共用 Viewer 支援 A－01～10。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十個獨立 renderer；A－11～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
 
 ## 26. A－08 正式 Template 實際落地狀態
 
@@ -659,7 +659,7 @@ Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片
 Code Commit 精確包含：
 
 - `bn/templates/A/08-spx-tvbn-1.js`：A－08 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－08 route，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－08 route，現支援 A－01～10。
 - `bn/launch/A/08_SPX TVBN_1.command`：A－08 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/08_SPX TVBN_1.jpg`：A－08 正式 1080 × 1920 runtime 底圖。
 - `bn/assets/A/對位/08_SPX TVBN_1.png`：只供 Launch 視覺校稿的 1080 × 1920 RGBA 正式對位圖。
@@ -680,7 +680,7 @@ Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片
 
 其後 Jamie 已由 Finder 雙擊 A－08 `.command`，在 Chrome／Safari 完成真實 Canvas、overlay、文字定位、Medium 70pt／40pt 粗細與銳利度、Bold 90pt／75pt mixed baseline、不同位置的 `$`／`%`、已知 1px 對位差異、輸入限制／rollback、中文 IME、Console 與 A－01～07 regression 的人工驗證，並明確回覆 PASS。因此 A－08 已完成並通過人工驗收，不是 unresolved blocker。Code Commit 的 `git diff --check HEAD^ HEAD` PASS。
 
-目前共用 Viewer 支援 A－01～09。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這九個獨立 renderer；A－10～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+目前共用 Viewer 支援 A－01～10。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十個獨立 renderer；A－11～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
 
 ## 27. A－09 正式 Template 實際落地狀態
 
@@ -689,7 +689,7 @@ Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片
 Code Commit 精確包含：
 
 - `bn/templates/A/09-spx-tvbn-2.js`：A－09 獨立正式 renderer。
-- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－09 route，現支援 A－01～09。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－09 route，現支援 A－01～10。
 - `bn/launch/A/09_SPX TVBN_2.command`：A－09 直接啟動入口，Git mode 為 `100755`。
 - `bn/assets/A/底圖/09_SPX TVBN_2.jpg`：A－09 正式 1599 × 1080 runtime 底圖。
 - `bn/assets/A/對位/09_SPX TVBN_2.png`：只供 Launch 視覺校稿的 1599 × 1080 RGBA 正式對位圖。
@@ -710,4 +710,38 @@ Codex Phase 5 完成 renderer／Viewer／Launch 語法、HTTP resources、圖片
 
 其後 Jamie 已由 Finder 雙擊 A－09 `.command`，在 Chrome／Safari 完成真實 Canvas、overlay、actual-ink 文字定位、Medium 60pt／35pt 粗細與銳利度、Bold 76pt／65pt mixed baseline、不同位置的 `$`／`%`、輸入限制／rollback、真實中文 IME、Console 與 A－01～08 regression 的人工驗證，並明確回覆 PASS。因此 A－09 已完成並通過人工驗收，不是 unresolved blocker。Photoshop 完成參考圖 `/Users/jamie/Downloads/A-assets/09_SPX TVBN_2.jpg` 僅作唯讀視覺基準，不是 runtime asset。Code Commit 的 `git diff --check HEAD^ HEAD` PASS。
 
-目前共用 Viewer 支援 A－01～09。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這九個獨立 renderer；A－10～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+目前共用 Viewer 支援 A－01～10。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十個獨立 renderer；A－11～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+
+## 28. A－10 正式 Template 實際落地狀態
+
+樣式 A／`10_POP UP` 已完成獨立正式 renderer、共用薄 Viewer 的 A－10 route、直接 Launch、正式 runtime assets、Phase 5 當時環境可執行的靜態／deterministic 驗證，以及 Jamie Chrome／Safari 最終手動驗證。Jamie 已明確回覆 PASS。Code Commit 為 `92aebac0b014c17094ea0401808ba0ab505a4dfe`（`feat(bn): add A10 POP UP template`），且是在 Jamie 完成手動驗證後才建立；`git diff --check HEAD^ HEAD` PASS。
+
+Code Commit 精確包含：
+
+- `bn/templates/A/10-pop-up.js`：A－10 獨立正式 renderer。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－10 route，現支援 A－01～10。
+- `bn/launch/A/10_POP UP.command`：A－10 直接啟動入口，Git mode 為 `100755`。
+- `bn/assets/A/底圖/10_POP UP.png`：A－10 正式 475 × 673 RGBA runtime 底圖。
+- `bn/assets/A/對位/10_POP UP.png`：只供 Launch 視覺校稿的 580 × 720 RGBA 正式對位圖。
+
+A－10 正式 Canvas 為 transparent 580 × 720px；版位特定 dimension guard 分別要求 Canvas 精確為 580 × 720、底圖 intrinsic dimensions 精確為 475 × 673。底圖只以 `x: 53px; y: 27px; width: 475px; height: 673px` 原尺寸 1:1、正式 1× 繪製，不 Resize、不 Stretch、不 Crop、不補邊、不 Scale-to-fit，也不使用「底圖尺寸等於 Canvas」的一般 guard。
+
+三個正式 runtime frame 為主標 `129,128,323,38`、副標 `85,181,410,51`、保護文字 `85,242,410,25`。Photoshop 工作區原始 frame 為 `565,759,323,38`、`521,812,410,51`、`521,873,410,25`；Phase 2 確認一致轉換 `xLocal = xPhotoshop - 436`、`yLocal = yPhotoshop - 631`，renderer 不使用 Photoshop 工作區座標作為 runtime frame。
+
+三組文字使用 `measureText()` 的 `actualBoundingBoxLeft`／`Right`／`Ascent`／`Descent` 計算完整 actual ink bbox，再於各自 frame 內水平＋垂直置中；不是單純 `textAlign: center`、靠左、top alignment、固定 baseline 或 fixed offset。字級直接使用 Photoshop 原始 `pt`：主標 Medium 30pt、副標 ordinary Bold 40pt、同一副標欄位中的 `$`／`%` Bold 35pt、保護文字 Medium 20pt；顏色依序為 `#ffffff`、`#fff285`、`#fff285`、`#a6f4e6`，不建立人工 `pt → px` 換算。
+
+副標 ordinary／symbol 先 token 化並依 advance width 排成連續 mixed-run group；symbols 使用相鄰 ordinary glyph actual ink-bottom baseline 邏輯。Renderer 計算完整 mixed group actual ink bbox 後將整組水平＋垂直置中，再逐 run 繪製。`$`／`%` 不是獨立 Editor 欄位；不存在 fixed symbol offset、spacing compensation、自動縮字、換行或裁切。
+
+A－10 經自身 Requirement、Investigation、Proposal 與 Jamie 批准採版位 local 2× Medium rendering。Renderer 建立 1160 × 1440 transparent temporary Canvas，context 使用 `scale(2, 2)`，只讓 Medium 30pt 主標與 Medium 20pt 保護文字依原始 pt、正式 runtime frames 及相同 actual ink 置中邏輯繪製，再以 high-quality downsample 回正式 580 × 720 Canvas。正式 PNG 底圖、Bold 40pt ordinary subtitle 與 Bold 35pt `$`／`%` 維持正式 1×；繪製順序為底圖 `53,27,475,673` 正式 1×、transparent Medium layer 縮回合成、Bold mixed subtitle 1×，正式 compositing 使用 `globalAlpha = 1` 與 `source-over`。此行為只屬 A－10 版位特定 rendering，不是全 BN、全 Medium 或其他 Type 的 shared／global 規則。
+
+底部「逛逛去 ▶」是正式底圖內的固定圖像內容，不是第四個文字欄位、input、Editor field、runtime frame 或 renderer text layer；renderer 不重繪 CTA。
+
+A－10 route 為 `viewer.html?type=A&bn=10_POP%20UP`，解碼後為 `type=A`、`bn=10_POP UP`。Canvas、Preview 與 overlay 均為 580 × 720；正式對位 PNG 以原始 Alpha、同原點、原尺寸 1:1、CSS opacity 1 疊加，不合成進正式 Canvas。Viewer 沿用三個 input、合法內容即時 render、IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限、超限 rollback、overlay toggle、dynamic dimensions 與圖片 decode／intrinsic dimension guard。
+
+A－10 `.command` 固定使用 `127.0.0.1:4173`；正確 Viewer service 已存在時沿用，遇到不相符的外部 service 時停止提示，不換 port、不 kill 外部 process，必要時使用 `/usr/bin/python3 -m http.server`，且只停止自己啟動的 server。Filesystem permission 為 755，Code Commit 中 Git mode 為 `100755`。
+
+Codex Phase 5 完成 renderer／Viewer／Launch 語法、正式 assets decode／dimensions、底圖 placement、transparent Canvas 邊界、runtime frames、actual-ink 置中公式、local 2× 分層、mixed-run deterministic／in-memory 模擬、Viewer input／IME／rollback 靜態邏輯、HTTP resources、A－01～09 regression、whitespace 與 Git Scope 等當時環境可執行的驗證。因受控 Chrome extension／native host 當時不可用，Codex 沒有取得或宣稱真實 Browser actual font metrics、Console、rasterization、Canvas＋overlay／Photoshop 視覺或真實中文 IME PASS。
+
+其後 Jamie 已由 Finder 雙擊 A－10 `.command`，在 Chrome／Safari 完成底圖 placement、透明邊界、固定 CTA、三欄 actual-ink 定位、Medium 30pt／20pt 粗細與銳利度、Bold 40pt／35pt mixed baseline、不同位置的 `$`／`%`、正式 overlay、輸入限制／rollback、真實中文 IME、Console 與必要 regression 的實機驗證，並明確回覆 PASS。因此 A－10 已完成並通過人工驗收，不是 unresolved blocker。
+
+目前共用 Viewer 支援 A－01～10。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十個獨立 renderer；A－11～17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
