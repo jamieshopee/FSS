@@ -6,6 +6,14 @@
     <title>樣式 A－01_DDcard BN 校稿</title>
     <style>
       @font-face {
+        font-family: "ShopeeNotoSans Regular";
+        src: url("../../fonts/ShopeeNotoSans(content)-Regular.woff2") format("woff2");
+        font-display: block;
+        font-style: normal;
+        font-weight: 400;
+      }
+
+      @font-face {
         font-family: "ShopeeNotoSans Medium";
         src: url("../../fonts/ShopeeNotoSans(content)-Medium.woff2") format("woff2");
         font-display: block;
@@ -281,9 +289,22 @@
         overlaySource = "../assets/A/對位/10_POP UP.png";
         renderTemplate = template.renderPopUp;
         waitForFonts = template.waitForPopUpFonts;
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "11_Line OA"
+      ) {
+        const template = await import("../templates/A/11-line-oa.js");
+        viewerTitle = "樣式 A－11_Line OA";
+        viewerLabel = "A－11";
+        width = 1040;
+        height = 1040;
+        backgroundSource = "../assets/A/底圖/11_Line OA.png";
+        overlaySource = "../assets/A/對位/11_Line OA.png";
+        renderTemplate = template.renderLineOa;
+        waitForFonts = template.waitForLineOaFonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2 與 10_POP UP。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP 與 11_Line OA。",
         );
       }
 
