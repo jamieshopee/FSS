@@ -333,9 +333,26 @@
           { id: "line1", label: "第一行", value: "週六免運日", limit: 5 },
           { id: "line2", label: "第二行", value: "全站$499免運", limit: 6 },
         ];
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "14_Skinny BN_PC"
+      ) {
+        const template = await import("../templates/A/14-skinny-bn-pc.js");
+        viewerTitle = "樣式 A－14_Skinny BN_PC";
+        viewerLabel = "A－14";
+        width = 400;
+        height = 110;
+        backgroundSource = "../assets/A/底圖/14_Skinny BN_PC.png";
+        overlaySource = "../assets/A/對位/14_Skinny BN_PC.png";
+        renderTemplate = template.renderSkinnyBnPc;
+        waitForFonts = template.waitForSkinnyBnPcFonts;
+        fieldConfig = [
+          { id: "line1", label: "第一行", value: "週六免運日", limit: 5 },
+          { id: "line2", label: "第二行", value: "全站$499免運", limit: 6 },
+        ];
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN 與 13_Skinny BN_APP。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP 與 14_Skinny BN_PC。",
         );
       }
 
