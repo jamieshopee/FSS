@@ -129,6 +129,11 @@
           <input id="protection-input" type="text" autocomplete="off" value="免運優惠須依店家適用之物流為主" disabled />
         </label>
 
+        <label for="extra-input" hidden>
+          額外欄位
+          <input id="extra-input" type="text" autocomplete="off" value="" disabled />
+        </label>
+
         <label class="overlay-control" for="overlay-toggle">
           <input id="overlay-toggle" type="checkbox" disabled />
           顯示對位圖
@@ -367,9 +372,28 @@
           { id: "line1", label: "第一行", value: "宅配滿", limit: 3 },
           { id: "line2", label: "第二行", value: "$490", limit: 3 },
         ];
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "16_副區"
+      ) {
+        const template = await import("../templates/A/16-sub-area.js");
+        viewerTitle = "樣式 A－16_副區";
+        viewerLabel = "A－16";
+        width = 1200;
+        height = 220;
+        backgroundSource = "../assets/A/底圖/16_副區.jpg";
+        overlaySource = "../assets/A/對位/16_副區.png";
+        renderTemplate = template.renderSubArea;
+        waitForFonts = template.waitForSubAreaFonts;
+        fieldConfig = [
+          { id: "leftTitle", label: "左標題", value: "全站大免運", limit: 10 },
+          { id: "leftCopy", label: "左文案", value: "店取滿$199免運", limit: 10 },
+          { id: "rightTitle", label: "右標題", value: "商城優選皆適用", limit: 10 },
+          { id: "rightCopy", label: "右文案", value: "宅配滿$490免運", limit: 10 },
+        ];
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC 與 15_AR。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR 與 16_副區。",
         );
       }
 
@@ -417,12 +441,17 @@
           label: document.querySelector('label[for="protection-input"]'),
           input: document.querySelector("#protection-input"),
         },
+        {
+          label: document.querySelector('label[for="extra-input"]'),
+          input: document.querySelector("#extra-input"),
+        },
       ];
 
       let fields;
       if (fieldConfig) {
         fields = fieldConfig.map((config, index) => {
           const slot = fieldSlots[index];
+          slot.label.hidden = false;
           slot.label.firstChild.textContent = config.label;
           slot.input.value = config.value;
           return { id: config.id, input: slot.input, limit: config.limit };
