@@ -4,7 +4,7 @@
 >
 > 文件範圍：固定 17 個正式 BN Templates 與 A／B／C／D Type 真正存在的差異
 >
-> 狀態：A－01、A－02、A－03、A－04、A－05、A－06、A－07、A－08、A－09、A－10、A－11、A－12、A－13、A－14 已完成並經 Jamie 手動驗證 PASS；其他版位依確認狀態追加
+> 狀態：A－01、A－02、A－03、A－04、A－05、A－06、A－07、A－08、A－09、A－10、A－11、A－12、A－13、A－14、A－15 已完成並經 Jamie 手動驗證 PASS；其他版位依確認狀態追加
 >
 > 整理日期：2026-08-12
 >
@@ -35,6 +35,8 @@
 > A－13 落地狀態同步日期：2026-08-16
 >
 > A－14 落地狀態同步日期：2026-08-16
+>
+> A－15 落地狀態同步日期：2026-08-16
 
 ## 1. 文件目的
 
@@ -64,18 +66,18 @@
 
 目前已確認並納入完整 Requirement 的對象為：
 
-> 樣式 A／內部 Type A 的正式 `01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP` 與 `14_Skinny BN_PC` Template。
+> 樣式 A／內部 Type A 的正式 `01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP`、`14_Skinny BN_PC` 與 `15_AR` Template。
 
 目前只定義：
 
-- A－01～14 的正式版位與視覺規格。
-- A－01～14 正式 Template 使用底圖與對位圖的需求。
-- A－01～14 透過 `bn/launch/A/` 對應入口直接查看與進行視覺驗證的產品需求。
+- A－01～15 的正式版位與視覺規格。
+- A－01～15 正式 Template 使用底圖與對位圖的需求。
+- A－01～15 透過 `bn/launch/A/` 對應入口直接查看與進行視覺驗證的產品需求。
 - 既有 BN 控制台維持不變、正式 Template 接入控制台移至後續獨立開發階段的邊界。
 
-目前不處理 A－15～17、樣式 B／C／D 或其他生成器功能，也不為它們建立空章節、TODO、placeholder 或未確認規格表格。
+目前不處理 A－16～17、樣式 B／C／D 或其他生成器功能，也不為它們建立空章節、TODO、placeholder 或未確認規格表格。
 
-正式 BN Template 採逐樣式、逐版位製作與驗證；目前已完成「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」、「樣式 A → `07_FB POST`」、「樣式 A → `08_SPX TVBN_1`」、「樣式 A → `09_SPX TVBN_2`」、「樣式 A → `10_POP UP`」、「樣式 A → `11_Line OA`」、「樣式 A → `12_LPBN`」、「樣式 A → `13_Skinny BN_APP`」與「樣式 A → `14_Skinny BN_PC`」。後續版位仍須由 Jamie 逐一確認，不因 A－01～14 完成而預填或製作其他版位。
+正式 BN Template 採逐樣式、逐版位製作與驗證；目前已完成「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」、「樣式 A → `07_FB POST`」、「樣式 A → `08_SPX TVBN_1`」、「樣式 A → `09_SPX TVBN_2`」、「樣式 A → `10_POP UP`」、「樣式 A → `11_Line OA`」、「樣式 A → `12_LPBN`」、「樣式 A → `13_Skinny BN_APP`」、「樣式 A → `14_Skinny BN_PC`」與「樣式 A → `15_AR`」。後續版位仍須由 Jamie 逐一確認，不因 A－01～15 完成而預填或製作其他版位。
 
 ## 3. 既有 Locked 架構
 
@@ -96,7 +98,7 @@
 - 上述原則不改變正式 Phase 順序，只避免重複無意義的調查。
 - 未經 Jamie 確認的樣式／版位不得預填 Requirement、空章節、TODO、placeholder 或規格表格。
 
-目前已完成的正式 Template 為「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」、「樣式 A → `07_FB POST`」、「樣式 A → `08_SPX TVBN_1`」、「樣式 A → `09_SPX TVBN_2`」、「樣式 A → `10_POP UP`」、「樣式 A → `11_Line OA`」、「樣式 A → `12_LPBN`」、「樣式 A → `13_Skinny BN_APP`」與「樣式 A → `14_Skinny BN_PC`」。後續 Scope 仍由 Jamie 逐一確認。
+目前已完成的正式 Template 為「樣式 A → `01_DDcard BN`」、「樣式 A → `02_MALL HBN`」、「樣式 A → `03_Coin page BN`」、「樣式 A → `04_Loyalty BN`」、「樣式 A → `05_MSBN`」、「樣式 A → `06_IG`」、「樣式 A → `07_FB POST`」、「樣式 A → `08_SPX TVBN_1`」、「樣式 A → `09_SPX TVBN_2`」、「樣式 A → `10_POP UP`」、「樣式 A → `11_Line OA`」、「樣式 A → `12_LPBN`」、「樣式 A → `13_Skinny BN_APP`」、「樣式 A → `14_Skinny BN_PC`」與「樣式 A → `15_AR`」。後續 Scope 仍由 Jamie 逐一確認。
 
 ## 5. 正式版位 Requirement
 
@@ -272,7 +274,7 @@ A－01 是第一個已完成的正式 BN Template。Jamie 已完成 Safari／Chr
 正式落地項目為：
 
 - Template renderer：`bn/templates/A/01-ddcard-bn.js`。
-- 共用 Launch Viewer：`bn/launch/viewer.html`；目前支援 A－01～14。
+- 共用 Launch Viewer：`bn/launch/viewer.html`；目前支援 A－01～15。
 - A－01 直接啟動入口：`bn/launch/A/01_DDcard BN.command`。
 - 正式底圖：`bn/assets/A/底圖/01_DDcard BN.jpg`。
 - 正式對位圖：`bn/assets/A/對位/01_DDcard BN.png`。
@@ -283,7 +285,7 @@ A－01 是第一個已完成的正式 BN Template。Jamie 已完成 Safari／Chr
 
 A－01 `.command` 可由 Jamie 直接雙擊，不必先手動啟動根目錄 `啟動 FSS.command`；它會確認或啟動 `127.0.0.1:4173` 並開啟共用 Viewer 的 A－01 route。正確服務已存在時沿用，若該 port 是不相符的服務則停止並提示，不自行改 port，也不終止既有程序。Launch Viewer 提供三欄測試文字即時編輯、IME-safe、ASCII 0.5／非 ASCII 1 計數、超限 rollback，以及正式對位圖顯示／隱藏；A－02～12 亦沿用這些共用薄校稿能力。
 
-既有 BN 控制台仍維持 placeholder Preview，尚未接入 A－01～14 正式 Template。A－15～17 與 B／C／D 均未製作；目前的 Type A 路徑與 Viewer 實作不預先決定其他 Type 的 Template 共用方式，也不建立 Registry、Framework 或未經確認的抽象化。
+既有 BN 控制台仍維持 placeholder Preview，尚未接入 A－01～15 正式 Template。A－16～17 與 B／C／D 均未製作；目前的 Type A 路徑與 Viewer 實作不預先決定其他 Type 的 Template 共用方式，也不建立 Registry、Framework 或未經確認的抽象化。
 
 #### 5.1.2 `02_MALL HBN`
 
@@ -417,7 +419,7 @@ A－03 使用共用薄校稿頁 `bn/launch/viewer.html`。Route 為 `type=A&bn=0
 
 Viewer 的 A－03 Canvas、Preview 與 overlay 均為 1200 × 391；對位 PNG 使用原始 Alpha、相同原點及原尺寸 1:1 疊加，不額外設定 opacity、不 Resize、不位移，也不合成進正式 Canvas。三個測試 input 沿用即時更新、IME-safe、ASCII 0.5／非 ASCII 1、8／7／17 上限、超限 rollback 與 overlay toggle。
 
-A－03 `.command` 沿用既有 `127.0.0.1:4173` Launch 流程，開啟上述 route，Git executable mode 為 `100755`。Viewer 仍是共用薄校稿工具，不是第二套 Generator；既有正式 BN 控制台尚未接入 A－01～14 renderer。
+A－03 `.command` 沿用既有 `127.0.0.1:4173` Launch 流程，開啟上述 route，Git executable mode 為 `100755`。Viewer 仍是共用薄校稿工具，不是第二套 Generator；既有正式 BN 控制台尚未接入 A－01～15 renderer。
 
 ##### 5.1.3.7 正式落地與驗證狀態
 
@@ -1367,6 +1369,96 @@ Claude Phase 5 已完成當時環境可執行的 deterministic／static／sandbo
 - `bn/assets/A/底圖/14_Skinny BN_PC.png`
 - `bn/assets/A/對位/14_Skinny BN_PC.png`
 
+#### 5.1.15 `15_AR`
+
+##### 5.1.15.1 正式版位與資產規格
+
+| 項目 | 正式需求 |
+|---|---|
+| 正式名稱 | `15_AR` |
+| 樣式／內部 Type | 樣式 A／Type A |
+| 版位分類 | 特殊文字訊息版位（兩-input 版位） |
+| Canvas | 100 × 100px |
+| Template renderer | `bn/templates/A/15-ar.js` |
+| 正式底圖 | `bn/assets/A/底圖/15_AR.jpg`（JPEG RGB） |
+| 底圖 intrinsic dimensions | 100 × 100px |
+| 底圖正式 placement | `0, 0, 100, 100`；原尺寸 1:1、正式 1× |
+| 正式對位圖 | `bn/assets/A/對位/15_AR.png`（RGBA，100 × 100px） |
+| Viewer | `bn/launch/viewer.html` |
+| Viewer route | `viewer.html?type=A&bn=15_AR` |
+| Finder Launch | `bn/launch/A/15_AR.command` |
+
+正式底圖 intrinsic dimensions 精確等於 Canvas 100 × 100；renderer 只以 `0, 0, 100, 100` 原尺寸 1:1、正式 1× 繪製，不 Resize、不 stretch、不 crop、不 scale-to-fit、不補邊。Canvas 100 × 100 與底圖 intrinsic 100 × 100 採各自精確 dimension guard，結構錯誤 hard-stop。正式對位圖為 100 × 100px，Viewer 保留其原始 Alpha，以相同原點及原尺寸 1:1、CSS opacity 1 疊加，只供校稿；對位圖不合成進正式 Canvas。
+
+A－15 精確只有兩個動態文字欄位（第一行、第二行），無第三欄。對位 PNG 中 level-49 的三條 72px 寬橫條只是 overlay 校稿間距指示，不是文字欄位、input、renderer layer 或第三欄。
+
+##### 5.1.15.2 正式文字規格與座標
+
+| 欄位 | 字型／字重 | 字級 | 顏色 | Runtime frame（left, top, width, height） | 字數上限 |
+|---|---|---|---|---|---:|
+| 第一行 Han 字元 | `ShopeeNotoSans Bold` | 18pt | `#fff285` | `14, 22, 72, 25` | 3 |
+| 第一行 其他字元 | `ShopeeNotoSans Bold` | 18.5pt | `#fff285` | 同一第一行 frame 與同一 input | 同第一行 |
+| 第二行 Han 字元 | `ShopeeNotoSans Bold` | 18pt | `#fff285` | `14, 54, 72, 25` | 3 |
+| 第二行 其他字元 | `ShopeeNotoSans Bold` | 18.5pt | `#fff285` | 同一第二行 frame 與同一 input | 同第二行 |
+
+兩行規格完全相同。所有字級直接使用原始 `pt` 作 Canvas font specification，沒有人工 `pt → px` 換算。第一行／第二行上限均為 3；Viewer 字數算法仍是既有 ASCII = 0.5、非 ASCII = 1。
+
+**字級 tokenizer 與 Viewer 字數算法是兩套獨立規則，不得混用**：renderer 的字級分類使用 JavaScript Unicode property escape `/\p{Script=Han}/u`，以 `for...of` 按 code point 迭代，連續同類字元合併為 run——Unicode Script=Han 字元 → Bold 18pt，其他所有字元 → Bold 18.5pt。「其他」包含英文字母、數字、`$`、`%`、半形／全形符號、空白、非 ASCII 拉丁字元（如 `é`）；Unicode Script=Han 的 `々` 依標準分類為 Han 18pt。字級分類不是 ASCII vs 非 ASCII；ASCII 0.5／非 ASCII 1 只用於 Viewer 字數計算。
+
+Photoshop 原始 frames 為：
+
+- 第一行：`481, 422, 72, 25`
+- 第二行：`481, 454, 72, 25`
+
+Photoshop 工作區到 runtime Canvas 的座標轉換為 `xLocal = xPhotoshop - 467`、`yLocal = yPhotoshop - 400`（兩框逐一驗算一致）。Renderer 直接使用上述已確認 runtime frames，不在 render 時重新推算。
+
+##### 5.1.15.3 共用 alphabetic baseline 與整組置中
+
+所有 runs 使用 `textAlign = "left"`、`textBaseline = "alphabetic"`，各自以 `measureText()` 的 `width` 與 `actualBoundingBoxLeft/Right/Ascent/Descent` 量測，任一 non-finite hard-stop。同一行所有 18pt／18.5pt Bold runs 共用同一 alphabetic baseline，不使用 A－13／14 的 `$`／`%` ink-bottom baseline 規則、不加 per-run baseline offset；各 run 依 advance width 連續排列，無人工 spacing。合併整行完整 mixed-group actual ink bbox 後，整組在各自 72 × 25 frame 內水平＋垂直置中（以 actual-ink bbox 計算，不是單純 `textAlign = "center"`）；空字串不繪製並回傳 0 × 0 validation。
+
+##### 5.1.15.4 全部正式 1×，無 local 2×
+
+A－15 兩行全部使用 Bold，沒有任何 Medium run，因此 **A－15 不建立 local 2× temporary Canvas，全部文字與底圖維持正式 1×**。先前輸入中的「Medium 直接採 local 2×」已在 Phase 1／2 調查確認與本版實際文字規格衝突，並於 Phase 3 正式裁決為沿用前版的筆誤；Bold 不得套入 2×。此結果只屬 A－15，不反向改寫 A－01～14 各版既有 local 2× 規格。
+
+正式繪製順序為：
+
+1. clear Canvas。
+2. 正式底圖 `0, 0, 100, 100` 以原尺寸 1:1、正式 1× 繪製。
+3. 第一行 Bold mixed runs 以正式 1× 繪製。
+4. 第二行 Bold mixed runs 以正式 1× 繪製。
+
+正式 Canvas 使用 `globalAlpha = 1` 與 `globalCompositeOperation = "source-over"`。
+
+##### 5.1.15.5 Font-ready、frame-fit 與 hard-stop guards
+
+Font-ready 精確檢查 `18pt "ShopeeNotoSans Bold"` 與 `18.5pt "ShopeeNotoSans Bold"`，沿用 Viewer 既有 Bold WOFF2 mapping，透過 `document.fonts.load()` 與 `document.fonts.check()`（test text 涵蓋 Han 與非 Han）；未 ready hard-stop、不 fallback、不新增 font mapping。
+
+A－15 沿用 A－11～14 最終 frame-fit policy：兩行各自如實計算並回傳 `inkWidth`、`inkHeight`、`inkLeft`、`inkTop`、`inkRight`、`inkBottom`、`fitsWidth`、`fitsHeight` 八欄位；`fitsWidth: false` 或 `fitsHeight: false` 不改成 `true`、不阻擋 render，不加入 epsilon、tolerance、offset 或縮字。Canvas／HTMLImageElement 型別、image complete／decode、底圖 intrinsic ≠ 100 × 100、Canvas ≠ 100 × 100、placement／frame geometry、2D context、font-ready、non-finite TextMetrics／ink geometry 等結構性錯誤仍 hard-stop，並回報 A－15 專屬錯誤。本版無 temporary Canvas，因此沒有 2× temporary Canvas guard。
+
+##### 5.1.15.6 Viewer 兩-input 支援
+
+A－15 route 為 `viewer.html?type=A&bn=15_AR`。Canvas、Preview 與 overlay 均為 100 × 100。
+
+A－15 直接復用 A－13／14 已 PASS 的 Viewer 版位別 fieldConfig 兩-input 架構，只最小追加 route 與自己的 fieldConfig，未重構 Viewer：第一行 input label 為「第一行」、上限 3、預設校稿文字「宅配滿」；第二行 input label 為「第二行」、上限 3、預設校稿文字「$490」。第三個既有 input 與 label 沿用 hidden＋disabled 機制，不進 fields、不進 state、不參與 render／validation。
+
+A－01～12 各 route 仍維持三個 input 與 8／7／17 上限，A－13～14 route 仍維持兩 input 與 5／6 上限，行為完全不變。`countTextUnits`（ASCII 0.5／非 ASCII 1）、IME-safe、compositionend 後 commit、超限 rollback、overlay toggle 與圖片 decode／intrinsic dimension guard 均沿用既有機制。
+
+##### 5.1.15.7 Launch／驗證狀態與 Code Commit
+
+`bn/launch/A/15_AR.command` 完全沿用 A－14 已 PASS 結構，固定使用 `127.0.0.1:4173` 開啟 `?type=A&bn=15_AR`。正確 Viewer service 以 marker 驗證後沿用；其他 service 占用 port 時停止提示，不換 port、不 kill 外部 process，必要時使用 `/usr/bin/python3 -m http.server`，且只停止自身啟動的 server。Filesystem executable，Git executable mode 為 `100755`。
+
+Claude Phase 5 已完成當時環境可執行的 deterministic／static／sandbox 驗證：renderer／Viewer module 語法、HTTP 200、正式 assets decode／dimensions／SHA-256、placement 與雙 guard、runtime frames、font-ready 結構、renderer mock 測試 27/27（含 tokenizer 純 Han／純 Other／多次切換／`$`／`%`／全形符號／全形空白／`é`／`々`、共用 baseline（所有 run y 相同）、advance continuity、mixed-group actual-ink 置中、無 temporary Canvas／無 `scale(2,2)`、空字串、frame-fit false non-blocking、結構性 hard-stop）、Viewer 邏輯測試 15/15，以及 A－01～14 regression 與 Git Scope（`git diff --check` PASS）。sandbox 無 zsh，`zsh -n` 未執行，改以與 A－14 已 PASS script 的逐行 diff（僅預期替換）作替代證據；mock metrics 不是 Chrome／Safari actual TextMetrics，未被記作視覺 PASS。
+
+其後 Jamie 已由 Finder 雙擊 A－15 `.command`，在 Chrome／Safari 完成最終實機手動驗證並明確回覆 PASS，之後才建立 Code Commit。Code Commit 為 `5c833297c31f7f98269aeec20d65b59b8b5bb126`（`feat(bn): add A15 AR template`），`git diff --check HEAD^ HEAD` PASS，精確包含：
+
+- `bn/templates/A/15-ar.js`
+- `bn/launch/viewer.html`
+- `bn/launch/A/15_AR.command`（Git mode `100755`）
+- `bn/assets/A/底圖/15_AR.jpg`
+- `bn/assets/A/對位/15_AR.png`
+
+兩張 committed assets 的 SHA-256 與 Phase 2／5 原檔完全一致（底圖 `d5098b9dfea1e53e3c60a406f5ffd9e3f04291dbbfc51ac8f1217dfb8de9a136`、對位 `d1cf28e80ea937145dfd749655179898af5a7cf0606952e91f61670139f83664`），只加入版本控制、零修改。
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：
@@ -1384,13 +1476,13 @@ bn/
 
 `bn/launch/` 的用途只限正式 BN Template 的開發／視覺驗證入口。Launch 只負責讓指定 Type 與 BN 版位可以直接開啟及查看；它不是第二套 Generator、第二套 Template 系統、四套獨立正式 Template 實作或 68 份互相複製的正式 Layout 程式。Launch 必須呈現共用正式 Template 系統中的同一份正式 Template，不得複製正式 Template 程式。
 
-Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～12 Launch 只提供三個測試文字欄位，A－13 與 A－14 Launch 只提供「第一行」「第二行」兩個測試文字欄位；均只含即時 Canvas 更新及對位圖顯示／隱藏，不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
+Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～12 Launch 只提供三個測試文字欄位，A－13、A－14 與 A－15 Launch 只提供「第一行」「第二行」兩個測試文字欄位；均只含即時 Canvas 更新及對位圖顯示／隱藏，不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
 
-目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP` 與 `14_Skinny BN_PC` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
+目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP`、`14_Skinny BN_PC` 與 `15_AR` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
 
 Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query parameter、wrapper、共用 viewer 或其他技術形式，也不建立任何 Launch 檔案。具體方式必須留待 Phase 2 Investigation，再由 Phase 3 Proposal 提出最小修改方案。
 
-不要求一次建立 68 個空啟動檔，也不預建 A－15～17、B－01～17、C－01～17、D－01～17 的空 Template 或空 Launcher。後續入口仍須逐版位經過正式 Phase 流程，不得因未來全部需要而提前 Coding 未完成版位。
+不要求一次建立 68 個空啟動檔，也不預建 A－16～17、B－01～17、C－01～17、D－01～17 的空 Template 或空 Launcher。後續入口仍須逐版位經過正式 Phase 流程，不得因未來全部需要而提前 Coding 未完成版位。
 
 ## 7. 共通完成邊界
 
@@ -1424,9 +1516,9 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 
 本輪不得處理：
 
-- A－15～17 Templates。
+- A－16～17 Templates。
 - 樣式 B、C、D Templates。
-- 15～17 Templates。
+- 16～17 Templates。
 - Excel Import、Excel Mapping／Schema。
 - 暫存 Restore、Workspace JSON Schema。
 - Export、ZIP、JPG Export Coding。
@@ -1448,7 +1540,7 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 - Launch 字型、字重、字級、顏色、座標、文字框、對齊、opacity、Resize 或 Template 樣式調整功能。
 - 對位圖 Resize、位移、重新生成、內容修改、額外 opacity／globalAlpha、透明度 Slider 或自動淡化。
 - 對位圖進入正式 Template、BN 控制台、Editor、Workspace 或 Export 成品。
-- A－15～17 的空啟動檔或未使用入口。
+- A－16～17 的空啟動檔或未使用入口。
 - B－01～17、C－01～17、D－01～17 的空 Template、空 Launcher 或正式 Layout 程式。
 - 一次建立 68 個啟動檔或 68 份正式 Template 程式。
 
