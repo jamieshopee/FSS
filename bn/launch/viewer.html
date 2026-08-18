@@ -83,6 +83,42 @@
         margin: 0;
       }
 
+      select#preset-select {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 9px 10px;
+        border: 1px solid #aeb8b5;
+        border-radius: 4px;
+        background: #ffffff;
+        font: 16px system-ui, sans-serif;
+      }
+
+      textarea#model-input {
+        display: block;
+        width: 100%;
+        margin-top: 6px;
+        padding: 9px 10px;
+        border: 1px solid #aeb8b5;
+        border-radius: 4px;
+        background: #ffffff;
+        font: 13px ui-monospace, monospace;
+        resize: vertical;
+      }
+
+      #warnings-area h2 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        color: #b42318;
+      }
+
+      #warnings-area ul {
+        margin: 0;
+        padding-left: 18px;
+        font-size: 13px;
+        color: #b42318;
+      }
+
       .preview {
         position: relative;
         flex: 0 0 auto;
@@ -139,6 +175,23 @@
           顯示對位圖
         </label>
 
+        <label id="preset-select-label" for="preset-select" hidden>
+          測試資料組
+          <select id="preset-select" disabled></select>
+        </label>
+
+        <label id="model-input-label" for="model-input" hidden>
+          JSON 測試資料
+          <textarea id="model-input" rows="16" spellcheck="false" disabled></textarea>
+        </label>
+
+        <p id="model-error" class="load-error" role="alert" hidden></p>
+
+        <section id="warnings-area" aria-label="A－17 renderer 警告" hidden>
+          <h2>Renderer 警告</h2>
+          <ul id="warnings-list"></ul>
+        </section>
+
         <p id="load-error" class="load-error" role="alert" hidden></p>
       </section>
 
@@ -164,6 +217,7 @@
       let renderTemplate;
       let waitForFonts;
       let fieldConfig = null;
+      let thresholdTable = null;
 
       if (
         parameters.get("type") === "A" &&
@@ -391,9 +445,22 @@
           { id: "rightTitle", label: "右標題", value: "商城優選皆適用", limit: 10 },
           { id: "rightCopy", label: "右文案", value: "宅配滿$490免運", limit: 10 },
         ];
+      } else if (
+        parameters.get("type") === "A" &&
+        parameters.get("bn") === "17_門檻表"
+      ) {
+        const template = await import("../templates/A/17-threshold-table.js");
+        viewerTitle = "樣式 A－17_門檻表";
+        viewerLabel = "A－17";
+        renderTemplate = template.renderThresholdTable;
+        waitForFonts = template.waitForThresholdTableFonts;
+        thresholdTable = {
+          titleSource: "../assets/A/底圖/17_主標題.png",
+          vipSource: "../assets/A/底圖/17_VIP.png",
+        };
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR 與 16_副區。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區 與 17_門檻表。",
         );
       }
 
@@ -411,22 +478,26 @@
         .setAttribute("aria-label", `${viewerLabel} 測試文字`);
 
       const preview = document.querySelector("#preview");
-      preview.style.width = `${width}px`;
-      preview.style.height = `${height}px`;
       preview.setAttribute("aria-label", `${viewerLabel} 正式 Canvas 預覽`);
 
       const canvas = document.querySelector("#preview-canvas");
-      canvas.width = width;
-      canvas.height = height;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
       const overlay = document.querySelector("#alignment-overlay");
-      overlay.src = new URL(overlaySource, import.meta.url).href;
-      overlay.width = width;
-      overlay.height = height;
-      overlay.style.width = `${width}px`;
-      overlay.style.height = `${height}px`;
+
+      if (!thresholdTable) {
+        preview.style.width = `${width}px`;
+        preview.style.height = `${height}px`;
+
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+
+        overlay.src = new URL(overlaySource, import.meta.url).href;
+        overlay.width = width;
+        overlay.height = height;
+        overlay.style.width = `${width}px`;
+        overlay.style.height = `${height}px`;
+      }
 
       const fieldSlots = [
         {
@@ -448,7 +519,13 @@
       ];
 
       let fields;
-      if (fieldConfig) {
+      if (thresholdTable) {
+        fields = [];
+        for (const slot of fieldSlots) {
+          slot.label.hidden = true;
+          slot.input.disabled = true;
+        }
+      } else if (fieldConfig) {
         fields = fieldConfig.map((config, index) => {
           const slot = fieldSlots[index];
           slot.label.hidden = false;
@@ -469,6 +546,12 @@
       }
       const overlayToggle = document.querySelector("#overlay-toggle");
       const loadError = document.querySelector("#load-error");
+
+      if (thresholdTable) {
+        document.querySelector('label[for="overlay-toggle"]').hidden = true;
+        overlayToggle.disabled = true;
+        overlay.hidden = true;
+      }
       const state = Object.fromEntries(fields.map((field) => [field.id, field.input.value]));
       let backgroundImage = null;
 
@@ -542,36 +625,370 @@
         overlay.hidden = !overlayToggle.checked;
       });
 
-      try {
-        const backgroundUrl = new URL(
-          backgroundSource,
-          import.meta.url,
-        );
-        [backgroundImage] = await Promise.all([
-          loadImage(backgroundUrl.href, `${viewerLabel} 正式底圖`),
-          waitForFonts(),
-          overlay.decode().then(() => {
-            if (
-              overlay.naturalWidth !== width ||
-              overlay.naturalHeight !== height
-            ) {
-              throw new Error(
-                `${viewerLabel} 正式對位圖必須為 ${width} × ${height}px。`,
+      // A－17 專用：presets ＋ JSON textarea ＋ warnings 的開發／校稿控制。
+      // 只作 Launch 視覺校稿，不是正式 Editor、Excel Import、Workspace 或 Export。
+      async function initThresholdTableViewer() {
+        const presets = {
+          "P1｜正式 A.xlsx sample（4物流／3門檻／↑merge）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [
+              { line1: "蝦皮店到店", line2: "" },
+              { line1: "蝦皮店到店", line2: "隔日到貨" },
+              { line1: "蝦皮店到店", line2: "環保無包裝" },
+              { line1: "店到家宅配", line2: "(含新竹物流，海外宅配)" },
+            ],
+            thresholds: [
+              {
+                name: "平日門檻",
+                cells: [
+                  { color: "綠", amount: "$199" },
+                  { color: "紅", amount: "$299" },
+                  { color: "紅", amount: "$99" },
+                  { color: "紅", amount: "$490起" },
+                ],
+              },
+              {
+                name: "週三/週六\n加碼",
+                cells: [
+                  { color: "綠", amount: "$149" },
+                  { color: "", amount: "↑" },
+                  { color: "", amount: "↑" },
+                  { color: "", amount: "↑" },
+                ],
+              },
+              {
+                name: "6/1加碼",
+                cells: [
+                  { color: "紅", amount: "$99" },
+                  { color: "", amount: "↑" },
+                  { color: "", amount: "↑" },
+                  { color: "", amount: "↑" },
+                ],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P2｜5物流全單行／1門檻（最小高度）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [
+              { line1: "蝦皮店到店", line2: "" },
+              { line1: "隔日到貨", line2: "" },
+              { line1: "環保無包裝", line2: "" },
+              { line1: "店到家宅配", line2: "" },
+              { line1: "海外宅配", line2: "" },
+            ],
+            thresholds: [
+              {
+                name: "平日門檻",
+                cells: [
+                  { color: "綠", amount: "$199" },
+                  { color: "紅", amount: "$299" },
+                  { color: "綠", amount: "$99" },
+                  { color: "紅", amount: "$490起" },
+                  { color: "綠", amount: "$59" },
+                ],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P3｜1物流（單欄最寬）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [{ line1: "蝦皮店到店", line2: "" }],
+            thresholds: [
+              { name: "平日門檻", cells: [{ color: "綠", amount: "$199" }] },
+              { name: "6/1加碼", cells: [{ color: "紅", amount: "$99" }] },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P4｜line2 Han=5／6 邊界（28pt→17pt）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [
+              { line1: "蝦皮店到店", line2: "環保無包裝" },
+              { line1: "店到家宅配", line2: "環保無包裝袋" },
+            ],
+            thresholds: [
+              {
+                name: "平日門檻",
+                cells: [
+                  { color: "綠", amount: "$199" },
+                  { color: "紅", amount: "$490起" },
+                ],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P5｜門檻 1／2／3／4 行（\\n＋自動換行）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [{ line1: "蝦皮店到店", line2: "" }],
+            thresholds: [
+              { name: "平日門檻", cells: [{ color: "綠", amount: "$199" }] },
+              { name: "週三/週六\n加碼", cells: [{ color: "綠", amount: "$149" }] },
+              { name: "超長門檻名稱自動換行", cells: [{ color: "紅", amount: "$99" }] },
+              {
+                name: "第一段\n超長門檻名稱自動換行測試",
+                cells: [{ color: "紅", amount: "$79" }],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P6｜空白金額／中間空列／跨不同列高 merge": {
+            mainTitle: "不限店家無限免運",
+            logistics: [
+              { line1: "蝦皮店到店", line2: "" },
+              { line1: "隔日到貨", line2: "" },
+              { line1: "店到家宅配", line2: "" },
+            ],
+            thresholds: [
+              {
+                name: "平日門檻",
+                cells: [
+                  { color: "綠", amount: "$199" },
+                  { color: "紅", amount: "$299" },
+                  { color: "綠", amount: "$99" },
+                ],
+              },
+              {
+                name: "週三/週六\n加碼",
+                cells: [
+                  { color: "綠", amount: "$149" },
+                  { color: "", amount: "↑" },
+                  { color: "", amount: "" },
+                ],
+              },
+              { name: "", cells: [] },
+              {
+                name: "6/1加碼",
+                cells: [
+                  { color: "", amount: "" },
+                  { color: "", amount: "↑" },
+                  { color: "紅", amount: "$79" },
+                ],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+          "P7｜錯誤資料（warnings 仍整張生成）": {
+            mainTitle: "不限店家無限免運",
+            logistics: [
+              { line1: "蝦皮店到店", line2: "" },
+              { line1: "", line2: "" },
+            ],
+            thresholds: [
+              {
+                name: "平日門檻",
+                cells: [
+                  { color: "", amount: "↑" },
+                  { color: "藍", amount: "$88" },
+                ],
+              },
+              {
+                name: "",
+                cells: [
+                  { color: "綠", amount: "$100" },
+                  { color: "紅", amount: "" },
+                ],
+              },
+              {
+                name: "6/1加碼",
+                cells: [
+                  { color: "", amount: "$77" },
+                  { color: "", amount: "↑" },
+                ],
+              },
+            ],
+            vip: {
+              title: "天天無限免運 ｜ 不分時段$49起",
+              copy: "額外享天天9折優惠券，首月免費試用",
+              cta: "訂閱去",
+            },
+          },
+        };
+
+        const presetLabel = document.querySelector("#preset-select-label");
+        const presetSelect = document.querySelector("#preset-select");
+        const modelLabel = document.querySelector("#model-input-label");
+        const modelInput = document.querySelector("#model-input");
+        const modelError = document.querySelector("#model-error");
+        const warningsArea = document.querySelector("#warnings-area");
+        const warningsList = document.querySelector("#warnings-list");
+
+        let titleImage = null;
+        let vipImage = null;
+
+        const syncCanvasSize = () => {
+          preview.style.width = `${canvas.width}px`;
+          preview.style.height = `${canvas.height}px`;
+          canvas.style.width = `${canvas.width}px`;
+          canvas.style.height = `${canvas.height}px`;
+        };
+
+        const showWarnings = (result) => {
+          const entries = [...result.warnings];
+          const addFit = (label, fit) => {
+            if (fit && (!fit.fitsWidth || !fit.fitsHeight)) {
+              entries.push(
+                `${label} ink 超出可用範圍（fitsWidth=${fit.fitsWidth}、fitsHeight=${fit.fitsHeight}）。`,
               );
             }
-          }),
-        ]);
+          };
+          addFit("主標題", result.frames.mainTitle);
+          addFit("適用物流", result.frames.logisticsHeader);
+          result.frames.logistics.forEach((fit, index) =>
+            addFit(`物流欄 ${index + 1} 名稱`, fit),
+          );
+          result.frames.thresholds.forEach((fit, index) =>
+            addFit(`門檻列 ${index + 1} 名稱`, fit),
+          );
+          result.frames.amounts.forEach((cells, index) =>
+            cells.forEach((fit) => addFit(`物流欄 ${index + 1} 金額`, fit)),
+          );
+          addFit("VIP 標題", result.frames.vipTitle);
+          addFit("VIP 文案", result.frames.vipCopy);
+          addFit("CTA", result.frames.cta);
 
-        render();
-        fields.forEach((field) => {
-          bindField(field);
-          field.input.disabled = false;
+          warningsList.replaceChildren(
+            ...entries.map((text) => {
+              const item = document.createElement("li");
+              item.textContent = text;
+              return item;
+            }),
+          );
+          warningsArea.hidden = entries.length === 0;
+        };
+
+        const renderModel = () => {
+          let model;
+          try {
+            model = JSON.parse(modelInput.value);
+          } catch (error) {
+            modelError.textContent = `JSON 解析失敗：${error.message}`;
+            modelError.hidden = false;
+            return;
+          }
+
+          try {
+            const result = renderTemplate(canvas, { titleImage, vipImage }, model);
+            syncCanvasSize();
+            modelError.hidden = true;
+            modelError.textContent = "";
+            showWarnings(result);
+          } catch (error) {
+            modelError.textContent =
+              error instanceof Error ? error.message : String(error);
+            modelError.hidden = false;
+          }
+        };
+
+        const applyPreset = (name) => {
+          modelInput.value = JSON.stringify(presets[name], null, 2);
+          renderModel();
+        };
+
+        for (const name of Object.keys(presets)) {
+          const option = document.createElement("option");
+          option.value = name;
+          option.textContent = name;
+          presetSelect.append(option);
+        }
+        presetSelect.addEventListener("change", () => applyPreset(presetSelect.value));
+
+        let isComposing = false;
+        modelInput.addEventListener("compositionstart", () => {
+          isComposing = true;
         });
-        overlayToggle.disabled = false;
-      } catch (error) {
-        loadError.textContent = error instanceof Error ? error.message : String(error);
-        loadError.hidden = false;
-        throw error;
+        modelInput.addEventListener("compositionend", () => {
+          isComposing = false;
+          renderModel();
+        });
+        modelInput.addEventListener("input", (event) => {
+          if (isComposing || event.isComposing) return;
+          renderModel();
+        });
+
+        try {
+          [titleImage, vipImage] = await Promise.all([
+            loadImage(
+              new URL(thresholdTable.titleSource, import.meta.url).href,
+              "A－17 正式主標底圖",
+            ),
+            loadImage(
+              new URL(thresholdTable.vipSource, import.meta.url).href,
+              "A－17 正式 VIP 底圖",
+            ),
+            waitForFonts(),
+          ]);
+
+          presetLabel.hidden = false;
+          modelLabel.hidden = false;
+          presetSelect.disabled = false;
+          modelInput.disabled = false;
+          applyPreset(Object.keys(presets)[0]);
+        } catch (error) {
+          loadError.textContent =
+            error instanceof Error ? error.message : String(error);
+          loadError.hidden = false;
+          throw error;
+        }
+      }
+
+      if (thresholdTable) {
+        await initThresholdTableViewer();
+      } else {
+        try {
+          const backgroundUrl = new URL(
+            backgroundSource,
+            import.meta.url,
+          );
+          [backgroundImage] = await Promise.all([
+            loadImage(backgroundUrl.href, `${viewerLabel} 正式底圖`),
+            waitForFonts(),
+            overlay.decode().then(() => {
+              if (
+                overlay.naturalWidth !== width ||
+                overlay.naturalHeight !== height
+              ) {
+                throw new Error(
+                  `${viewerLabel} 正式對位圖必須為 ${width} × ${height}px。`,
+                );
+              }
+            }),
+          ]);
+
+          render();
+          fields.forEach((field) => {
+            bindField(field);
+            field.input.disabled = false;
+          });
+          overlayToggle.disabled = false;
+        } catch (error) {
+          loadError.textContent = error instanceof Error ? error.message : String(error);
+          loadError.hidden = false;
+          throw error;
+        }
       }
     </script>
   </body>
