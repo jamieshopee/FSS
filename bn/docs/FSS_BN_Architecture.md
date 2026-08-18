@@ -947,3 +947,25 @@ A－16 `.command` 完全沿用 A－15 已 PASS 結構，固定使用 `127.0.0.1:
 Claude Phase 5 已完成當時環境可執行的 deterministic／static／sandbox 驗證：renderer／Viewer module 語法、HTTP 200、正式 assets decode／dimensions／SHA-256、placement 與雙 guard、四 runtime frames、font-ready 結構、2400 × 440 temporary Canvas、雙 Medium 標題同層 2× 與一次 downsample、Bold 文案 1×、四欄 actual-ink 置中、mixed runs 各位置、結構性 hard-stop、Viewer 邏輯測試 20/20，以及 A－01～15 regression 與 Git Scope。Renderer mock 測試最終 34/34 PASS；初跑曾有 1 項 fitsWidth 測試 FAIL，經查為 mock 測試字串寬度不足 540px 的測試資料問題、非 renderer 缺陷，加長測試字串後全數通過。sandbox 無 zsh，`zsh -n` 未執行，改以與 A－15 已 PASS script 的逐行 diff（僅預期替換）作替代證據；mock／sandbox metrics 沒有被宣稱為真實 Chrome／Safari Browser actual TextMetrics 或視覺 PASS。其後 Jamie 已由 Finder 雙擊 A－16 `.command`，在 Chrome／Safari 完成真實 Canvas、底圖與固定區塊、Medium 34pt local 2× 粗細與銳利度、Bold 34pt／28pt mixed baseline、不同位置的 `$`／`%`、四框 actual-ink 置中、四-input 操作與輸入限制／rollback、overlay、真實中文 IME、Console 與必要 regression 的實機驗證，並明確回覆 PASS。因此 A－16 已完成並通過人工驗收，不是 unresolved blocker。
 
 目前共用 Viewer 支援 A－01～16。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十六個獨立 renderer；A－17 與 B／C／D 仍未落地。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位實作方式。
+
+## 35. A－17 正式 Template 實際落地狀態
+
+樣式 A／`17_門檻表` 已完成獨立正式 table renderer、共用薄 Viewer 的 A－17 專用 branch、Finder Launch、正式 runtime assets、Phase 5 真實 Chromium AI 自驗、兩輪最小 Visual Tuning，以及 Jamie Chrome／Safari 最終手動驗證。Jamie 已明確回覆 PASS。Code Commit 為 `556a79c25ce9d7ddb77b25075484312f37ea4197`（`feat(bn): add A17 threshold table template`），且是在 Jamie 完成手動驗證後由 Jamie 於 macOS Terminal 建立；`git diff --check HEAD^ HEAD` PASS。
+
+Code Commit 精確包含：
+
+- `bn/templates/A/17-threshold-table.js`：A－17 獨立正式 table renderer。
+- `bn/launch/A/17_門檻表.command`：A－17 直接啟動入口，Git mode 為 `100755`。
+- `bn/launch/viewer.html`：共用薄 Viewer，最小增加 A－17 專用 branch。
+- `bn/assets/A/底圖/17_主標題.png`：正式主標底圖，PNG RGBA，intrinsic 1180 × 83，SHA-256 `ecf17ed1b9841fd62dd1535bb0573148361ddbc0cd22ed914457b8d38ac32bac`。
+- `bn/assets/A/底圖/17_VIP.png`：正式 VIP 底圖，PNG RGBA，intrinsic 1180 × 185，SHA-256 `34df2ee85c09e691a25de31a7f5595833b98c9e01697a7234cb52a845512ba2c`。
+
+A－17 是目前唯一的動態門檻表版位，與 A－01～16 的固定 Canvas＋固定文字 frame 模式不同：正式輸出為 PNG，Canvas 固定 width 1200px、height 動態（`canvasHeight = 290 + middleHeight`）；body x = 10、width = 1180，外距 top 10／bottom 12；垂直組成為 `17_主標題.png`（1:1 @ `(10, 10)`）→ renderer 依資料自繪的 dynamic middle → `17_VIP.png`（1:1 緊接其後），三段直接相接。中段 background `#1a9c8b`、外 padding 與 cell gap 均 12px、生成色塊 radius 10px；橫向 `12 + 177 + 12 + 967 + 12 = 1180`。物流最多 5 欄、實際 N 欄時欄寬 `(967 − 12 × (N − 1)) / N`（fractional coordinates），完全未使用欄不生成並重新分配；line1／line2 為明確欄位，任一有效物流有 line2 時 logistics row = 80px、否則 45px；line2 依 Unicode Han 計數（`/\p{Script=Han}/u`）≤5 用 28px `#006351`、>5 用 17px `#4e4e4e`。門檻名稱支援 literal `\n` 強制斷行＋153px 實際 `measureText()` greedy auto-wrap，baseline pitch 30px，`rowHeight = 70 + (lineCount − 1) × 30`。金額 cell `#fffced`、32px Bold、單行雙向置中，顏色依 dropdown 對映綠 `#006351`／紅 `#d0011b`，空 amount 仍生成空白白格。`↑`（trim 後精確 U+2191）為向上 merge 指令：只能併入正上方相鄰 open segment，merged geometry 含跨越 row heights＋12px gaps，文字／顏色沿用起始格且不繪製 `↑`；無效 `↑` 生成獨立空白白格＋warning，不猜值、不整張 fail。資料問題採 warnings 照常生成，結構性錯誤才 hard-stop；frame-fit 沿用如實回報 policy。
+
+A－17 正式字級經 Jamie Visual Tuning 裁決為 **Canvas `px` 同值**（主標 50px Bold `#ffed54`、左欄 label／物流／門檻 28px Bold、物流長名稱 17px、金額 32px Bold、VIP 標題 36px Bold `#d0011b`、VIP 文案 34px Bold `#ffffff`、CTA 30px Regular `#ffffff`）：Photoshop 設計數值必須以同值 px 呈現才能還原正式成品尺度，禁止 runtime `pt` 與 96/72／1.333 換算；早期 pt runtime 造成的整體 4/3 放大與「週三/週六」多斷行已修正，不是正式規格。VIP 三組文字使用已驗證 asset-local frames：標題 `(217, 42, 935, 34)` 置中、文案 `(201, 128, 720, 34)` 置中、CTA `(1003, 128, 85, 34)` 靠右＋垂直置中，runtime origin `(10, 10 + 83 + middleHeight)`；local frames 由 Photoshop absolute 經單一平移 `local = absolute − (3328, 1190)` 驗證成立。
+
+第二輪 Visual Tuning 經 Jamie 批准與 Manual PASS：僅左側兩類 28px Bold `#ffee9f` 黃字（「適用物流」label＋全部門檻名稱）採 A－17 local 2× temporary canvas（`scale(2, 2)`）＋`imageSmoothingQuality = "high"` 一次 downsample 回正式 1×；不套用右側物流名稱、金額、主標、VIP、CTA，不是全域規則，geometry／wrap／字級／frame 均不因此改變。Jamie 另明確裁決兩項為「可接受的 nominal-frame overflow」，非視覺缺陷、非 Coding bug、不阻擋 Manual PASS，diagnostic warning 保留：VIP 標題 ink 高約 36px 相對 34px frame（`fitsHeight = false`）；CTA ink 寬約 88px 相對 85px frame（`fitsWidth = false`，右緣仍精確對齊）。
+
+A－17 route 為 `viewer.html?type=A&bn=17_%E9%96%80%E6%AA%BB%E8%A1%A8`。A－17 無對位 PNG，不使用 overlay（overlay image／toggle 於此 route 隱藏停用、decode guard 跳過）。Viewer A－17 branch 以 preset select（P1～P7）＋JSON textarea＋warnings 區作 Launch 校稿：P1 為正式 A.xlsx sample，於 px runtime 實測 4 物流、columnWidth 232.75、logistics row 80、threshold heights `[70, 100, 70]`（「週三/週六\n加碼」2 visual lines／100px）、middleHeight 380、Canvas 1200 × 670；歷史上的 298／588 只是兩門檻列 scratch sanity 數值，不是 P1 正式高度。JSON parse 失敗保留上一個有效 Preview、IME composition-safe；render 後依 canvas intrinsic 同步 CSS 尺寸（維持精確 1:1）。既有 4 個 field slots 於 A－17 hidden＋disabled；A－01～16 各 route 行為完全不變，Phase 5 已對 A－01／02／15／16 作 route regression 無回歸。此校稿 UI 只屬 Launch 工具，`17_門檻表` 控制台手動 Editor 維持第一輪排除、`getEditorFields("17")` 仍回傳空陣列。
+
+目前共用 Viewer 支援 A－01～17，樣式 A 全部 17 個正式版位均已落地。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十七個獨立 renderer；B／C／D、正式 Excel Import、Workspace Schema、Export／ZIP 仍未實作。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位或 Type 的實作方式。

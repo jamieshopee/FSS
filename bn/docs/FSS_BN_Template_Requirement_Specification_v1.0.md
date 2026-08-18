@@ -1558,6 +1558,125 @@ Claude Phase 5 已完成當時環境可執行的 deterministic／static／sandbo
 
 兩張 committed assets 的 SHA-256 與 Phase 2／5 原檔完全一致（底圖 `12902843ca43ffc7f1c89669514afa8477675406f96dab4f9b8819f11ba9506e`、對位 `f716ccf2e955e0770e5115966ac1703327a3720e17ece618759015f01f1bee77`），只由 untracked 轉為 tracked、零修改。
 
+#### 5.1.17 `17_門檻表`
+
+##### 5.1.17.1 正式版位與資產規格
+
+| 項目 | 正式需求 |
+|---|---|
+| 正式名稱 | `17_門檻表` |
+| 樣式／內部 Type | 樣式 A／Type A |
+| 版位分類 | 動態門檻表（dynamic threshold table；A－17 是目前唯一表格型動態版位） |
+| Canvas | 固定 width 1200px；height 動態，`canvasHeight = 290 + middleHeight` |
+| 正式輸出格式 | PNG |
+| Template renderer | `bn/templates/A/17-threshold-table.js` |
+| 正式主標底圖 | `bn/assets/A/底圖/17_主標題.png`（PNG RGBA，intrinsic 1180 × 83） |
+| 正式 VIP 底圖 | `bn/assets/A/底圖/17_VIP.png`（PNG RGBA，intrinsic 1180 × 185） |
+| 對位圖 | 無。A－17 不使用 overlay，校稿依 presets＋JSON 測試資料與正式參考圖人工比對 |
+| Viewer | `bn/launch/viewer.html`（A－17 專用 branch） |
+| Viewer route | `viewer.html?type=A&bn=17_%E9%96%80%E6%AA%BB%E8%A1%A8` |
+| Finder Launch | `bn/launch/A/17_門檻表.command` |
+
+A－17 與 A－01～16 的「固定 Canvas＋固定底圖＋固定文字 frame」模式不同：主標與 VIP 為固定 asset 區，中段門檻表由 renderer 依資料動態自繪，最終 Canvas 高度依實際內容決定，不補成固定高度、不縮放內容。
+
+##### 5.1.17.2 Canvas 動態 geometry 與中段結構
+
+- body：x = 10、width = 1180；外距 top 10、bottom 12、左右各 10。
+- 垂直組成：`17_主標題.png`（1:1 置於 `(10, 10)`）→ dynamic middle → `17_VIP.png`（1:1 接於 `(10, 10 + 83 + middleHeight)`）；三段直接相接。
+- 中段：background `#1a9c8b`、直角（外圓角由上下 assets 承擔）；外 padding 四邊 12px；cell gap 水平／垂直 12px；生成色塊 radius 10px。
+- 橫向：`12 + 177（左欄） + 12 + 967（logistics area） + 12 = 1180`。
+- `middleHeight = 12 + logisticsRowHeight + Σ(12 + thresholdRowHeight) + 12`；`canvasHeight = 10 + 83 + middleHeight + 185 + 12 = 290 + middleHeight`。
+- 兩張 assets 只以原尺寸 1:1 繪製並各自精確 intrinsic dimension guard（1180×83／1180×185），不 Resize、不 stretch、不 crop。
+
+##### 5.1.17.3 正式字級單位裁決（Canvas px 同值）
+
+A－17 正式字級經 Visual Tuning 由 Jamie 正式裁決為 **Canvas `px` 同值**：Photoshop 提供的設計數值在本版位 Canvas runtime 必須以同值 `px` 呈現才能還原正式成品尺度；禁止 runtime 使用 `pt`、禁止 96/72、1.333 或其他 pt→px 放大換算。此裁決取代本版位早期以 `pt` 直接作 Canvas font specification 的做法（pt runtime 曾造成整體約 4/3 放大與「週三/週六」多斷一行，已修正，不得記為正式規格）。
+
+| 文字 | 字型／字重 | 字級 | 顏色 |
+|---|---|---:|---|
+| 主標題 | `ShopeeNotoSans Bold` | 50px | `#ffed54` |
+| 左欄「適用物流」label／門檻名稱 | `ShopeeNotoSans Bold` | 28px | `#ffee9f` |
+| 物流名稱 line1／line2（Han ≤5） | `ShopeeNotoSans Bold` | 28px | `#006351` |
+| 物流名稱 line2（Han >5） | `ShopeeNotoSans Bold` | 17px | `#4e4e4e` |
+| 金額 | `ShopeeNotoSans Bold` | 32px | 依 dropdown：綠 `#006351`／紅 `#d0011b` |
+| VIP 標題 | `ShopeeNotoSans Bold` | 36px | `#d0011b` |
+| VIP 文案 | `ShopeeNotoSans Bold` | 34px | `#ffffff` |
+| CTA | `ShopeeNotoSans Regular` | 30px | `#ffffff` |
+
+主標題上限 15 字、VIP 標題／文案各 20 字、CTA 3 字（箭頭屬 VIP 底圖固定 graphics，不在 CTA 文字內）。主標題文字於 1180 × 83 主標區內依 actual ink bbox 水平＋垂直置中。Font-ready 以 `document.fonts.load()`／`check()` 精確檢查上表全部字級；A－17 不使用 Medium，無 Medium local 2×。
+
+##### 5.1.17.4 物流欄與物流名稱
+
+- 最多 5 個物流欄；實際使用 N 欄時欄寬 `(967 − 12 × (N − 1)) / N`，允許 fractional coordinates；完全未使用之物流欄（名稱與該欄全部 color／amount 皆空）不生成並重新分配寬度。
+- line1／line2 為 Excel／test model 的兩個明確欄位，renderer 不自行把 line1 拆成兩行。
+- 任一有效物流存在 line2 → logisticsRowHeight = 80px；否則 45px；左側「適用物流」cell 與所有物流 cells 同高。
+- line2 以 Unicode Han 計數（`/\p{Script=Han}/u` 逐 code point；A－17 local 實作）：Han ≤5 → 28px `#006351`；Han >5 → 17px `#4e4e4e`。此為正式視覺規則，不是超限縮字；不使用 UTF-16 length、code point 總數或 countTextUnits。
+- line1＋line2 作為文字 group：垂直依整組 ink bbox 置中、各 visual line 水平各自置中，baseline pitch 30px。
+
+##### 5.1.17.5 門檻名稱換行與 row height
+
+- 左欄 width 177px、fill `#006351`、text safe padding 四邊 12px、可用文字寬 153px。
+- 門檻名稱支援 literal `\n` 強制斷行；每段內再依 153px 以實際 `measureText()` 寬度 greedy auto-wrap（按 code point 迭代，不拆 surrogate pair）；不縮字、不 scale-to-fit，超寬由 frame-fit 如實回報。
+- 全部 visual lines 依 30px baseline pitch 堆疊，整組垂直置中、各行水平置中。
+- `rowHeight = 70 + (lineCount − 1) × 30`；金額內容不參與 row height 計算。
+
+##### 5.1.17.6 金額 cell
+
+fill `#fffced`、radius 10、32px Bold、永遠單行、於 cell（或合併後整格）內水平＋垂直置中；高度跟隨所屬 threshold row。顏色只依資料 dropdown 對映：綠 → `#006351`、紅 → `#d0011b`，renderer 不依金額內容猜色。空 amount 仍生成空白白格，不改 row geometry。
+
+##### 5.1.17.7 `↑` merge 與無效 `↑`
+
+- 控制值（color／amount／`↑` 判斷）解析前先 trim ASCII whitespace＋U+3000；`↑` 為 trim 後精確 U+2191，是 merge 指令，不是輸出文字，renderer 永不繪製 `↑` 字元。
+- 有效 `↑` 只能併入正上方相鄰的 open segment（有效金額起始格或其連續延伸）；merged geometry 必須包含跨越的實際 row heights＋被覆蓋的 12px vertical gaps，不得使用 fixedRowHeight × rowspan；文字與顏色沿用起始金額 cell，於完整 merged 白格內雙向置中。空白 amount 會關閉 segment。
+- 無效 `↑`（首列即 `↑`、上方為空白格或無效格）：生成獨立空白白格＋warning（標明物流×門檻與原因），不猜值、不猜 merge、不畫 `↑`，整張照常生成。
+
+##### 5.1.17.8 Warnings 與 hard-stop 邊界
+
+可恢復資料問題一律 warnings＋照常生成：物流名稱空白但欄內有資料（欄仍生成、名稱格空白）；門檻 label 空白但列內有資料（列仍生成、左格空白、70px）；color 有值 amount 空白（空白白格）；amount 有值 color 空白（白格、不畫金額，不得預設綠色）；非法 color（同前）；`↑` 帶 color（忽略並警告）；無效 `↑`。結構性錯誤才 hard-stop：canvas／image 型別、asset intrinsic 不符、字型未 ready、2D context 失敗、非有限 metrics、>5 物流／>9 門檻、全空 table。frame-fit 沿用既有 policy：`fitsWidth`／`fitsHeight` 如實回傳，false 不阻擋 render、不縮字、不加 tolerance。
+
+##### 5.1.17.9 VIP 固定區與 local frames
+
+VIP asset 已含橘底、蝦皮 VIP graphics/logo、白色 title rectangle、黑色 CTA pill 與箭頭等全部固定 graphics，renderer 不重畫。三組文字使用已驗證的 asset-local frames（相對 1180 × 185 asset 左上角；runtime origin 為 `(10, 10 + 83 + middleHeight)`）：
+
+| 欄位 | Local frame（left, top, width, height） | 對齊 |
+|---|---|---|
+| VIP 標題 | `217, 42, 935, 34` | 水平＋垂直置中，36px Bold `#d0011b` |
+| VIP 文案 | `201, 128, 720, 34` | 水平＋垂直置中，34px Bold `#ffffff` |
+| CTA | `1003, 128, 85, 34` | 靠右＋垂直置中，30px Regular `#ffffff` |
+
+Local frames 由 Photoshop absolute frames（title 3545/1232、copy 3529/1318、CTA 4331/1318）經單一平移 `local = absolute − (3328, 1190)` deterministic 驗證成立（A－17 VIP Local Frame Verification PASS）；Photoshop 大工作區 absolute 座標不寫入 renderer。
+
+##### 5.1.17.10 左欄黃字 local 2×（Jamie Manual PASS）
+
+A－17 經獨立 Investigation 與 Jamie 批准／Manual PASS，僅對左側兩類 28px Bold `#ffee9f` 黃字——「適用物流」label 與全部門檻名稱——採版位 local 2× rendering：建立 transparent temporary canvas（1200 × canvasHeight 的 2× backing、尺寸 guard），`scale(2, 2)` 後以原字級與原 logical frames／對齊邏輯繪製，再以 `imageSmoothingEnabled = true`、`imageSmoothingQuality = "high"` 一次 downsample 回正式 1× Canvas。此規則**只限 A－17 左欄黃字**：不套用右側物流名稱（同為 28px Bold）、17px 小字、金額、主標、VIP 標題／文案、CTA，不是全域規則，不得推廣到其他版位；geometry、wrap、字級、frame 均不因 local 2× 改變（wrap 與定位仍依正式 1× metrics，`measureText` 不受 transform 影響）。
+
+##### 5.1.17.11 已接受的 nominal-frame overflow（Jamie 裁決）
+
+Jamie 已明確裁決下列兩項為「可接受的 nominal-frame overflow」，不是視覺缺陷、不是 Coding bug，不需要修改字級／frame／座標／字型／geometry，也不阻擋 Manual Validation PASS：
+
+- VIP 標題：actual ink 高約 36px，相對 34px nominal frame `fitsHeight = false`。
+- CTA：`訂閱去` actual ink 寬約 88px，相對 85px nominal frame `fitsWidth = false`（右緣仍精確對齊 frame 右緣）。
+
+兩項 frame-fit diagnostic warning 保留於 Launch 警告區作校稿診斷資訊，不因此修改 renderer。
+
+##### 5.1.17.12 Viewer A－17 branch（presets＋JSON textarea）
+
+A－17 不使用一般 4-input fieldConfig：既有 4 個 field slots 於 A－17 route hidden＋disabled；改提供 preset select（P1～P7）＋JSON textarea＋warnings 區。P1 為正式 A.xlsx sample（4 物流／3 門檻／↑ merge／Han >5 小字），P2～P7 依序覆蓋 5 欄最小高度、單欄最寬、Han 5／6 邊界、1～4 行換行（含 `\n` 與純 auto-wrap）、空白金額／中間空列／跨異高 merge、錯誤資料 warnings。JSON parse 失敗顯示錯誤並保留上一個有效 Preview；IME composition 中不 parse。A－17 無 overlay：overlay image／toggle 隱藏停用、decode guard 跳過。每次 render 後 Viewer 依 `canvas.width/height` 同步 preview／canvas CSS 尺寸（Canvas intrinsic 與 CSS 維持精確 1:1）。此校稿 UI 只限 Launch 開發／視覺校稿，不是正式 Editor、Excel Import、Workspace 或 Export；A－17 控制台第一輪 Editor 排除規格維持不變。A－01～16 各 route 行為零變動。
+
+##### 5.1.17.13 Launch／驗證狀態與 Code Commit
+
+`bn/launch/A/17_門檻表.command` 完全沿用 A－16 已 PASS 結構（僅替換版位名與 URL），固定 `127.0.0.1:4173`、marker 驗證、占用即停、不換 port、不 kill 外部 process；Git mode `100755`。
+
+Phase 5 以真實 Chromium（Playwright headless）＋正式 Shopee WOFF2 完成 AI 自驗：P1 正式 sample 於 px runtime 為 4 物流、columnWidth 232.75、logistics row 80、threshold heights `[70, 100, 70]`（「週三/週六\n加碼」為 2 visual lines／100px）、middleHeight 380、Canvas **1200 × 670**；P1～P7 dynamic geometry／`↑` merge（含跨異高列與 pixel 級無縫驗證）／blank amount／warnings（P7 七條）／JSON rollback／IME／overlay disabled／動態 Canvas 全部驗證 PASS；A－01／02／15／16 route regression 無回歸；A－01～16 本輪零修改。歷史備註：298／588 只是過往「兩門檻列」scratch geometry sanity 數值，不存在 Repository，不是 A.xlsx P1 正式高度。其後 Jamie 已由 Finder 雙擊 `.command` 在 Chrome／Safari 完成實機手動驗證（含左欄黃字 local 2× 效果）並明確 PASS。
+
+Code Commit 為 `556a79c25ce9d7ddb77b25075484312f37ea4197`（`feat(bn): add A17 threshold table template`），`git diff --check HEAD^ HEAD` PASS，精確包含：
+
+- `bn/templates/A/17-threshold-table.js`
+- `bn/launch/A/17_門檻表.command`（Git mode `100755`）
+- `bn/launch/viewer.html`（A－17 branch 最小修改）
+- `bn/assets/A/底圖/17_主標題.png`（SHA-256 `ecf17ed1b9841fd62dd1535bb0573148361ddbc0cd22ed914457b8d38ac32bac`）
+- `bn/assets/A/底圖/17_VIP.png`（SHA-256 `34df2ee85c09e691a25de31a7f5595833b98c9e01697a7234cb52a845512ba2c`）
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：
@@ -1575,9 +1694,9 @@ bn/
 
 `bn/launch/` 的用途只限正式 BN Template 的開發／視覺驗證入口。Launch 只負責讓指定 Type 與 BN 版位可以直接開啟及查看；它不是第二套 Generator、第二套 Template 系統、四套獨立正式 Template 實作或 68 份互相複製的正式 Layout 程式。Launch 必須呈現共用正式 Template 系統中的同一份正式 Template，不得複製正式 Template 程式。
 
-Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～12 Launch 只提供三個測試文字欄位，A－13、A－14 與 A－15 Launch 只提供「第一行」「第二行」兩個測試文字欄位，A－16 Launch 提供「左標題」「左文案」「右標題」「右文案」四個測試文字欄位；均只含即時 Canvas 更新及對位圖顯示／隱藏，不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
+Launch 是正式 Template 的最小開發／視覺校稿工具，不是第二套 BN 控制台、正式 Workspace 或正式資料輸入流程。A－01～12 Launch 只提供三個測試文字欄位，A－13、A－14 與 A－15 Launch 只提供「第一行」「第二行」兩個測試文字欄位，A－16 Launch 提供「左標題」「左文案」「右標題」「右文案」四個測試文字欄位，A－17 Launch 提供 preset select（P1～P7）＋JSON textarea＋warnings 區且無對位圖（見 5.1.17.12）；均只含即時 Canvas 更新（與各自的對位圖顯示／隱藏，A－17 除外），不得複製控制台 Editor／Workspace，也不得加入 Excel Import、JSON Restore、暫存、Export、ZIP、banwords UI、Type Selection、17 BN Navigation、正式控制台 UI 或 Template 樣式調整功能。
 
-目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP`、`14_Skinny BN_PC`、`15_AR` 與 `16_副區` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
+目前樣式 A－`01_DDcard BN`、`02_MALL HBN`、`03_Coin page BN`、`04_Loyalty BN`、`05_MSBN`、`06_IG`、`07_FB POST`、`08_SPX TVBN_1`、`09_SPX TVBN_2`、`10_POP UP`、`11_Line OA`、`12_LPBN`、`13_Skinny BN_APP`、`14_Skinny BN_PC`、`15_AR`、`16_副區` 與 `17_門檻表` 均可由 `bn/launch/A/` 中各自的直接查看入口開啟；Jamie 不必每次依序經過 FSS 首頁、BN 樣式選擇頁、控制台及左側選取。
 
 Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query parameter、wrapper、共用 viewer 或其他技術形式，也不建立任何 Launch 檔案。具體方式必須留待 Phase 2 Investigation，再由 Phase 3 Proposal 提出最小修改方案。
 
@@ -1613,11 +1732,9 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 
 ## 8. 明確不做的內容
 
-本輪不得處理：
+本輪不得處理（A－17 已於 5.1.17 正式完成，不再屬於本清單）：
 
-- A－17 Templates。
 - 樣式 B、C、D Templates。
-- 17 Templates（`17_門檻表`）。
 - Excel Import、Excel Mapping／Schema。
 - 暫存 Restore、Workspace JSON Schema。
 - Export、ZIP、JPG Export Coding。
@@ -1639,7 +1756,6 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 - Launch 字型、字重、字級、顏色、座標、文字框、對齊、opacity、Resize 或 Template 樣式調整功能。
 - 對位圖 Resize、位移、重新生成、內容修改、額外 opacity／globalAlpha、透明度 Slider 或自動淡化。
 - 對位圖進入正式 Template、BN 控制台、Editor、Workspace 或 Export 成品。
-- A－17 的空啟動檔或未使用入口。
 - B－01～17、C－01～17、D－01～17 的空 Template、空 Launcher 或正式 Layout 程式。
 - 一次建立 68 個啟動檔或 68 份正式 Template 程式。
 
