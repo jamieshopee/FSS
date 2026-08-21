@@ -23,6 +23,14 @@ const PICKUP_FIELDS = [
   { id: "rightCopy", label: "右文案", limit: 10 }
 ];
 
+// A－17 右欄四欄（Round 7）：對映既有 threshold.mainTitle／vip.*；上限 15/20/20/3。
+const THRESHOLD_FIELDS = [
+  { id: "mainTitle", label: "主標題", limit: 15 },
+  { id: "vipTitle", label: "VIP 標題", limit: 20 },
+  { id: "vipCopy", label: "VIP 文案", limit: 20 },
+  { id: "vipCta", label: "CTA", limit: 3 }
+];
+
 export function getEditorFields(bnId) {
   const number = Number.parseInt(bnId, 10);
 
@@ -30,6 +38,7 @@ export function getEditorFields(bnId) {
   if (number === 13 || number === 14) return STORE_FIELDS;
   if (number === 15) return PAYMENT_FIELDS;
   if (number === 16) return PICKUP_FIELDS;
+  if (number === 17) return THRESHOLD_FIELDS;
   return [];
 }
 

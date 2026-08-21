@@ -8,6 +8,7 @@ readonly FSS_PORT="4173"
 readonly FSS_URL="http://${FSS_HOST}:${FSS_PORT}/"
 readonly FSS_PYTHON="/usr/bin/python3"
 readonly FSS_CURL="/usr/bin/curl"
+readonly FSS_LSOF="/usr/sbin/lsof"
 readonly FSS_OPEN="/usr/bin/open"
 
 fss_server_pid=""
@@ -38,18 +39,40 @@ if [[ ! -x "${FSS_PYTHON}" ]]; then
   exit 1
 fi
 
-"${FSS_PYTHON}" -m http.server "${FSS_PORT}" --bind "${FSS_HOST}" &
+if "${FSS_LSOF}" -nP -iTCP:"${FSS_PORT}" -sTCP:LISTEN >/dev/null 2>&1; then
+  echo "Port ${FSS_PORT} 已被占用，可能已有舊 FSS Server 正在執行。請先關閉舊的 FSS Server 後再重新啟動。"
+  pause_before_exit
+  exit 1
+fi
+
+"${FSS_PYTHON}" - "${FSS_PORT}" "${FSS_HOST}" <<'PYTHON' &
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+import sys
+
+
+class NoCacheHTTPRequestHandler(SimpleHTTPRequestHandler):
+    def end_headers(self):
+        request_path = self.path.split("?", 1)[0].lower()
+        if request_path.endswith((".js", ".css")):
+            self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
+
+ThreadingHTTPServer((sys.argv[2], int(sys.argv[1])), NoCacheHTTPRequestHandler).serve_forever()
+PYTHON
 fss_server_pid=$!
 
 fss_server_ready=false
 
 for _ in {1..50}; do
-  if "${FSS_CURL}" --silent --fail --max-time 1 "${FSS_URL}" >/dev/null 2>&1; then
-    fss_server_ready=true
+  if ! kill -0 "${fss_server_pid}" 2>/dev/null; then
     break
   fi
 
-  if ! kill -0 "${fss_server_pid}" 2>/dev/null; then
+  if "${FSS_CURL}" --silent --fail --max-time 1 "${FSS_URL}" >/dev/null 2>&1; then
+    if kill -0 "${fss_server_pid}" 2>/dev/null; then
+      fss_server_ready=true
+    fi
     break
   fi
 
@@ -63,9 +86,9 @@ if [[ "${fss_server_ready}" != true ]]; then
   exit 1
 fi
 
-if ! "${FSS_OPEN}" "${FSS_URL}"; then
+if ! "${FSS_OPEN}" -a "Google Chrome" "${FSS_URL}"; then
   echo
-  echo "Server 已啟動，但無法自動開啟預設瀏覽器。"
+  echo "Server 已啟動，但無法自動以 Google Chrome 開啟。"
   echo "請手動開啟：${FSS_URL}"
 fi
 

@@ -174,6 +174,7 @@ h3 {
   width: 100%;
   height: 100vh;
   grid-template-columns: var(--left-width) minmax(0, 1fr) var(--right-width);
+  grid-template-rows: minmax(0, 100%);
   overflow: hidden;
 }
 
@@ -250,6 +251,8 @@ h3 {
 }
 
 .preview-column {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
   overflow: auto;
@@ -269,9 +272,105 @@ h3 {
 }
 
 .preview {
-  display: grid;
-  min-height: calc(100% - 78px);
-  place-items: center;
+  display: flex;
+  flex: 1 1 0;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-canvas {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.io-status {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.io-status.success {
+  color: #7ee2c7;
+}
+
+.io-status.error {
+  color: #ff9d8a;
+}
+
+/* A－17 門檻表 Modal 骨架（Round 1：純 UI，預設 hidden，不影響既有 layout） */
+.threshold-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgb(4 8 9 / 62%);
+}
+
+.threshold-panel {
+  width: min(94vw, 1120px);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 24px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.threshold-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.threshold-counts {
+  display: flex;
+  gap: 18px;
+  margin: 6px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.threshold-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.threshold-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.threshold-table th,
+.threshold-table td {
+  padding: 8px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+  text-align: left;
+}
+
+.threshold-remove {
+  margin-top: 6px;
+  padding: 3px 9px;
+  color: var(--danger);
+  background: transparent;
+  border: 1px solid var(--danger);
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
 }
 
 .preview-placeholder {
