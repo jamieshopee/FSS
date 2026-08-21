@@ -339,7 +339,7 @@ Mapping 已於 Phase 0 實測鎖定：
 - 正式格式固定：01 JPG、02 JPG、03 JPG、04 PNG、05 PNG、06 JPG、07 JPG、08 JPG、09 JPG、10 PNG、11 PNG、12 JPG、13 PNG、14 PNG、15 JPG、16 JPG、17 PNG；`12_LPBN.jpg`＝1200×550。
 - PNG／JPG 一律寫入 72 dpi metadata（PNG pHYs 2835 ppm、JPEG JFIF 72×72，byte-level patch、不重編碼、不 Resize）；JPG quality＝1.0。
 - 容量控制（正式行為）：`01_DDcard BN.jpg` 最終檔 ≤245,000 bytes、`02_MALL HBN.jpg` ≤145,000 bytes——於 0.5～1.0 內自動搜尋符合上限的最高 quality（patch 後 bytes 判定；q=0.5 仍超標則整次 Export fail）。其餘 JPG 維持 quality 1.0。
-- **尚未完成**：`10_POP UP.png` ≤145KB 需求（需有損 PNG 量化）尚未處理，維持無損 PNG 輸出，待 Jamie 裁決路徑後另行開發。
+- `10_POP UP.png` 容量需求：舊記錄之 ≤145KB 已由 Jamie 正式裁決**取代**為最終檔 ≤250,000 bytes，並已於後續 Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`（`feat(bn): enforce PNG size limit for A10`）**實作完成**；正式 Requirement 與實作／驗證記錄見第 27 節（含 27.9）。
 
 ### 26.5 A－17 Manual Editor 最終正式行為
 
@@ -357,4 +357,84 @@ Mapping 已於 Phase 0 實測鎖定：
 
 ### 26.7 Scope Boundary（維持）
 
-僅樣式 A 完成平台整合；B／C／D 尚未接入；A／B／C／D 是否共用 renderer／helper／schema／registry 尚未裁決；`10_POP UP` 145KB 未完成。本節不構成任何跨 Type 架構決策。
+僅樣式 A 完成平台整合；B／C／D 尚未接入；A／B／C／D 是否共用 renderer／helper／schema／registry 尚未裁決；`10_POP UP` 容量 Requirement（≤250,000 bytes，第 27 節）已裁決並已實作完成（Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`，見 27.9）。本節不構成任何跨 Type 架構決策。
+
+## 27. `10_POP UP.png` 容量 Requirement（≤250,000 bytes；已實作、已驗證）
+
+> 本節為正式 Requirement，經 Investigation、Repository 外獨立 PoC 與 Jamie Manual Visual Verification 後由 Jamie 正式裁決成立，**取代**舊文件記錄之「`10_POP UP.png` ≤145KB」需求（舊 145KB 僅為歷史記錄，現已不適用）。本節狀態＝Requirement 已裁決且**已實作完成**：Proposal、Coding、AI Verification（25/25 PASS）與 Jamie Manual Verification 均已完成，正式行為以 Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`（`feat(bn): enforce PNG size limit for A10`）落地；實作與驗證記錄見 27.9。
+
+### 27.1 需求定義
+
+- 版位：`10_POP UP`；格式：PNG；尺寸：580 × 720；檔名：`10_POP UP.png`（不變）。
+- 最終下載檔案（ZIP 內該張成品）必須 ≤**250,000 bytes**。此為精確 byte 上限：不是「250 KB」模糊語意、不是 250 KiB（256,000 bytes）。Requirement 與後續 Code 一律使用 `250000`。
+- 容量 Gate 判定基準：**72 dpi pHYs patch 後的最終 Blob bytes**（與 01／02 JPG capacity Gate「patch 後 bytes 判定」同一原則）。encode 前或 patch 前的 bytes 不得作為判定依據。
+
+### 27.2 正式 Compression Policy（native → 256-color → fail）
+
+1. 以現有 browser native Canvas PNG encoder（`canvas.toBlob("image/png")`）產生 PNG。
+2. 套用現有 byte-level 72 dpi pHYs patch（不 re-encode、不動 IDAT、不改 pixel dimensions）。
+3. 檢查 patch 後最終 bytes：≤250,000 → **直接採用 native lossless PNG**，不執行任何 quantization，加入 ZIP。
+4. patch 後 >250,000 → 進入唯一 fallback：以**原始 Canvas raw RGBA pixels** 做 UPNG 256-color indexed PNG encode。禁止以已 patch 過的 PNG 作為 quantization 的正式中間來源。
+5. fallback encode 完成後**重新**套用 72 dpi pHYs patch（任何 re-encode 之後都必須重新 patch，因 re-encode 可能移除 metadata）。
+6. 重新檢查 patch 後最終 bytes：≤250,000 → PASS，加入 ZIP；仍 >250,000 → **整次完整專案 Export failure**。
+
+正式 ladder 僅此三態：native lossless → UPNG 256 colors → Export failure。**不包含**：UPNG lossless 中繼步（PoC 實測僅 −16.5%、317,944 bytes 仍 FAIL，Jamie 裁決捨棄）、192／128／96／64／48／32／16／8 colors、dithering。後續 Phase 不得自行增加 fallback 階層。
+
+### 27.3 Invariants（兩條路徑一律適用）
+
+- **Pixel dimensions**：最終成品必須維持 580 × 720。禁止 resize、downscale、改 Canvas backing dimensions、裁切。壓縮只能改變 PNG serialization／color representation／compressed bytes，不得改 layout dimensions。
+- **格式**：最終永遠是合法 PNG。native path 可維持 color type 6（RGBA）；quantized fallback 允許 color type 3（indexed）＋tRNS。不要求「一定 color type 6」；正式要求＝合法 PNG、580×720、alpha 正常、72 dpi、≤250,000 bytes。
+- **Alpha**：本版位素材含 103,210 個全透明 pixels 與 362 個半透明 anti-aliasing pixels（PoC 實測）。fallback 必須保留完全透明區與必要半透明 AA；不得 flatten alpha、不得填白底或任何背景、**JPG fallback 永久禁止**。
+- **72 dpi**：所有最終成品必須帶 72 dpi pHYs metadata；正式順序見 27.2（encode → patch → Gate；不得 patch 後 re-encode 直接交付）。
+
+### 27.4 Failure Policy
+
+UPNG 256-color＋72 dpi patch 後仍 >250,000 bytes 時，正式行為＝**整次完整專案 Export failure**（不產出 ZIP）。與 01／02 JPG capacity Gate「無法在正式允許品質內達標 → 整次 Export fail」原則一致。不得：自動改 JPG、resize／downscale、改 Canvas dimensions、改 renderer、降至 128／64／更低色數、加 dithering 再嘗試、靜默輸出超標 PNG、ZIP 少放 `10_POP UP`、legacy RGB 均勻量化、任何未經 Requirement 裁決之 fallback。
+
+### 27.5 適用範圍與 Regression Boundary
+
+- 本容量 policy **只適用 `10_POP UP`**。其他 PNG 版位（04／05／11／13／14／17）無本次 byte-limit 需求，必須維持現行 native lossless PNG 輸出；不得因本功能全面套用 quantization。未來其他 PNG 若另有 byte-limit，另行 Requirement 裁決。
+- renderer／Preview／Template／Canvas dimensions／layout／文字／圖片 positioning 一律零修改。PNG compression 是 Export serialization concern，不是 rendering concern；Preview 必須繼續顯示 renderer 原始高品質 Canvas，不因 Export quantization 改變。
+- 01／02 JPG capacity 功能（≤245,000／≤145,000 bytes、quality search、Gate）完全 LOCKED：不得修改、不得抽象重構、不得因 PNG 功能共用而改寫。
+- 其他 Export contract 不變：`FSS BN_MMDD.zip`／`FSS BN_MMDD.json`、ZIP 根層 17 圖＋1 JSON、Workspace JSON schema（`{format:"FSS BN Workspace", version:1, type:"A", selectedBnId, shared, bnText, threshold}`）、01→17 sequential export、正式 format table（01–03 JPG、04–05 PNG、06–09 JPG、10–11 PNG、12 JPG＝1200×550、13–14 PNG、15–16 JPG、17 PNG）、JPEG quality 既有行為、PNG／JPG 72 dpi contract。
+- Sequential／memory：維持 01→17 sequential，不同時 quantize 多張；只有 10 native 超標時才建立 RGBA ImageData（1,670,400 bytes）／UPNG 暫存 buffer／quantized Blob。本 Requirement 不要求 Web Worker、WASM、parallel export；Proposal 若發現真正必要須另行提出，不得自行擴 scope。
+- Future consideration（不在本次 scope）：未來若立案「單張圖片下載」，應重用本節同一 serialization／capacity policy，避免 ZIP 與單張行為分歧。本次不新增單張下載、不預先重構 Export architecture、不決定 helper／API 名稱。
+
+### 27.6 Dependency Requirement
+
+- fallback 需要可於 browser 內完成 256-color indexed PNG encode 的 library；已完成 PoC 驗證的候選為 **UPNG.js＋pako**。
+- 正式 implementation 必須：完全 client-side、完全 offline、不依賴 CDN runtime（不得自 cdnjs 等載入）、不依賴 server、Safari／Chrome 可用、License 可 vendor 進 Repository；UPNG／pako 應 local vendor（比照 `bn/js/vendor/` 既有慣例）。
+- 正式 vendor 來源、檔案版本 pinning 與載入方式已由 Proposal Phase 裁決並於 Code Commit 落地（版本、sha256 pin、載入順序見 27.9）。
+- 技術描述界線：UPNG 支援 PNG encode／quantization，PoC 已驗證 256-color indexed PNG 可滿足本版位需求；UPNG **不內建** Floyd-Steinberg dithering（若未來另有需求，屬額外實作或其他 quantizer capability，另行裁決）；UPNG 不保證任何未來圖片必然 ≤250,000 bytes——真正的保證機制是 27.2 的 byte Gate 與 27.4 的 failure policy。
+
+### 27.7 PoC Evidence 與裁決記錄
+
+PoC 於 Repository 外以正式 FSS Export 成品 `10_POP UP.png`（380,713 bytes、580×720、color type 6、含 72 dpi pHYs）為 baseline；所有 candidate 以 72 dpi patch 後 bytes 判定：
+
+| Candidate | 方式 | patch 後 bytes | 結果 | 裁決 |
+|---|---|---|---|---|
+| A | Native（browser PNG） | 380,713 | FAIL | baseline，超標 |
+| B | UPNG lossless（cnum=0） | 317,944 | FAIL | 不保留為正式中繼步（僅 −16.5% 仍超標，徒增一次 encode） |
+| C | UPNG 256-color indexed＋tRNS | **95,376** | **PASS**（−75%，餘裕約 154,624 bytes） | **正式採用**；580×720、alpha 正常、encode 約 116ms |
+| D | UPNG 128-color | 77,213 | PASS | 不採用：256 已達標，無理由多犧牲色彩品質 |
+
+品質證據（256-color vs native）：PSNR 41.87 dB、平均每 pixel error 1.18/255、error ≥100 僅 18 pixels（集中於 CTA 按鈕下緣 AA transition）；品牌色 teal `[0,118,97]` 與 yellow `[255,242,133]` 精確保留，紅 Δ2、白字 Δ3；alpha error ≥32 僅 27 pixels（圓角／按鈕 AA 單像素邊緣）。Jamie 已完成 Native vs 256-color 肉眼比較（小字副標、黃色大字、吉祥物、背景、商品箱陰影、品牌色、透明區、CTA），**Manual Visual Verification：PASS**。Dithering：未執行、不需要（無不可接受 banding）、不在本次 scope。
+
+### 27.8 Out of Scope
+
+本功能明確排除（Requirement Phase 定義，Coding 完成後仍維持）：dithering、128／64 等 palette ladder、其他 PNG capacity control、B／C／D、renderer、Preview、Template、Workspace schema、Import、Editor、A－17 Manual Editor、單張下載、Web Worker、WASM、server-side compression、CDN runtime、01／02 JPG 重構、ZIP 結構變更、JSON schema 變更。（Requirement Phase 當時另排除之 Coding 與正式 vendor 安裝，已於後續 Phase 依裁決完成，見 27.9。）
+
+### 27.9 Implementation／Verification／Completion 記錄
+
+**Code Commit**：`0dadb5470470a91fe1aad240516697a001f9b4f0`（`feat(bn): enforce PNG size limit for A10`），於 Jamie Manual Verification PASS 後建立，精確包含 6 檔：`bn/index.html`、`bn/js/export.js`、`bn/js/vendor/pako.min.js`、`bn/js/vendor/upng.js`、`bn/js/vendor/LICENSE.pako.txt`、`bn/js/vendor/LICENSE.upng.txt`。
+
+**Implementation（正式已落地行為）**：
+- `export.js`：`EXPORT_ITEMS` item 10 加入 `maxBytes: 250000`（唯一有 PNG maxBytes 的版位）；新增 PNG capacity helper（`encodePngWithinLimit`），實作 27.2 之 native lossless → UPNG 256-color indexed → 整次 Export fail ladder，容量一律以 72 dpi patch 後最終 Blob bytes 判定，fallback 自原始 Canvas raw RGBA encode 並於 encode 後重新 patch 72 dpi；無 `maxBytes` 之 PNG（04／05／11／13／14／17）走原文 native path，不經 UPNG；JPEG helper 與 JPEG branch 零修改。fallback 超標之 failure 文案等義於「`10_POP UP` 以 256 色 PNG 壓縮後仍為 {實際 bytes} bytes，超過容量上限 250000 bytes，無法輸出完整專案。」，經既有 export catch 顯示，整次 Export abort、不產出 partial ZIP。
+- `index.html`：script 載入順序＝`xlsx.full.min.js` → `jszip.min.js` → `pako.min.js` → `upng.js` → `app.js`（module），全部 defer、全部 local；**pako 必須先於 UPNG**（UPNG 於載入當下綁定 global `pako`，順序顛倒會於 encode 時失敗）。
+- **正式 vendor（完全 local、完全 offline、無 CDN runtime）**：`bn/js/vendor/upng.js`＝npm `upng-js@2.1.0` artifact 內 `UPNG.js` 原檔（byte-identical，31,508 bytes，sha256 `b7c0bdb021dffeb82f1ac27c6762f939f967a9e4e0886518fef649331b612164`，MIT，LICENSE 原文＝`LICENSE.upng.txt`）；`bn/js/vendor/pako.min.js`＝npm `pako@2.1.0` artifact 內 `dist/pako.min.js`（46,859 bytes，sha256 `ede2693a4a6a5126b9d35669062b358ecab6ae7b9b86a1cf302feb45a8514907`，MIT AND Zlib，LICENSE 原文＝`LICENSE.pako.txt`）。
+
+**Verification**：
+- AI Verification **25/25 PASS**（以正式 380,713-byte baseline＋repo 實際 export.js 原文＋repo 內正式 vendor 檔執行）：native ≤上限 path 提前 return、不呼叫 getImageData／UPNG；native >上限 → 256 fallback 最終 **95,376 bytes**（≤250,000）、IHDR 580×720、PNG color type 3（indexed）、pHYs 2835×2835 pixels/meter・unit=1・唯一、PLTE／tRNS 正常、全透明 pixels 103,210 與 baseline 完全一致、UPNG 回讀＋Pillow 獨立 decode PASS；failure path：256 仍超標時 throw、`exportWorkspace` abort、`zip.generateAsync` 不執行、無 partial ZIP；Workspace JSON schema、format table、01→17 sequential order 驗證不變。Safari／Chrome 實機部分由 Manual Verification 覆蓋。
+- **Jamie Manual Verification：PASS**（正式完整專案 Export 可用、`10_POP UP` 容量與畫面驗收通過），Code Commit 於 PASS 後才建立。
+
+**Vendor Note（已知 `git diff --check` exception）**：Code Commit 後 `git diff --check HEAD^ HEAD` 對非 vendor-upng 之 5 檔全部 PASS；`bn/js/vendor/upng.js` 為上游 byte-identical 原檔，自帶 155 行 trailing-whitespace warnings。Jamie 正式裁決：保留原始 bytes、不為消除 whitespace warning 修改 vendor source（修改即破壞 sha256 pin）。未來看到 `git diff --check` 對此檔的 whitespace warning 時，以上列 sha256 pin 驗證即可確認屬已知 vendor exception，並非 FSS source regression。
