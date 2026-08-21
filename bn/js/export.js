@@ -12,7 +12,7 @@ export const EXPORT_ITEMS = Object.freeze([
   { id: "07", name: "07_FB POST", format: "jpg" },
   { id: "08", name: "08_SPX TVBN_1", format: "jpg" },
   { id: "09", name: "09_SPX TVBN_2", format: "jpg" },
-  { id: "10", name: "10_POP UP", format: "png" },
+  { id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 },
   { id: "11", name: "11_Line OA", format: "png" },
   { id: "12", name: "12_LPBN", format: "jpg" },
   { id: "13", name: "13_Skinny BN_APP", format: "png" },
@@ -242,6 +242,43 @@ async function encodeJpegWithinLimit(canvas, maxBytes, itemName) {
   return bestBlob;
 }
 
+// 只供帶 maxBytes 的 PNG 版位（10_POP UP）使用（Jamie 裁決之正式 ladder：
+// native lossless → UPNG 256 色 indexed PNG → 整次 Export fail，無其他階層）。
+// 容量一律以 72 dpi patch 後最終 bytes 判定；native 達標即直接採用、不 quantize。
+// fallback 一律從原始 Canvas raw RGBA encode（不以 patch 後 PNG 為中間來源），
+// encode 完成後重新 patch 72 dpi，再以最終 bytes 判定；仍超標 → throw。
+async function encodePngWithinLimit(canvas, maxBytes, itemName) {
+  const nativeBlob = await setPngDpi(
+    await canvasToBlob(canvas, "image/png"),
+    EXPORT_DPI
+  );
+  if (nativeBlob.size <= maxBytes) return nativeBlob;
+
+  if (!globalThis.pako || !globalThis.UPNG) {
+    throw new Error("PNG 壓縮程式庫尚未載入。");
+  }
+
+  const imageData = canvas
+    .getContext("2d")
+    .getImageData(0, 0, canvas.width, canvas.height);
+  const encodedBuffer = globalThis.UPNG.encode(
+    [imageData.data.buffer],
+    canvas.width,
+    canvas.height,
+    256
+  );
+  const quantizedBlob = await setPngDpi(
+    new Blob([encodedBuffer], { type: "image/png" }),
+    EXPORT_DPI
+  );
+  if (quantizedBlob.size > maxBytes) {
+    throw new Error(
+      `${itemName} 以 256 色 PNG 壓縮後仍為 ${quantizedBlob.size} bytes，超過容量上限 ${maxBytes} bytes，無法輸出完整專案。`
+    );
+  }
+  return quantizedBlob;
+}
+
 // --- Export orchestration ---
 
 function makeDateCode(date) {
@@ -288,8 +325,12 @@ export async function exportWorkspace(state) {
       }
       zip.file(`${item.name}.jpg`, blob);
     } else {
-      blob = await canvasToBlob(canvas, "image/png");
-      blob = await setPngDpi(blob, EXPORT_DPI);
+      if (item.maxBytes) {
+        blob = await encodePngWithinLimit(canvas, item.maxBytes, item.name);
+      } else {
+        blob = await canvasToBlob(canvas, "image/png");
+        blob = await setPngDpi(blob, EXPORT_DPI);
+      }
       zip.file(`${item.name}.png`, blob);
     }
   }
