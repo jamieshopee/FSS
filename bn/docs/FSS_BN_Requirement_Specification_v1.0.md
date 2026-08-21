@@ -352,3 +352,5 @@ Template 原本使用的樣式與顏色必須維持不變。
 - `17_門檻表` 手動 Editor
 
 控制台中的「匯入工單 Excel」、「匯入暫存檔」與「下載完整專案」目前只有明確停用的入口，並非已完成功能。
+
+> （後續同步）A 樣式平台整合（Excel Import／正式 Workspace／renderer Preview／Restore／Export）與 A－17 Manual Editor 已完成並經 Jamie Manual Verification PASS，Code Commit `91aa7f6`；正式行為見 `bn/docs/FSS_BN_A樣式平台整合_Requirement_Specification_v1.0.md` 與 `FSS_BN_Architecture.md` 第 36 節。本文件其餘第一輪 Requirement 歷史內容維持不變。

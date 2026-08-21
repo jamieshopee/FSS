@@ -80,7 +80,9 @@ D： - D 專用底圖 - 無額外文字帶入 - 有額外 Logo 圖帶入
 
 ### 04_Loyalty BN - 尺寸：702 × 208 - 格式：PNG - 分類：主視覺 Resize
 
-### 05_MSBN - 尺寸：1200 × 360 - 格式：JPG - 分類：主視覺 Resize
+### 05_MSBN - 尺寸：1200 × 400 - 格式：PNG - 分類：主視覺 Resize
+
+（早期記載為 1200 × 360／JPG；已依正式 A.xlsx 工單「1200x400／PNG 檔」與 A－05 正式 Template 實作（透明 1200 × 400 Canvas）修正。）
 
 ### 06_IG - 尺寸：900 × 1600 - 格式：JPG - 分類：主視覺 Resize
 
@@ -94,7 +96,9 @@ D： - D 專用底圖 - 無額外文字帶入 - 有額外 Logo 圖帶入
 
 ### 11_Line OA - 尺寸：1040 × 1040 - 格式：PNG - 分類：主視覺 Resize
 
-### 12_LPBN - 尺寸：1200 × 550 - 格式：PNG - 分類：主視覺 Resize
+### 12_LPBN - 尺寸：1200 × 550 - 格式：JPG - 分類：主視覺 Resize
+
+（早期記載為 PNG；Jamie 已正式裁決 `12_LPBN.jpg` 為 JPG，早期 PNG 記載屬筆誤，已依裁決與 Code Commit `91aa7f6` 實作修正。）
 
 ### 13_Skinny BN_APP - 尺寸：358 × 360 - 格式：PNG - 分類：特殊文字訊息版位
 

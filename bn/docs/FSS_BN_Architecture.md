@@ -969,3 +969,27 @@ A－17 正式字級經 Jamie Visual Tuning 裁決為 **Canvas `px` 同值**（�
 A－17 route 為 `viewer.html?type=A&bn=17_%E9%96%80%E6%AA%BB%E8%A1%A8`。A－17 無對位 PNG，不使用 overlay（overlay image／toggle 於此 route 隱藏停用、decode guard 跳過）。Viewer A－17 branch 以 preset select（P1～P7）＋JSON textarea＋warnings 區作 Launch 校稿：P1 為正式 A.xlsx sample，於 px runtime 實測 4 物流、columnWidth 232.75、logistics row 80、threshold heights `[70, 100, 70]`（「週三/週六\n加碼」2 visual lines／100px）、middleHeight 380、Canvas 1200 × 670；歷史上的 298／588 只是兩門檻列 scratch sanity 數值，不是 P1 正式高度。JSON parse 失敗保留上一個有效 Preview、IME composition-safe；render 後依 canvas intrinsic 同步 CSS 尺寸（維持精確 1:1）。既有 4 個 field slots 於 A－17 hidden＋disabled；A－01～16 各 route 行為完全不變，Phase 5 已對 A－01／02／15／16 作 route regression 無回歸。此校稿 UI 只屬 Launch 工具，`17_門檻表` 控制台手動 Editor 維持第一輪排除、`getEditorFields("17")` 仍回傳空陣列。
 
 目前共用 Viewer 支援 A－01～17，樣式 A 全部 17 個正式版位均已落地。既有 BN 控制台仍維持 placeholder Preview，尚未正式接入這十七個獨立 renderer；B／C／D、正式 Excel Import、Workspace Schema、Export／ZIP 仍未實作。本次同步不建立 Registry、Framework、Build System、shared/common/base renderer，也不預先決定後續版位或 Type 的實作方式。
+
+## 36. A 樣式平台整合實際落地狀態
+
+> 本節同步「A 樣式平台整合＋A－17 Manual Editor」已完成並經 Jamie Manual Verification PASS 的架構狀態。Code Commit 為 `91aa7f644b42be29651754af280fd094a2f2cfb0`（`feat(bn): integrate style A platform with A-17 manual editor`）。第 18.4 節「尚未落地的架構部分」中的正式 Excel Import、正式 Workspace、Restore、Export，以及第 19～35 節各版位段落中「既有 BN 控制台仍維持 placeholder Preview、尚未正式接入」的過渡描述，自本節起由本節取代；各節其餘歷史決策與 Template 規格不變。完整正式行為以 `bn/docs/FSS_BN_A樣式平台整合_Requirement_Specification_v1.0.md`（含第 25～26 節）為準。
+
+### 36.1 已落地範圍
+
+- 樣式 A 的 01～17 已全部接入正式控制台：正式 Excel Import（僅讀 workbook `Sheets.A`、A15/A16/A17 標籤驗證、detached candidate → Atomic replace、Import 不做 banwords）→ 統一 Workspace → 17 個既有正式 renderer Preview → 暫存 Restore → 完整專案 Export。
+- Code Commit 落地檔案：`bn/index.html`、`bn/css/styles.css`、`bn/js/app.js`、`bn/js/editor.js`、`bn/js/workspace.js`、`bn/js/import.js`、`bn/js/export.js`、`bn/js/render-a.js`、`bn/js/vendor/`（SheetJS CE 0.20.3、JSZip 3.10.1，各附 LICENSE；依生成器分離原則為 BN 自有副本）、`啟動 FSS.command`。
+- 正式 Workspace state＝`{currentType, selectedBnId, shared, bnText, threshold}`：01～12 共用單一 `shared` 文字組（永遠同步）；13～16 各自獨立；17 為固定 5×9 的結構化 `threshold`。第 18.2 節之第一輪 runtime 骨架描述自此由本 shape 取代。
+- Restore 暫存 JSON＝`{format:"FSS BN Workspace", version:1, type:"A", selectedBnId, shared, bnText, threshold}`；覆蓋前確認、Atomic。
+- Preview：`render-a.js` A-only renderer 對應表＋asset/font readiness；Preview Fit 以 viewport 實測計算顯示 scale（scale≤1、只寫 inline style、不動 backing dimensions），06／08／17 完整 fit、15 不放大，均 Manual PASS。
+- Export：同一 Workspace 序列輸出 17 張；ZIP 根層 17 圖＋1 份 `FSS BN_MMDD.json`（無資料夾、無 manifest）、ZIP 名 `FSS BN_MMDD.zip`；格式固定 01 JPG、02 JPG、03 JPG、04 PNG、05 PNG、06 JPG、07 JPG、08 JPG、09 JPG、10 PNG、11 PNG、12 JPG（`12_LPBN.jpg` 1200×550）、13 PNG、14 PNG、15 JPG、16 JPG、17 PNG；全部成品 72 dpi metadata（PNG pHYs 2835 ppm／JPEG JFIF 72×72，byte-level patch 不重編碼）；JPG quality 1.0；`01_DDcard BN.jpg` ≤245,000 bytes、`02_MALL HBN.jpg` ≤145,000 bytes 之自動 quality 搜尋（0.5～1.0、patch 後 bytes 判定、floor 仍超標則整次 fail）為正式行為。
+- A－17 Manual Editor：右欄「主標題 → 編輯門檻表 → VIP 標題 → VIP 文案 → CTA」（15/20/20/3，沿用既有 Editor 引擎與 banwords／IME／rollback）；Modal 直接編輯正式 threshold（無 draft）；新增／刪除物流與門檻（5／9 上限、session-only 空項規則、刪除同步 compact logistics＋全部 9 組 cells／整組門檻上移、`↑` 語意交由既有 renderer）；schema 永遠固定 5×9。
+
+### 36.2 啟動流程正式行為
+
+`啟動 FSS.command`：固定 `127.0.0.1:4173`、server 就緒後以 Google Chrome 開啟；啟動前以 `lsof` 偵測 4173 既有 listener，佔用即拒絕啟動且不 kill 外部 process；readiness 輪詢同時確認自身 child process 存活；本機 server 對 `.js`／`.css` 回應 `Cache-Control: no-store`，避免本機開發驗證重用舊 module。
+
+### 36.3 邊界維持
+
+- B／C／D 尚未接入平台；A／B／C／D 是否共用 renderer／helper／schema／registry 尚未裁決；本節不構成跨 Type 架構決策。
+- `10_POP UP.png` ≤145KB（需有損 PNG 量化）尚未處理，維持無損 PNG 輸出。
+- A－01～17 正式 renderer、Launch／Viewer 於本輪零修改；Launch 仍只是校稿工具。
