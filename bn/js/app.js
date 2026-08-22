@@ -245,7 +245,19 @@ function render(state, reason) {
     renderedEditorBnId = null;
   }
 
-  editorTitle.textContent = selectedItem.name;
+  // 右側版位名稱沿用左側 .bn-item 既有的 underscore 呈現規則，避免 `_` 與鄰字黏在一起。
+  editorTitle.textContent = "";
+  selectedItem.name.split(/(_)/).forEach((part) => {
+    if (part !== "_") {
+      editorTitle.append(part);
+      return;
+    }
+
+    const underscore = document.createElement("span");
+    underscore.className = "bn-name-underscore";
+    underscore.textContent = part;
+    editorTitle.append(underscore);
+  });
   // Round 7：17 未匯入時以無欄位 bnId 呈現既有空狀態提示，不建立假 threshold。
   const editorBnId =
     state.selectedBnId === "17" && !state.threshold ? "00" : state.selectedBnId;
