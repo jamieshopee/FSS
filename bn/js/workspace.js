@@ -10,7 +10,9 @@ const emptyState = () => ({
     "15": { line1: "", line2: "" },
     "16": { leftTitle: "", leftCopy: "", rightTitle: "", rightCopy: "" }
   },
-  threshold: null
+  threshold: null,
+  // A－12／12_LPBN 專用 optional 掛標月份；不屬於 01～12 shared text。
+  lpbnBadgeMonth: ""
 });
 
 export function isSharedBnId(bnId) {

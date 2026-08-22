@@ -121,6 +121,10 @@ export async function parseExcelFile(file, selectedBnId) {
 
   const threshold = parseThresholdModel(worksheet, errors);
 
+  // A－12 專用 optional 值：只讀取與保存，不判斷掛標群組或素材是否存在，
+  // 也不因掛標狀態使 Import 失敗；asset availability 由 Preview／Export runtime 判定。
+  const lpbnBadgeMonth = cellText(worksheet, "E15").trim();
+
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
   }
@@ -130,7 +134,8 @@ export async function parseExcelFile(file, selectedBnId) {
     selectedBnId: ALL_BN_IDS.includes(selectedBnId) ? selectedBnId : "01",
     shared,
     bnText,
-    threshold
+    threshold,
+    lpbnBadgeMonth
   };
 }
 
@@ -265,6 +270,10 @@ export function parseWorkspaceJson(text) {
     );
   });
   const threshold = validateThresholdModel(data.threshold, errors);
+  // Backward-compatible optional 欄位：既有 v1 暫存檔沒有此欄位時視同空白，
+  // 不 push error、不影響 Restore 合法性（掛標群組是否存在屬 runtime asset 狀態）。
+  const lpbnBadgeMonth =
+    typeof data.lpbnBadgeMonth === "string" ? data.lpbnBadgeMonth : "";
 
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
@@ -275,6 +284,7 @@ export function parseWorkspaceJson(text) {
     selectedBnId: data.selectedBnId,
     shared,
     bnText,
-    threshold
+    threshold,
+    lpbnBadgeMonth
   };
 }

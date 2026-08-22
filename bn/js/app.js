@@ -3,6 +3,10 @@ import { getEditorFields, renderEditor } from "./editor.js";
 import { ImportValidationError, parseExcelFile, parseWorkspaceJson } from "./import.js";
 import { getBnFieldValues, renderBnToCanvas } from "./render-a.js";
 import { exportWorkspace } from "./export.js";
+import { composeLpbnVariantCanvas, resolveLpbnBadges } from "./lpbn-badges.js";
+
+// A－12 掛標 stack modifier：只在 12_LPBN 有可用掛標 variants 時加在 #preview 上。
+const PREVIEW_STACK_CLASS = "is-lpbn-stack";
 
 const BN_ITEMS = [
   { id: "01", name: "01_DDcard BN" },
@@ -108,6 +112,7 @@ function buildBnList() {
 }
 
 function showPreviewMessage(message) {
+  preview.classList.remove(PREVIEW_STACK_CLASS);
   const card = document.createElement("article");
   card.className = "preview-placeholder";
   const text = document.createElement("p");
@@ -119,7 +124,7 @@ function showPreviewMessage(message) {
 
 // Preview Fit（Round 3 批准方案）：只計算顯示尺寸，只寫 canvas inline style，
 // 絕不修改 canvas.width/height（backing dimensions）、不影響 Export。
-function applyPreviewFit(canvas) {
+function applyPreviewFit(canvas, { widthOnly = false } = {}) {
   if (!canvas) return;
   const availableWidth = preview.clientWidth;
   // Round 4：#preview.clientHeight 可能已被內容撐高，不是真正可視高度；
@@ -135,17 +140,21 @@ function applyPreviewFit(canvas) {
   );
   if (
     availableWidth <= 0 ||
-    availableHeight <= 0 ||
+    (!widthOnly && availableHeight <= 0) ||
     canvas.width <= 0 ||
     canvas.height <= 0
   ) {
     return;
   }
-  const scale = Math.min(
-    availableWidth / canvas.width,
-    availableHeight / canvas.height,
-    1
-  );
+  // A－12 掛標 stack（widthOnly）：只受 Preview 欄可用寬度限制、維持 intrinsic 比例，
+  // 不再把每一張都各自縮到單張 viewport 高度；總高度由既有 scroll container 捲動。
+  const scale = widthOnly
+    ? Math.min(availableWidth / canvas.width, 1)
+    : Math.min(
+        availableWidth / canvas.width,
+        availableHeight / canvas.height,
+        1
+      );
   canvas.style.width = `${canvas.width * scale}px`;
   canvas.style.height = `${canvas.height * scale}px`;
 }
@@ -165,11 +174,30 @@ async function renderPreview(state) {
     canvas.className = "preview-canvas";
     const result = await renderBnToCanvas(canvas, state, bnId);
     if (token !== previewToken) return;
-    applyPreviewFit(canvas);
-    preview.replaceChildren(canvas);
+
+    // A－12：base canvas 永遠保留且不被 overlay 修改；每個實際可用 slot 另建獨立 canvas。
+    // resolver 與 Export 共用，缺 slot 不建立空 canvas、不重新編號。
+    let canvases = [canvas];
+    if (bnId === "12") {
+      const badges = await resolveLpbnBadges(state.lpbnBadgeMonth);
+      if (token !== previewToken) return;
+      canvases = [
+        canvas,
+        ...badges.variants.map((variant) => {
+          const variantCanvas = composeLpbnVariantCanvas(canvas, variant.image);
+          variantCanvas.className = "preview-canvas";
+          return variantCanvas;
+        })
+      ];
+    }
+
+    const stacked = canvases.length > 1;
+    preview.classList.toggle(PREVIEW_STACK_CLASS, stacked);
+    canvases.forEach((item) => applyPreviewFit(item, { widthOnly: stacked }));
+    preview.replaceChildren(...canvases);
     requestAnimationFrame(() => {
       if (token !== previewToken) return;
-      applyPreviewFit(canvas);
+      canvases.forEach((item) => applyPreviewFit(item, { widthOnly: stacked }));
     });
     if (result && Array.isArray(result.warnings) && result.warnings.length > 0) {
       console.warn("A－17 renderer warnings:", result.warnings);
@@ -188,6 +216,7 @@ function render(state, reason) {
   if (!hasWorkspace) {
     renderedEditorBnId = null;
     previewToken += 1;
+    preview.classList.remove(PREVIEW_STACK_CLASS);
     preview.replaceChildren();
     setStatus(importStatus, "");
     setStatus(exportStatus, "");
@@ -324,8 +353,16 @@ exportButton.addEventListener("click", async () => {
   exportButton.disabled = true;
   setStatus(exportStatus, "正在建立完整專案…");
   try {
-    await exportWorkspace(workspace.getState());
-    setStatus(exportStatus, "完整專案已建立。", "success");
+    const result = await exportWorkspace(workspace.getState());
+    const warnings =
+      result && Array.isArray(result.warnings) ? result.warnings : [];
+    setStatus(
+      exportStatus,
+      warnings.length > 0
+        ? `完整專案已建立。\n${warnings.join("\n")}`
+        : "完整專案已建立。",
+      "success"
+    );
   } catch (error) {
     setStatus(exportStatus, `完整專案建立失敗：\n${formatError(error)}`, "error");
   } finally {
@@ -678,7 +715,10 @@ document.addEventListener("keydown", (event) => {
 // 單一 ResizeObserver：Preview 可用區變動時只重算現存 canvas 的顯示尺寸，
 // 不重跑 renderer、不重新匯入；無 canvas 時 no-op。
 function refitPreviewCanvas() {
-  applyPreviewFit(preview.querySelector(".preview-canvas"));
+  const widthOnly = preview.classList.contains(PREVIEW_STACK_CLASS);
+  preview
+    .querySelectorAll(".preview-canvas")
+    .forEach((canvas) => applyPreviewFit(canvas, { widthOnly }));
 }
 
 const previewFitObserver = new ResizeObserver(refitPreviewCanvas);
