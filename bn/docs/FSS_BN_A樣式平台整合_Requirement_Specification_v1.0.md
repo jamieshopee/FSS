@@ -327,6 +327,7 @@ Mapping 已於 Phase 0 實測鎖定：
 
 - Excel Import 僅精確讀取 workbook 的 `Sheets.A`（不 fallback）；以 A15／A16／A17 固定標籤驗證正式工單；01～12 只讀 B15／B16／B17；13～16 讀 L20/L21、L22/L23、L24/L25、L26/L27/O26/O27；A－17 依工單區塊組成 5×9 model。detached candidate 完整建立並驗證後才 Atomic replace；任何失敗不觸碰現有 Workspace；Import 不做 banwords。
 - Restore 暫存 JSON schema＝`{format:"FSS BN Workspace", version:1, type:"A", selectedBnId, shared, bnText, threshold}`；覆蓋前確認、Atomic、壞檔拒絕且現況不變。
+  - （現況註記）後續 Code Commit `dad56a465f20e064452c6866c82fcf02be2e6751` 於此 payload 追加 A－12 專用 optional 欄位 `lpbnBadgeMonth`；**JSON version 維持 `1`、未升版**，既有不含該欄位的 v1 暫存檔仍可正常 Restore 並回到 base-only 行為。實作與資料流以 `bn/docs/FSS_BN_Architecture.md` 第 37.3～37.4 節為準。
 
 ### 26.3 Preview
 
@@ -336,6 +337,7 @@ Mapping 已於 Phase 0 實測鎖定：
 ### 26.4 Export
 
 - 同一 Workspace 序列輸出 01→17；ZIP 根層＝17 張成品＋1 份 `FSS BN_MMDD.json`（共 18 項，無資料夾、無 manifest）；ZIP 名稱 `FSS BN_MMDD.zip`，MMDD 取實際下載當下、同次共用。
+  - （現況註記）此「17 張成品／共 18 項」為本節 Code Commit 當時之落地狀態。後續 Code Commit `dad56a465f20e064452c6866c82fcf02be2e6751`（`feat(bn): add LPBN badge variants`）為 A－12 新增 optional 掛標 variants：工單 `Sheets.A` 之 `E15` 指定掛標月份且素材齊全時，A－12 於既有 `12_LPBN.jpg` 之外追加 `12_LPBN_1.jpg`／`_2.jpg`／`_3.jpg`，ZIP 圖檔數由 17 張增為 20 張（另加同一份 `FSS BN_MMDD.json`）；`E15` 空白時仍為 17 張圖＋JSON。ZIP 根層扁平、無資料夾、無 manifest、ZIP 名稱規則、本節既有格式表、72 dpi 與 JPG quality 1.0 行為均不變，17 版位模型亦未改變。詳見 `bn/docs/FSS_BN_A12_LPBN掛標_Requirement_Specification_v1.0.md` 與 `bn/docs/FSS_BN_Architecture.md` 第 37 節。
 - 正式格式固定：01 JPG、02 JPG、03 JPG、04 PNG、05 PNG、06 JPG、07 JPG、08 JPG、09 JPG、10 PNG、11 PNG、12 JPG、13 PNG、14 PNG、15 JPG、16 JPG、17 PNG；`12_LPBN.jpg`＝1200×550。
 - PNG／JPG 一律寫入 72 dpi metadata（PNG pHYs 2835 ppm、JPEG JFIF 72×72，byte-level patch、不重編碼、不 Resize）；JPG quality＝1.0。
 - 容量控制（正式行為）：`01_DDcard BN.jpg` 最終檔 ≤245,000 bytes、`02_MALL HBN.jpg` ≤145,000 bytes——於 0.5～1.0 內自動搜尋符合上限的最高 quality（patch 後 bytes 判定；q=0.5 仍超標則整次 Export fail）。其餘 JPG 維持 quality 1.0。

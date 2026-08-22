@@ -993,3 +993,44 @@ A－17 route 為 `viewer.html?type=A&bn=17_%E9%96%80%E6%AA%BB%E8%A1%A8`。A－17
 - B／C／D 尚未接入平台；A／B／C／D 是否共用 renderer／helper／schema／registry 尚未裁決；本節不構成跨 Type 架構決策。
 - `10_POP UP.png` 容量控制**已實作、已驗證**（Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`，`feat(bn): enforce PNG size limit for A10`）：最終檔 ≤250,000 bytes（精確 bytes，非 250 KiB；舊 ≤145KB 記錄已取代）。正式 pipeline＝Canvas native PNG encode → 既有 72 dpi pHYs patch → patch 後 final Blob bytes Gate；≤250,000 直接採用 native lossless；超標才由原始 Canvas raw RGBA 進 UPNG 256-color indexed PNG（保留 alpha／tRNS、580×720 不變）→ 重新 patch 72 dpi → 再 Gate；仍超標則整次 Export failure、不產出 partial ZIP。僅 10 有 PNG capacity fallback；04／05／11／13／14／17 維持 native lossless、不經 UPNG；01／02 JPEG capacity logic 零修改；renderer／Preview／Template 零修改。依賴完全 local／offline vendor（無 CDN runtime）：`bn/js/vendor/pako.min.js`（pako@2.1.0，MIT AND Zlib，sha256 `ede2693a4a6a5126b9d35669062b358ecab6ae7b9b86a1cf302feb45a8514907`）與 `bn/js/vendor/upng.js`（upng-js@2.1.0，MIT，sha256 `b7c0bdb021dffeb82f1ac27c6762f939f967a9e4e0886518fef649331b612164`；上游原檔自帶 trailing-whitespace，屬已知 `git diff --check` vendor exception，詳見 A樣式平台整合 spec 27.9）；`bn/index.html` 載入順序 xlsx → jszip → pako → upng → app module，pako 必先於 UPNG。AI Verification 25/25 PASS（fallback 實測 95,376 bytes）、Jamie Manual Verification PASS。Requirement 與完整記錄見 `FSS_BN_A樣式平台整合_Requirement_Specification_v1.0.md` 第 27 節。
 - A－01～17 正式 renderer、Launch／Viewer 於本輪零修改；Launch 仍只是校稿工具。
+
+## 37. A－12 LPBN 掛標 variants 實際落地狀態
+
+> 本節同步「A－12／`12_LPBN` optional 掛標 variants」已完成並經 Jamie Manual Verification PASS 的架構狀態。Code Commit 為 `dad56a465f20e064452c6866c82fcf02be2e6751`（`feat(bn): add LPBN badge variants`），且是在 Jamie 完成手動驗證後才建立；`git diff --check HEAD^ HEAD` PASS。第 36.1 節的正式 Workspace state、Restore 暫存 JSON 與 Export 三項描述，自本節起由本節 37.3～37.5 取代；第 36 節其餘內容不變。完整產品行為以 `bn/docs/FSS_BN_A12_LPBN掛標_Requirement_Specification_v1.0.md` 為準。
+
+### 37.1 已落地範圍
+
+- 工單 `Sheets.A` 的 `E15` 為 optional「LPBN 掛標月份」（label 位於 `D15`），正式值目前為 `9`／`10`／`11`／`12`。它是 A－12 專用資料，**不屬於** 01～12 共用 `shared` 主標／副標／保護文字，也不影響其他任何版位。
+- `E15` 空白時，A－12 完全維持既有行為：Preview 單一無掛標 canvas、Export 只有 `12_LPBN.jpg`。
+- `E15` 有月份且該群組三張素材齊全時，A－12 形成 base ＋ 3 個掛標 variants；既有無掛標 `12_LPBN.jpg` 永遠保留，不被 variant 取代。
+- Code Commit 落地檔案：`bn/js/lpbn-badges.js`（新增）、`bn/js/import.js`、`bn/js/workspace.js`、`bn/js/app.js`、`bn/js/export.js`、`bn/css/styles.css`，以及 `bn/assets/LPBN掛標/{9,10,11,12}/` 共 12 張正式掛標 PNG。
+
+### 37.2 掛標 assets 與 A－12-local registry 責任
+
+- 正式掛標素材位於 `bn/assets/LPBN掛標/<month>/`，每張皆為預先製作完成的 1200 × 550 transparent PNG，與 A－12 正式 Canvas 完全同尺寸。程式不繪製掛標內容、文字、shape，也不計算座標或調整尺寸。
+- 月份 → asset slots 由 `bn/js/lpbn-badges.js` 內的 **A－12-local 靜態 registry** 明確定義固定順位，不做 runtime 檔名日期推導、不依賴 HTTP directory autoindex、不依賴檔案系統回傳順序。正式順位為：`9` → `99.png`／`918.png`／`925.png`；`10` → `1010.png`／`1018.png`／`1025.png`；`11` → `1111.png`／`1118.png`／`1125.png`；`12` → `1212.png`／`1218.png`／`1225.png`，依序對應 slot 1／2／3。
+- `lpbn-badges.js` 只負責四件事：月份→固定 slot asset mapping、掛標 image 載入與 Promise cache（載入失敗即從 cache 移除，後續操作可重試）、`resolveLpbnBadges()` 回傳實際可用 variants 與缺失狀態、以及由既有 base canvas 複製後疊加 overlay 的 variant composition。它是 A－12 專屬 module，**未建立通用 Badge System、Variant Framework 或 Asset Manager**，也未修改 `render-a.js` 的既有 asset loading。
+- `bn/templates/A/12-lpbn.js` 於本輪**零修改**：掛標一律在既有 base render 完成後於外層疊加，A－12 layout geometry、文字規格與 shared text 行為皆不變。
+- 長期維護規則：新增月份的正常維護動作為「新增該月份 3 張掛標 PNG ＋ 在此 A－12-local registry 增加一筆月份 mapping」，不應每月修改 `12-lpbn.js`，也不因此建立平台級掛標系統。
+
+### 37.3 正式 Workspace state（取代第 36.1 節對應描述）
+
+正式 Workspace state＝`{currentType, selectedBnId, shared, bnText, threshold, lpbnBadgeMonth}`：01～12 共用單一 `shared` 文字組（永遠同步）；13～16 各自獨立；17 為固定 5×9 的結構化 `threshold`；`lpbnBadgeMonth` 為 A－12 專用 optional top-level 值，預設空字串。Import 只讀取並保存 `E15`，**不檢查 registry、不檢查 asset 是否存在**，也不因 optional 掛標素材問題讓整份工單 Import 失敗；掛標可用性一律由 Preview／Export 於 runtime 判定。
+
+### 37.4 Restore 暫存 JSON（取代第 36.1 節對應描述）
+
+Restore 暫存 JSON＝`{format:"FSS BN Workspace", version:1, type:"A", selectedBnId, shared, bnText, threshold, lpbnBadgeMonth}`；覆蓋前確認、Atomic 行為不變。`lpbnBadgeMonth` 為 backward-compatible optional 欄位，**JSON version 維持 `1`、未升版**；既有不含該欄位的 v1 暫存檔仍可正常 Restore，缺值時視同空白並回到 base-only 行為。
+
+### 37.5 Preview／Export（取代第 36.1 節對應描述）
+
+- Preview 與 Export **共用同一個 variant resolver**，因此兩邊對「本次有哪些可用 variants、各自對應哪個 overlay 與 slot」的判定必然一致。
+- Preview：左側仍是既有 17 個版位，未新增版位。選取 `12_LPBN` 且有可用 variants 時，中間 Preview 以垂直堆疊呈現 base、variant 1、variant 2、variant 3（正常完整群組為四張），總高度超出時由既有 `.preview-column` 捲動；此時每張只受 Preview 欄可用寬度限制並維持 1200:550 比例。`E15` 空白或無可用 variants 時回到既有單張 fit 行為。其他 16 個版位 Preview 行為完全不變。Editor 未新增掛標月份或掛標 1／2／3 欄位。
+- Export：同一 Workspace 序列輸出 01→17；A－12 的 base 仍依既有路徑輸出 `12_LPBN.jpg`，其後依實際可用 slot 追加 `12_LPBN_1.jpg`／`12_LPBN_2.jpg`／`12_LPBN_3.jpg`。slot 缺失時 suffix **不重新編號**（例如 slot 2 缺失時輸出 `_1` 與 `_3`）。ZIP 仍為根層扁平、無資料夾、無 manifest，ZIP 名稱與 `FSS BN_MMDD.json` 規則不變；完整月份時 ZIP 圖檔數由 17 張增為 20 張（另加既有 Workspace JSON），`E15` 空白時仍為 17 張圖＋JSON。這只是 A－12 一個 item 產生額外 variants，**未改 17 版位模型、未重新設計 ZIP／JSON 架構、未修改既有 Export format 表**。
+- A－12 全部 base 與 variants 皆維持 1200 × 550、JPG、72 dpi，完整沿用既有 JPEG quality 1.0 ＋ 72 dpi JFIF byte-level patch；A－12 **未新增** byte limit、quality retry 或 compression fallback。
+- 掛標群組不存在，或群組存在但部分素材無法載入時，base Preview／Export 一律保留、可用 variants 繼續處理，不因 optional 掛標讓整體失敗；Export 的最終狀態訊息會保留該警告，不被結束訊息覆蓋。
+
+### 37.6 邊界維持
+
+- 01／02 JPEG capacity logic（`01_DDcard BN.jpg` ≤245,000 bytes、`02_MALL HBN.jpg` ≤145,000 bytes）、`10_POP UP.png` ≤250,000 bytes 之 native lossless → UPNG 256-color → fail、A－17 Manual Editor、A－01～11／13～17 renderer、01～12 shared 文字行為，於本輪全部零修改。
+- `bn/templates/A/12-lpbn.js`、`bn/js/render-a.js`、`bn/js/editor.js`、`bn/index.html`、Launch／Viewer、vendor 於本輪零修改；未新增任何 dependency。
+- 掛標素材在資產定位上屬 LPBN 共用資產，未來其他 Type 的 LPBN 可能共用；但**本輪正式功能只涵蓋 A－12**，B／C／D 尚未實作掛標，本節不構成跨 Type 架構決策。

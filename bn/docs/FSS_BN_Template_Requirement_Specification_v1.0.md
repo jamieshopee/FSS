@@ -1189,6 +1189,17 @@ Jamie 其後已由 Finder Launch 在 Chrome／Safari 完成最終實機驗證並
 - `bn/assets/A/底圖/12_LPBN.jpg`
 - `bn/assets/A/對位/12_LPBN.png`
 
+##### 5.1.12.7 Optional LPBN 掛標 variants（後續輪次追加，已實作並驗證 PASS）
+
+A－12 於後續輪次新增 optional 掛標 variants。Code Commit 為 `dad56a465f20e064452c6866c82fcf02be2e6751`（`feat(bn): add LPBN badge variants`），Jamie Manual Verification PASS。完整產品行為以 `bn/docs/FSS_BN_A12_LPBN掛標_Requirement_Specification_v1.0.md` 為準；本小節只記錄與 A－12 template／輸出行為直接相關的邊界。
+
+- 正式工單 `Sheets.A` 的 `E15` 為 optional「LPBN 掛標月份」（正式值目前為 `9`／`10`／`11`／`12`），屬 A－12 專用資料，不屬於 01～12 共用主標／副標／保護文字。`E15` 空白時 A－12 完全維持既有單一輸出行為。
+- 有月份且素材齊全時，A－12 由既有無掛標成品加上 3 個掛標 variants；因此本節 5.1.12.1～5.1.12.6 的規格**不應被理解為 A－12 永遠只有單一輸出**。既有無掛標 `12_LPBN.jpg` 永遠保留，不被 variant 取代。
+- 掛標為預先製作完成的 1200 × 550 transparent PNG overlay，位於 `bn/assets/LPBN掛標/<month>/`，與 A－12 正式 Canvas 完全同尺寸。掛標一律在既有 base render 完成後於 template 之外疊加：**`bn/templates/A/12-lpbn.js` 零修改**，本節既有 Canvas 尺寸、底圖 placement、三欄 runtime frames、字級／顏色、local 2× Medium 分層、mixed-run 規則、frame-fit policy 與 guards 全部不變。
+- 全部 base 與 variants 維持 1200 × 550、JPG、72 dpi；A－12 未新增 byte limit、quality retry 或 compression fallback。
+- Export 檔名：base 仍為 `12_LPBN.jpg`，variants 為 `12_LPBN_1.jpg`／`12_LPBN_2.jpg`／`12_LPBN_3.jpg`；slot 缺失時 suffix 不重新編號。
+- 掛標未建立通用 Badge System；本輪只涵蓋 A－12，其他 A 版位與 B／C／D 均未實作掛標。
+
 #### 5.1.13 `13_Skinny BN_APP`
 
 ##### 5.1.13.1 正式版位與資產規格
