@@ -354,3 +354,5 @@ Template 原本使用的樣式與顏色必須維持不變。
 控制台中的「匯入工單 Excel」、「匯入暫存檔」與「下載完整專案」目前只有明確停用的入口，並非已完成功能。
 
 > （後續同步）A 樣式平台整合（Excel Import／正式 Workspace／renderer Preview／Restore／Export）與 A－17 Manual Editor 已完成並經 Jamie Manual Verification PASS，Code Commit `91aa7f6`；正式行為見 `bn/docs/FSS_BN_A樣式平台整合_Requirement_Specification_v1.0.md` 與 `FSS_BN_Architecture.md` 第 36 節。本文件其餘第一輪 Requirement 歷史內容維持不變。
+
+> （後續同步）B 樣式平台整合已完成並經 Phase 5 AI Verification 與 Phase 6 Jamie 手動驗證 PASS，Code Commit `4f9fb723930a907b8c3956fd084e757b41302137`（`feat(bn): add style B platform integration`）。因此**目前正式支援的樣式為 A 與 B**：Type A 使用 Excel worksheet `A` 與 `bn/assets/A/底圖/`，Type B 使用 worksheet `B` 與 `bn/assets/B/底圖/`；兩者共用同一組固定 17 個正式 renderer、同一套 Excel cell mapping 與 validation schema、同一個 Workspace 結構、同一套 Editor／Preview／Export 行為與 Export formats。上列「Type／樣式專用 BN 底圖」就 A 與 B 而言已完成；`17_門檻表` 手動 Editor 對 A 與 B 皆已可用。Type C 額外文字、Type D Logo 與 C／D 的 Import／Restore 仍未進入正式支援範圍。正式行為見 `bn/docs/FSS_BN_B樣式平台整合_Requirement_Specification_v1.0.md`（含第 27 節）與 `FSS_BN_Architecture.md` 第 38 節。本文件其餘第一輪 Requirement 歷史內容維持不變。

@@ -1034,3 +1034,53 @@ Restore 暫存 JSON＝`{format:"FSS BN Workspace", version:1, type:"A", selected
 - 01／02 JPEG capacity logic（`01_DDcard BN.jpg` ≤245,000 bytes、`02_MALL HBN.jpg` ≤145,000 bytes）、`10_POP UP.png` ≤250,000 bytes 之 native lossless → UPNG 256-color → fail、A－17 Manual Editor、A－01～11／13～17 renderer、01～12 shared 文字行為，於本輪全部零修改。
 - `bn/templates/A/12-lpbn.js`、`bn/js/render-a.js`、`bn/js/editor.js`、`bn/index.html`、Launch／Viewer、vendor 於本輪零修改；未新增任何 dependency。
 - 掛標素材在資產定位上屬 LPBN 共用資產，未來其他 Type 的 LPBN 可能共用；但**本輪正式功能只涵蓋 A－12**，B／C／D 尚未實作掛標，本節不構成跨 Type 架構決策。
+
+## 38. B 樣式平台整合實際落地狀態
+
+> 本節同步「B 樣式平台整合」已完成並經 Phase 5 AI Verification 與 Phase 6 Jamie 手動驗證 PASS 的架構狀態。Code Commit 為 `4f9fb723930a907b8c3956fd084e757b41302137`（`feat(bn): add style B platform integration`，parent `7e157bdaaa42aa5be1977449d3ff86c3921bbaa0`），且是在 Jamie 完成手動驗證後才建立；`git diff --check HEAD^ HEAD` PASS。第 36.3 節「B／C／D 尚未接入平台」與第 37.6 節「本輪正式功能只涵蓋 A－12，B／C／D 尚未實作掛標」兩項跨 Type 狀態描述，就**目前正式支援範圍**而言自本節起由本節取代；兩節其餘內容與各節歷史決策不變。完整產品行為以 `bn/docs/FSS_BN_B樣式平台整合_Requirement_Specification_v1.0.md`（含第 27 節）為準。
+
+### 38.1 目前正式支援的 Type
+
+目前正式支援的 Type 為 **A 與 B**。B－01～17 與 A－01～17 一一對應，兩者**共用同一個 Generator、同一個控制台、同一條 Import → Workspace → Preview → Restore → Export 流程，以及同一組固定 17 個正式 renderer/template definitions**。A／B 的唯一版型差異是各自使用自己的 background assets；Canvas dimensions、文字位置、字型、字級、顏色、特殊 formatting、layout、geometry、01～12 shared text、13～16 獨立文字資料結構、Editor、Preview、Export behavior 與 formats、既有 compression／capacity behavior 全部相同。B 不是另一套 renderer behavior。
+
+C／D 仍未進入正式支援範圍（見 38.7）。
+
+### 38.2 Type → background asset base
+
+`bn/js/render-a.js` 仍為實際的正式 renderer integration 檔案，沿用既有 17 個 A renderer/template definitions 與既有 registry（registry 只存檔名，17 筆 entry 零修改）。background base 依 `currentType` 解析：
+
+- Type A → `bn/assets/A/底圖/`
+- Type B → `bn/assets/B/底圖/`
+- 非 A／B → 明確失敗，**不 fallback 至 A 或 B**
+
+17 的 `17_主標題.png` 與 `17_VIP.png` 同樣依 `currentType` 自對應 Type 目錄取得。image cache 沿用既有機制（key 為解析後完整 URL）。未建立 B renderer 檔案、B template registry、B templates 或 generic renderer framework。檔名 `render-a.js` 現同時服務 A 與 B，**未 rename**。
+
+### 38.3 Type → Excel worksheet
+
+- Type A → worksheet `A`；Type B → worksheet `B`；**無 fallback**，不取「第一個 worksheet」。
+- 樣式驗證發生於 worksheet lookup **之前**，因此工單內即使實際存在其他 worksheet 也不會被讀取。
+- A／B 共用同一組 validation anchors（`A15`／`A16`／`A17`）、同一組 cell mapping、同一套 validation schema；未建立第二套 mapping。01～12 為 `B15`／`B16`／`B17`；13 為 `L20`／`L21`；14 為 `L22`／`L23`；15 為 `L24`／`L25`；16 為 `L26`／`L27`／`O26`／`O27`；B－12 掛標月份為 B worksheet `E15`；17 為 `I29`、`I32:M33`、9 組門檻列（起始列 35）、`I53`／`I54`／`I55`。
+- Import 成功後保留實際 `currentType`；Import 失敗訊息反映實際 Type／worksheet，且 Type A 的既有三則訊息在 Type A 下維持逐字相同。Import 失敗維持既有 Atomic 語意。
+
+### 38.4 Workspace 與 Restore
+
+Workspace Data **未因 B 重新設計**，維持既有 `currentType`／`selectedBnId`／`shared`／`bnText`／`threshold`／`lpbnBadgeMonth`；未新增任何 B-specific schema 或欄位，`bn/js/workspace.js` 零修改。暫存 JSON 的 `type` 採用 Workspace 實際 Type（A workspace → `"A"`、B workspace → `"B"`）。Restore 正式接受 A 與 B，並依 JSON 自己的 `type` 完整恢復，不需使用者先手動切換樣式；其他值一律 reject 且 Workspace 不被替換。ZIP `FSS BN_MMDD.zip` 與暫存 JSON `FSS BN_MMDD.json` 的命名規則未變。
+
+### 38.5 B－12 掛標沿用
+
+B－12 已正式支援與 A－12 相同的掛標流程：base 為 `bn/assets/B/底圖/12_LPBN.jpg`，月份取自 B worksheet `E15`（正式月份 9／10／11／12），overlay assets 仍共用既有 `bn/assets/LPBN掛標/<月份>/`。`E15` 空白只輸出 base，完整合法月份輸出 base ＋ 三張 variants。`bn/js/lpbn-badges.js` 於本輪**零修改**；未建立 B-specific badge assets、B badge registry 或通用 Badge System。A／B variants 均為 JPG、1200 × 550、72 dpi；`12_LPBN` 目前無 byte limit。
+
+### 38.6 B－17 沿用
+
+B－17 完整沿用 A－17 的 threshold schema、renderer、geometry、Manual Editor、Preview 與 Export，資料來源改為 B worksheet 但 mapping 與 schema 相同。Manual Editor 對 A 與 B 皆可用；A－17 Manual Editor 為 LOCKED，未重新設計，Modal 本身零修改。未建立 B-specific threshold schema、B－17 renderer 或 B-specific Editor。
+
+### 38.7 C／D 邊界
+
+C／D 仍未進入正式支援範圍。落地後行為為：Import 在 worksheet lookup 前明確 reject、Preview 明確失敗且不顯示 A 或 B 背景、Export 因 render 階段即失敗而不產出任何成品、`type` 為 C／D 的暫存 JSON 一律 reject。**工單內存在 C／D worksheet 不代表 C／D 已支援；UI 可選擇 C／D 卡片亦不代表 renderer 已支援。** 本輪未為 C／D 建立任何 mapping、asset resolver、Requirement 或功能，UI 樣式卡片未修改。第 14 節「尚未定案事項」中的「每一種 Type 的完整 Excel 欄位」與「暫存 JSON Schema」，就 A 與 B 而言已由各自 Requirement 正式定案，對 C／D 及未來 Type 仍然適用。
+
+### 38.8 邊界維持
+
+- `bn/templates/A/*.js`（17 檔）、`bn/js/lpbn-badges.js`、`bn/js/workspace.js`、`bn/js/editor.js`、`bn/js/banwords*.js`、`bn/index.html`、`bn/css/`、`bn/js/vendor/*`、`bn/assets/A/*`、`bn/assets/LPBN掛標/*`、`bn/launch/*` 與正式工單 Excel，於本輪全部零修改；未新增任何程式檔或 dependency。
+- 01／02 JPEG capacity logic、`10_POP UP.png` ≤250,000 bytes 之 native lossless → UPNG 256-color → fail、既有 compression ladder、72 dpi 行為、A－17 Manual Editor 與 A－01～17 renderer 行為，於本輪全部零修改。
+- `bn/assets/B/底圖/` 18 個正式 assets 已於本次 Code Commit 正式納入版控；其中 15／16／17 對應素材與 A 相同屬正式狀態，不是缺漏或暫存。
+- 本節不建立 Registry、Framework、Build System、shared/common/base renderer 或任何跨 Type 抽象層，也不預先決定 C／D 的實作方式。

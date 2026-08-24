@@ -361,6 +361,8 @@ Mapping 已於 Phase 0 實測鎖定：
 
 僅樣式 A 完成平台整合；B／C／D 尚未接入；A／B／C／D 是否共用 renderer／helper／schema／registry 尚未裁決；`10_POP UP` 容量 Requirement（≤250,000 bytes，第 27 節）已裁決並已實作完成（Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`，見 27.9）。本節不構成任何跨 Type 架構決策。
 
+> （後續同步）上段「僅樣式 A 完成平台整合；B／C／D 尚未接入」為本輪 A 平台整合完成時的真實狀態記錄。其後樣式 B 已完成正式平台整合並經 Phase 5 AI Verification 與 Phase 6 Jamie 手動驗證 PASS，Code Commit `4f9fb723930a907b8c3956fd084e757b41302137`（`feat(bn): add style B platform integration`）：**目前正式支援的樣式為 A 與 B**，Type A 使用 worksheet `A` 與 `bn/assets/A/底圖/`、Type B 使用 worksheet `B` 與 `bn/assets/B/底圖/`，兩者共用同一組固定 17 個正式 renderer、同一套 cell mapping 與 validation schema、同一個 Workspace 結構與同一套 Export 行為；C／D 仍未進入正式支援範圍。第 26.3 節「`render-a.js` 之 A-only renderer 對應表」就目前狀態而言，該對應表現同時服務 A 與 B（檔名未 rename、17 筆 entry 未修改）。本文件其餘 A 自身 Requirement 與歷史裁決一律維持原文，未因 B 落地而改寫；B 的正式行為見 `bn/docs/FSS_BN_B樣式平台整合_Requirement_Specification_v1.0.md` 與 `FSS_BN_Architecture.md` 第 38 節。
+
 ## 27. `10_POP UP.png` 容量 Requirement（≤250,000 bytes；已實作、已驗證）
 
 > 本節為正式 Requirement，經 Investigation、Repository 外獨立 PoC 與 Jamie Manual Visual Verification 後由 Jamie 正式裁決成立，**取代**舊文件記錄之「`10_POP UP.png` ≤145KB」需求（舊 145KB 僅為歷史記錄，現已不適用）。本節狀態＝Requirement 已裁決且**已實作完成**：Proposal、Coding、AI Verification（25/25 PASS）與 Jamie Manual Verification 均已完成，正式行為以 Code Commit `0dadb5470470a91fe1aad240516697a001f9b4f0`（`feat(bn): enforce PNG size limit for A10`）落地；實作與驗證記錄見 27.9。

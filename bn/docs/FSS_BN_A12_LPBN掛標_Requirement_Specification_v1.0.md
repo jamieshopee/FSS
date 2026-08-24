@@ -249,6 +249,8 @@ A－12 原有的 shared 主標／副標／保護文字行為與 layout geometry 
 
 此為未來考量，**不構成本輪需求**，不得據此在本輪增加抽象層、預留介面或實作其他 Type。
 
+> （後續同步）上述「未來可能供其他 Type 的 LPBN 共用」已實現：樣式 B 完成平台整合後，B－12 已正式支援與 A－12 相同的掛標流程，並**共用同一組既有 `bn/assets/LPBN掛標/<月份>/` 素材**，掛標月份取自 B worksheet `E15`，base 為 `bn/assets/B/底圖/12_LPBN.jpg`。該次落地未建立 B-specific badge assets、B badge registry 或通用 Badge System，`bn/js/lpbn-badges.js` 零修改，A－12 的行為與本文件全部 Requirement 均未改變。Code Commit `4f9fb723930a907b8c3956fd084e757b41302137`；B 的正式行為見 `bn/docs/FSS_BN_B樣式平台整合_Requirement_Specification_v1.0.md`。本文件維持為 A－12 的原始 Requirement，第 1～21 節不因此改寫。
+
 ---
 
 ## 21. 修改邊界

@@ -70,6 +70,19 @@ D： - D 專用底圖 - 無額外文字帶入 - 有額外 Logo 圖帶入
 
 目前不要自行推論未來新增 Type 的規則。
 
+（落地註記：樣式 A 與樣式 B 均已完成正式平台整合，目前正式支援的 Type 為
+A 與 B。A／B 的差異已正式確認**只有 background 底圖**：A 使用
+`bn/assets/A/底圖/`、B 使用 `bn/assets/B/底圖/`；01～17 的 rendering、
+typography、geometry、layout、文字資料結構、Editor、Preview、Export 行為與
+formats 完全相同，B 沿用同一組固定 17 個正式 renderer，沒有另一套 B
+renderer 或 B Template。12_LPBN 掛標行為 A／B 相同，共用既有
+`bn/assets/LPBN掛標/` 素材；17_門檻表 的 threshold schema、geometry 與
+Manual Editor A／B 相同。B 的正式 Code Commit 為
+`4f9fb723930a907b8c3956fd084e757b41302137`，正式行為以
+`bn/docs/FSS_BN_B樣式平台整合_Requirement_Specification_v1.0.md` 為準。
+C／D 仍未進入正式支援範圍，其上述已確認差異維持本節原記錄，本註記不對
+C／D 作任何新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize
