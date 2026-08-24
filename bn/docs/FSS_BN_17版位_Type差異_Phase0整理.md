@@ -128,6 +128,33 @@ Preview／Export 尚未 enable，版位 02 既有鎖定的 JPG／72 dpi／≤145
 亦尚未對 D 實測。C 不在本註記範圍；本註記不對 C 或未確認的 D 版位差異作任何
 新裁決。）
 
+（落地註記：樣式 D 的 `03_Coin page BN`（D－03）亦已完成正式 Template 與人工
+對位驗證，Jamie 已確認 PASS，Code Commit 為
+`024c621e2c61bd40d3b736af7487b22e332d0273`。D－03 底圖
+`bn/assets/D/底圖/03_Coin page BN.jpg`（JPEG 1200 × 391）與對位圖
+`bn/assets/D/對位/03_Coin page BN.png`（PNG 1200 × 391）已於該 Code Commit
+納管；固定 Logo 仍為共用 `bn/assets/D/Logo.png`（原始 784 × 112），已由
+D－01 納管，D－03 只引用、未新增第二份。與 D－02 相同：**D－03 三段文字的
+位置、字型、顏色、字數規則與 `$`／`%` formatting 完全沿用 A／B－03，未有任何
+文字位置差異**；D－03 唯一的差異是新增固定 Logo，Logo box 為
+`{left:92, top:107, width:351, height:50}`，水平靠左（contain 後 350 × 50 @
+`x = 92`、`y = 107`，1px 餘量在右側）。原 Photoshop CSS 的
+`{687, 508, 351, 50}` 已裁決為誤植，不再使用。D－03 採 D-specific template
+`bn/templates/D/03-coin-page-bn.js` 與獨立校稿入口
+`bn/launch/D/03_Coin page BN.command`，已封箱的
+`bn/templates/A/03-coin-page-bn.js` 未被修改或取代。
+
+前一則註記所述「目前已完成實作與人工驗證的 D 版位為 D－01 與 D－02」自本註記
+起更新為：**目前已完成實作與人工驗證的 D 版位為 D－01、D－02 與 D－03**；
+D－04～17 仍待逐一確認與開發，其文字位置差異與 Logo 位置一律尚未確認，不得由
+D－01、D－02 或 D－03 推論。**目前正式支援的 Type 仍為 A 與 B**：
+`SUPPORTED_TYPES` 仍為 A／B，`ASSET_BASE_BY_TYPE` 仍只有 A／B，正式 renderer
+registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed；D 的正式 Import／
+Restore／Preview／Export 尚未 enable，版位 03 既有鎖定的 JPG／72 dpi（版位 03
+無 byte 容量上限）亦尚未對 D 實測，不得記為已驗證。本次完成的是「D－03
+renderer ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；
+本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

@@ -1766,6 +1766,44 @@ D－02 route 為 `viewer.html?type=D&bn=02_MALL%20HBN`，沿用既有共用薄 V
 - 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
 - D－03～17 尚未完成。本節裁決**只代表 D－02**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
+（後續同步：D－03 已於 D－03 Code Commit 完成，見第 5.2.3 節；本節其餘內容維持不變。）
+
+#### 5.2.3 `03_Coin page BN`
+
+##### 5.2.3.1 正式規格來源
+
+D－03 的完整正式規格、幾何、typography、Logo 裁決與 deferred 邊界以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 的「D－03 Requirement」章節為準（完成狀態見該章節 9.15 節），實作紀錄以 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－03」章節（落地紀錄見 8.15 節）為準。樣式 D 只維護這一份總 Requirement 與一份總 Proposal，**不建立逐版位 Requirement／Proposal 文件**。**本節只作狀態登錄與規格引用，不複製該兩份文件內容。**
+
+D－03 與樣式 A／B 的 `03_Coin page BN` 共用同一組已確認的文字內容模型與視覺樣式（Canvas 1200 × 391、主標 Medium 37pt `#ffffff`、副標 Bold 50pt `#fff285`、副標 `$`／`%` Bold 40pt 特殊 formatting、保護文字 Medium 21pt `#a6f4e6`、ink bounding-box 靠左＋靠上、8／7／17 字數規則、Medium template-local 2× rasterization）。**D－03 真正存在的差異只有一項**：
+
+1. 新增固定 Logo。Logo box `{left:92, top:107, width:351, height:50}`；source `bn/assets/D/Logo.png` 原始 784 × 112（已由 D－01 納管，D－03 僅引用，非本版位新增素材）；以 contain 等比例縮放並**水平靠左**，`scale = min(351/784, 50/112) = 25/56`，destination 350 × 50、`x = 92`、`y = 107`，右側保留 1px 餘量（垂直餘量為 0，靠上與置中結果相同）；禁止 rounding、禁止 stretch 成 351 × 50、禁止 cover／crop／source clipping。Logo 為固定 renderer asset，**不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON**。
+
+三段文字 box 為 headline `{92,168,395,46}`、subheadline `{92,225,500,64}`、protectionText `{92,302,500,25}`；Medium local 2× 的 offscreen 為 **2400 × 782**，只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均未進 2× surface；draw order 為 **background → Logo → Medium local 2× → Bold subheadline**。原 Photoshop CSS 的 `{687, 508, 351, 50}` 已裁決為誤植（該 `top` 在 1200 × 391 canvas 上垂直無效），不得再使用。
+
+##### 5.2.3.2 正式落地與驗證狀態
+
+D－03 採 D-specific template definition（未在已封箱的 `bn/templates/A/03-coin-page-bn.js` 加入 D 分支，亦未修改或取代該檔）。Jamie 已親自由 Finder 雙擊 D－03 `.command` 完成人工對位驗證並明確回覆 PASS。
+
+Code Commit 為 **`024c621e2c61bd40d3b736af7487b22e332d0273`**（`feat(bn): add D03 Coin page BN template`，parent `de1d98a70aa6e29e95397a913a46e0a30e01b7af`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑：
+
+- `bn/templates/D/03-coin-page-bn.js`（新增）
+- `bn/launch/D/03_Coin page BN.command`（新增，Git mode `100755`）
+- `bn/launch/viewer.html`（只服務 D－03 的校稿 branch 最小修改）
+- `bn/assets/D/底圖/03_Coin page BN.jpg`（新增納管，JPEG 1200 × 391）
+- `bn/assets/D/對位/03_Coin page BN.png`（新增納管，PNG 1200 × 391）
+
+`bn/assets/D/Logo.png` 不在本次 commit 內（已由 D－01 納管，D－03 僅引用、未修改、未重存、未建立第二份）。
+
+D－03 route 為 `viewer.html?type=D&bn=03_Coin%20page%20BN`，沿用既有共用薄 Viewer 與 A－03 launcher 既有 `127.0.0.1:4173`／marker／server reuse／`trap` 行為（僅 7 行識別差異，未重構）；對位 PNG 1:1 疊加，不合成進正式 Canvas。Viewer 的 D－03 分支**未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字；A－01～12 共用預設未修改。D－03 template 的 8 個共用文字 helper 與 A－03 逐位元組相同；Logo smoothing 為 renderer-local 且自成一組 `save`／`restore`。
+
+##### 5.2.3.3 尚未完成的邊界
+
+- **本次完成的是「D－03 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** Jamie 的 PASS 是人工對位 PASS，不是正式平台 Preview／Export PASS。
+- 目前正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed；正式平台六個核心 JS 於本次 Code Commit 全部零修改。
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－03 正式 Preview ↔ Export 一致性實測，以及版位 03 既有鎖定的 **JPG／72 dpi**（**版位 03 無 byte 容量上限**，與 01 的 ≤245,000 bytes、02 的 ≤145,000 bytes 不同）實測，**deferred until D platform integration**（本次未執行 D Export 實測，不得記為已驗證）。
+- 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
+- D－04～17 尚未完成。本節裁決**只代表 D－03**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：

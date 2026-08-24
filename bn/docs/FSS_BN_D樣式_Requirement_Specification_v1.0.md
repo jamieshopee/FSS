@@ -2,9 +2,10 @@
 
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Requirement，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Requirement 文件；所有 D 版位的 Requirement 集中於本文件（見第 2 節）
-**目前狀態**：D－01、D－02 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－03～17 尚待逐一確認
+**目前狀態**：D－01、D－02、D－03 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04～17 尚待逐一確認
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
 **D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
+**D－03 Code Commit**：`024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 6 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -79,7 +80,7 @@
 |---|---|---|---|
 | `01_DDcard BN` | **已確認**（Jamie 正式裁決） | **已完成**；Phase 6 Jamie 人工對位驗證 PASS；Code Commit `1139a7c3eca005b15c24bef7751ebb0ada740fe1` | 第 5 節 |
 | `02_MALL HBN` | **已確認**（Jamie 正式裁決） | **已完成**；Phase 6 Jamie 人工對位驗證 PASS；Code Commit `9c9272704517743ae7d8ccdd73c5a5a7bae8c534` | 第 8 節 |
-| `03_Coin page BN` | 尚待 Jamie 確認 | 尚未開發 | — |
+| `03_Coin page BN` | **已確認**（Jamie 正式裁決） | **已完成**；Phase 6 Jamie 人工對位驗證 PASS；Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273` | 第 9 節 |
 | `04_Loyalty BN` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `05_MSBN` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `06_IG` | 尚待 Jamie 確認 | 尚未開發 | — |
@@ -549,6 +550,8 @@ D－01 必須沿用既有的「明確失敗、不靜默降級」原則：
 | 2026-08-24 | 建立樣式 D 總 Requirement | 依 Jamie 裁決之樣式 D 文件策略，將 D－01 於 Phase 1 建立並經 GPT Review PASS 的原始 Requirement 全文整併為本文件第 5 節，未刪減任何條文；同時新增第 2 節文件治理規則、第 3 節 D 全域已確認規則、第 4 節逐版位狀態索引、第 6 節 deferred 項目與本節。D－01 原本的 standalone Requirement 檔案於整併後移除（該檔從未進入任何 Commit，故不屬 Git tracked deletion）。 |
 | 2026-08-24 | 補記 D－01 完成狀態 | D－01 Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）。詳見第 5 節內部第 18 節。 |
 | 2026-08-24 | 新增 D－02 Requirement | D－02（`02_MALL HBN`）Requirement 經 Jamie 確認、Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）。新增第 8 節並更新第 4 節索引與文件標頭狀態；第 1～7 節既有條文（含 D－01 第 5 節）未改寫。為避免變動既有章節編號與交叉引用，D－02 章節以附加方式置於第 7 節之後。 |
+| 2026-08-24 | 新增 D－03 Requirement（Phase 1） | D－03（`03_Coin page BN`）Requirement 經 Jamie 正式裁決確認，**僅完成 Phase 1，尚未 Coding、尚未人工驗證、尚無 Code Commit**。Logo box 正式採 `{left:92, top:107, width:351, height:50}`；原 Photoshop CSS `{687, 508, 351, 50}` 判定為誤植並已更正（該 `top` 在 1200 × 391 canvas 上垂直無效）。新增第 9 節並更新第 4 節索引與文件標頭狀態；第 1～8 節既有條文（含 D－01 第 5 節、D－02 第 8 節）未改寫。為避免變動既有章節編號與交叉引用，D－03 章節以附加方式置於第 8 節之後。 |
+| 2026-08-24 | 補記 D－03 完成狀態 | D－03（`03_Coin page BN`）Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`，parent `de1d98a70aa6e29e95397a913a46e0a30e01b7af`）。新增第 9.15 節並更新文件標頭狀態、第 4 節索引，以及第 9 節導言、第 9.2、9.9、9.11 節中已因本次完成而過時的狀態文字；**第 9 節既有 LOCKED 規格（canvas、Logo box、三文字 geometry、typography、`$`／`%` formatting、Medium local 2×、draw order）與 Acceptance Criteria 均未改值、未重寫**，第 1～8 節（含 D－01 第 5 節、D－02 第 8 節）未改寫。正式平台仍維持 A／B fail-closed，D－04～17 未處理。 |
 
 後續變更一律以新增列的方式追加，不改寫既有列。
 
@@ -648,3 +651,171 @@ Code Commit 為 **`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`**（`feat(bn): add 
 - `bn/assets/D/對位/02_MALL HBN.png`（新增納管）
 
 `bn/assets/D/Logo.png` **不在本次 commit 內**（已由 D－01 納管，D－02 僅引用）。A／B templates、A／B launchers、A／B assets、D－01 template／launcher、正式平台六個核心 JS 與所有文件於本次 Code Commit 全部零修改。
+
+---
+
+## 9. D－03（`03_Coin page BN`）Requirement
+
+> 本節為 D－03 正式 Requirement，**階段為 Phase 1**。D－03 與樣式 A／B 的 `03_Coin page BN` **共用同一組已確認的文字內容模型與視覺樣式**，真正的差異只有「新增固定 Logo」一項；因此本節只記錄 D－03 真正不同與需追蹤的內容，其餘一律引用第 3 節 D 樣式全域已確認規則與既有 A／B－03 正式規格，不重複複製背景說明。
+>
+> **本節條文與裁決均未改寫。** 本節原以「尚未實作的需求」寫成（Phase 1 當時 D－03 尚未 Coding）；D－03 現已完成 Phase 4 Coding 並經 Phase 6 Jamie 人工對位驗證 PASS，Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）。完成狀態與實際落地內容補記於第 9.15 節；本節其餘敘述中的「未來／預定」語氣屬 Phase 1 歷史用語，其所定義的規格與驗收要求不變。**本次完成的是「D－03 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。**
+
+### 9.1 版位與 canvas
+
+- 版位 ID `03`，名稱 `03_Coin page BN`。
+- 正式 canvas **1200 × 391**，與 A／B－03 相同。
+
+### 9.2 素材
+
+| 用途 | 路徑 | 實證 |
+|---|---|---|
+| 正式底圖 | `bn/assets/D/底圖/03_Coin page BN.jpg` | JPEG **1200 × 391**（與 canvas 完全一致） |
+| 人工對位圖 | `bn/assets/D/對位/03_Coin page BN.png` | PNG **1200 × 391**；只供人工 overlay 校稿，**不得**進入正式 Preview 或 Export 產出 |
+| 固定共用 Logo | `bn/assets/D/Logo.png` | PNG 原始 **784 × 112**；**已由 D－01 Code Commit 納管，D－03 只引用，不新增第二份、不修改、不重存** |
+
+底圖與對位圖在 Phase 1 當時為 untracked；兩者已於 D－03 Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273` 正式納管（見第 9.15 節）。`bn/assets/D/Logo.png` 仍為 D－01 納管之共用素材，D－03 僅引用、未重新納管。
+
+### 9.3 資料來源
+
+沿用第 3.1 節：D 有自己的 worksheet `D`，工單配置與 A／B 相同；D－03 屬 01～12 區間，來源為 `B15 = headline`、`B16 = subheadline`、`B17 = protectionText`。此為**已確認產品需求**，是未來 D platform integration 應遵循的依據；**目前平台尚未 enable D，不代表 D Excel Import 已可使用**（見第 9.11 節）。D－03 **不新增任何專屬資料欄位**。
+
+固定 Logo 不是資料：不由 Excel 帶入、不由使用者上傳、不進入 Editor、不進入 Workspace state、不進入暫存 JSON schema、不進入 Import mapping（沿用第 3.5 節全域規則）。
+
+### 9.4 Typography、字數與特殊 formatting（完全沿用 A／B－03）
+
+以 `bn/templates/A/03-coin-page-bn.js` 正式 renderer 為準，**不得重新設計**：
+
+| 內容 | Font | Color | 字數上限 |
+|---|---|---|---|
+| headline | `37pt "ShopeeNotoSans Medium"` | `#ffffff` | 8 |
+| subheadline | `50pt "ShopeeNotoSans Bold"` | `#fff285` | 7 |
+| subheadline 之 `$`／`%` | `40pt "ShopeeNotoSans Bold"` | `#fff285` | （同上） |
+| protectionText | `21pt "ShopeeNotoSans Medium"` | `#a6f4e6` | 17 |
+
+⚠️ A／B－03 的字級與 A／B－01、A／B－02 **不同**（01／02 為 30／45／37／18pt）。D－03 必須採上表 **37／50／40／21pt**。
+
+字數規則沿用 01～12 shared LOCKED 規則（半形計 0.5），不新增 D－03 專屬字數規則。`$`／`%` 完整沿用既有特殊 formatting：獨立 `40pt` Bold run ＋ 相鄰 ordinary run 的 **boundary glyph ink-bottom 對齊**（`$` 對齊後方、`%` 對齊前方，含反向 fallback），不重新定義。
+
+### 9.5 Geometry
+
+三個文字 box **與 A／B－03 完全相同，一字未改**：
+
+| 元素 | left | top | width | height |
+|---|---|---|---|---|
+| headline | 92 | 168 | 395 | 46 |
+| subheadline | 92 | 225 | 500 | 64 |
+| protectionText | 92 | 302 | 500 | 25 |
+
+D－03 新增固定 Logo box：**`{left: 92, top: 107, width: 351, height: 50}`**（Jamie 已正式裁決值）。
+
+⚠️ 原 Photoshop CSS 的 `{left: 687, top: 508, width: 351, height: 50}` **為已更正的原始誤植，不得再作為 D－03 正式座標**（該 `top` 在 1200 × 391 canvas 上垂直完全無效）。
+
+四個 box 全部落在 canvas 內（右緣最大 592 < 1200、下緣最大 327 < 391），且**互不重疊**（垂直間隙依序 11 / 11 / 13 px）。
+
+文字定位沿用 A－03 既有 **ink bounding-box 靠左＋靠上** 行為：`textAlign = "left"`、`textBaseline = "alphabetic"`，`x = box.left − inkLeft`、`y = box.top − inkTop`（混合副標則以全 run ink bbox 聯集靠左靠上貼齊）。**禁止**改為 `center`／`middle`、**禁止**新增 padding／inset、**禁止**發明新的 alignment 算法。
+
+### 9.6 Logo Rendering Requirement
+
+- Logo 必須**保持原始 aspect ratio**、**完整顯示**；**禁止 stretch、禁止 cover、禁止 crop／source clipping**（`drawImage` source rect 須為完整原圖）。
+- contain 算術（source 784 × 112 對 box 351 × 50）LOCKED：`scale = min(351/784, 50/112) = **25/56**`；**render size 350 × 50**；**destination x = 92、y = 107**。
+- **水平靠左**（不是水平置中）：destination x 以 box `left` 為基準（92），Logo 右緣為 442，**剩餘 1px 留在右側**，此為靠左＋contain 的正確結果；**禁止**為填滿 351px 而拉伸。垂直餘量恰為 0（render height 50 == box height 50），故取 box `top` = 107。四個 destination 值皆為整數，**禁止**自行 round／floor／ceil／trunc。
+- Logo 繪製須使用 renderer-local 高品質 image smoothing（自成一組 `save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage()` → `restore()`），**不得**依賴 Medium 2× 的 smoothing state、**不得**放入 Medium 2× surface、**不得**建立共用 Logo helper。
+- Logo PNG alpha 由既有 `source-over` 與 `globalAlpha = 1` 自然合成，**不新增** blending／compositing。
+
+**D－03 的 Logo box 只適用 D－03**，不得據此推論其他 D 版位的 Logo 位置或尺寸（沿用第 3.4 節）；亦不得把 D－01 的水平置中或 D－02 的座標套用於 D－03。
+
+### 9.7 Medium local 2×
+
+沿用 A／B－03 既有機制：**template-local** 2× 常數、offscreen **2400 × 782**（1200×2 × 391×2）、以**同一組 1× layout 座標**繪製，**只處理 headline ＋ protectionText**；**Bold subheadline 不進 2× pass**、**Logo 亦不進 2× pass**；最後以 `imageSmoothingEnabled = true`／`imageSmoothingQuality = "high"` 降回 1200 × 391。**禁止**抽成共用 2× helper／framework。
+
+沿用 A－03（非 A－01）行為：A－03 **沒有**「headline／protectionText 皆空即早退」guard，D－03 亦不得加入該 guard。
+
+### 9.8 完整 draw order
+
+**background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline。**
+
+### 9.9 Renderer 與人工對位驗證需求（已於 Phase 4 實作、Phase 6 人工驗證 PASS）
+
+- D－03 **未來必須**使用 D-specific template（比照 D－01／D－02 慣例，預定 `bn/templates/D/03-coin-page-bn.js`）；**不得**修改已封箱的 `bn/templates/A/03-coin-page-bn.js`、不得在其中加 D branch、不得與 D－01／D－02 合併成 generic D renderer、不得建立 D template registry framework。
+- 固定素材（底圖、Logo）須由 caller 載入完成後以 images object 傳入 renderer；renderer 不自行 async 載圖、不建 image cache。
+- D－03 **未來必須**有自己的獨立啟動檔（比照 D－01／D－02，預定 `bn/launch/D/03_Coin page BN.command`），並在既有 `bn/launch/viewer.html` 以**最小 additive** 分支提供人工對位校稿；啟動檔與 viewer 僅為人工校稿工具，**不是**第二套正式 renderer、**不是**正式 Generator Preview、**不是**正式資料輸入流程。
+- 對位圖只作 DOM overlay 供人工比對；**Logo 必須由 D－03 renderer 真正畫進 canvas**，不得以 DOM overlay／CSS background／`<img>` 疊圖等 Preview-only 技巧呈現。
+- 對位圖與 canvas 同為 1200 × 391，可作 1:1 overlay 座標基準。
+
+### 9.10 Preview／Export 同一 renderer 要求（未來要求）
+
+D－03 未來的正式 Preview 與 Export **必須走同一正式 renderer path**，不得另寫第二套視覺 renderer；Logo 與 placement 不得只在 Preview 或只在 Export 生效。此要求於 D platform integration 階段生效與驗證。
+
+版位 03 既有鎖定的 Export 規則為 **JPG、72 dpi**（由既有 `EXPORT_ITEMS` 以版位 id 提供，與樣式 type 無關；**版位 03 無 byte 容量上限**，與 01 的 ≤245,000 bytes、02 的 ≤145,000 bytes 不同）。此為既有鎖定規則，D－03 不得重新設計。
+
+### 9.11 尚未完成的邊界（deferred）與正式平台 fail-closed
+
+- **D－03 已完成 Phase 1 Requirement、Phase 3 Proposal、Phase 4 Coding 與 Phase 6 Jamie 人工對位驗證（PASS）**，並已建立 renderer／launcher／viewer 分支與 Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273`（見第 9.15 節）。已完成範圍**僅限單版位 renderer 與人工對位驗證**，以下正式平台項目仍未完成。
+- 目前正式支援的樣式仍為 **A 與 B**；`bn/js/import.js` 的 `SUPPORTED_TYPES` 仍為 `["A", "B"]`，`bn/js/render-a.js` 的 `ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 type 維度或任何 D entry，樣式 D 在正式平台**維持 fail-closed**（詳見第 6.1 節）。**本階段不得修改 `SUPPORTED_TYPES`、不得在 `ASSET_BASE_BY_TYPE` 加入 D、不得修改正式 Import。**
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**。
+- D－03 的正式 Preview ↔ Export 一致性實測，以及版位 03 的 JPG／72 dpi 實測，**deferred until D platform integration**，不得記為已驗證。
+- D－04～17 尚未確認；本節裁決**只代表 D－03**，不得預先補完其他版位的 geometry、Logo 位置、文字差異或 renderer 路徑。樣式 C 不在本節範圍。
+
+### 9.12 Explicit Non-Goals（本節明確不做）
+
+1. 不修改 A／B 任何 template、launcher、assets 或既有行為（含 `bn/templates/A/03-coin-page-bn.js`）。
+2. 不修改 D－01、D－02 已完成的 template、launcher 或其 Requirement 條文。
+3. 不建立 generic abstraction／framework／plugin／共用 2× helper／共用 Logo helper／D template registry。
+4. 不預建、不預留、不抽象化 D－04～17；不處理樣式 C。
+5. 不正式 enable Type D；不修改正式平台六個核心 JS。
+6. Logo 不進 Excel mapping／Editor／Workspace state／JSON schema。
+7. 不新增 D－03 專屬資料欄位、不改字數規則、不新增 overflow 警告或自動縮字。
+8. 不重新設計 Export 容量／格式／dpi 策略。
+9. 本階段不 Coding、不建立 Proposal、不做 Documentation Update、不 Stage／Commit。
+
+### 9.13 Acceptance Criteria（可驗證，全部為未來驗收項目）
+
+1. D－03 正式輸出 canvas 為 **1200 × 391**。
+2. 使用 `bn/assets/D/底圖/03_Coin page BN.jpg` 作為底圖，1:1 鋪滿 canvas、未縮放、未裁切。
+3. Logo 固定取自 `bn/assets/D/Logo.png`，非 Excel 帶入、非使用者上傳、非 Editor 欄位；未新增第二份 Logo 素材。
+4. Logo 保持原始 aspect ratio，以 **contain** 等比例縮放，**未變形、未 cover、未 crop**（source rect 完整）。
+5. Logo render size 為 **350 × 50**，destination **x = 92、y = 107**；右側保留 1px 餘量；未做任何 rounding；未使用 `{687, 508}`。
+6. 三個文字 box 座標為 headline `{92,168,395,46}`、subheadline `{92,225,500,64}`、protectionText `{92,302,500,25}`。
+7. 三段文字採 **ink bounding-box 靠左＋靠上**（`textAlign="left"`／`textBaseline="alphabetic"`），未改用 center／middle、未加 padding／inset。
+8. 三段文字視覺樣式與 A／B－03 相同：`37pt Medium #ffffff`／`50pt Bold #fff285`／`21pt Medium #a6f4e6`。
+9. `$`／`%` 為 `40pt Bold` 且 boundary glyph ink-bottom 對齊行為未改變。
+10. Medium 採 **template-local 2×**、offscreen **2400 × 782**、只涵蓋 headline ＋ protectionText；Bold subheadline 與 Logo 均未進 2× surface；未建立共用 2× helper。
+11. draw order 為 **background → Logo → Medium 2× → Bold subheadline**；`globalCompositeOperation` 維持 `source-over`、`globalAlpha` 維持 `1`，未新增 blending／compositing。
+12. Logo smoothing 為 renderer-local 且自成一組 `save`／`restore`，未依賴 Medium 2× 的 smoothing state。
+13. D－03 使用 D-specific template；`bn/templates/A/03-coin-page-bn.js` 未被修改。
+14. D－03 有獨立 `.command` 啟動檔，且可經既有 viewer 以對位圖做 1:1 人工 overlay 校稿；關閉 overlay 後 Logo 與三段文字仍留在 canvas 上。
+15. A／B－01～17 與 D－01、D－02 的行為與輸出未改變。
+16. `SUPPORTED_TYPES` 仍為 `["A", "B"]`；`ASSET_BASE_BY_TYPE` 仍只有 A 與 B；樣式 D 在正式平台仍 fail-closed。
+17. Workspace／暫存 JSON schema 未新增 Logo 欄位；Editor 未出現 Logo 欄位。
+18. D－04～17 無新增實作；未建立 generic framework／plugin／共用 helper。
+19. **Deferred（不在本階段驗收）**：D－03 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、版位 03 的 JPG／72 dpi 實測 —— 全部 deferred until D platform integration。
+
+### 9.14 Phase Boundary
+
+- 本節為 **Phase 1 Requirement**，只定義「必須做到什麼」與「如何驗收」，**不指定實作方式**；模組切分、函式設計、參數介面、asset 載入時序等屬 Phase 2 Investigation 確認範圍與 Phase 3 Proposal 決定範圍。
+- 本階段**未** Coding、**未**建立 Proposal、**未**做 Documentation Update（Architecture、Template Requirement、17 版位差異、全域 Requirement 的同步屬 D－03 完成後的 Documentation Update 階段）、**未** Stage／Commit／Push／Tag／Release。
+- D－03 進入 Phase 2 之前，本節需經 Jamie／GPT Review PASS。
+
+（本節為 Phase 1 當時的階段邊界歷史紀錄，保留不改寫；D－03 後續各階段的實際完成狀態見第 9.15 節。）
+
+### 9.15 D－03 Implementation Outcome（完成狀態）
+
+本節全部 Requirement 條文與裁決均未改寫，僅補記完成狀態。
+
+D－03 已依第 9 節 Requirement 與 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－03」章節完成 Phase 2 Investigation、Phase 3 Proposal、Phase 4 Coding，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/03_Coin page BN.command` 完成人工對位驗證且明確 PASS**。
+
+Code Commit 為 **`024c621e2c61bd40d3b736af7487b22e332d0273`**（`feat(bn): add D03 Coin page BN template`，parent `de1d98a70aa6e29e95397a913a46e0a30e01b7af`），`git diff --check HEAD^ HEAD` PASS，**精確包含 5 個路徑**：
+
+- `bn/templates/D/03-coin-page-bn.js`（新增）
+- `bn/launch/D/03_Coin page BN.command`（新增，Git mode `100755`）
+- `bn/launch/viewer.html`（最小 additive D－03 branch）
+- `bn/assets/D/底圖/03_Coin page BN.jpg`（新增納管）
+- `bn/assets/D/對位/03_Coin page BN.png`（新增納管）
+
+`bn/assets/D/Logo.png` **不在本次 commit 內**（已由 D－01 納管，D－03 僅引用、未修改、未重存、未建立第二份）。A／B templates、A／B launchers、A／B assets、D－01／D－02 template 與 launcher、正式平台六個核心 JS 與所有文件於本次 Code Commit 全部零修改。
+
+已達成之 Acceptance Criteria：第 9.13 節第 1～18 條。落地實測值與第 9 節裁決完全一致 —— canvas **1200 × 391**；Logo box `{left:92, top:107, width:351, height:50}`（未使用已更正之誤植 `{687, 508, 351, 50}`）；Logo source 784 × 112 以 contain 縮放，`scale = min(351/784, 50/112) = 25/56`，destination **350 × 50**、`x = 92`、`y = 107`，右側保留 1px 餘量，source rect 完整、未 rounding、未 stretch／cover／crop；三文字 box `{92,168,395,46}`／`{92,225,500,64}`／`{92,302,500,25}`，typography 沿用 A／B－03（`37pt Medium #ffffff`／`50pt Bold #fff285`／`$`／`%` `40pt Bold`／`21pt Medium #a6f4e6`），ink bounding-box 靠左＋靠上（`textAlign="left"`／`textBaseline="alphabetic"`）；Medium template-local 2× offscreen **2400 × 782**、只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均未進 2× surface；draw order **background → Logo → Medium local 2× → Bold subheadline**。D－03 使用獨立 `bn/templates/D/03-coin-page-bn.js`，已封箱的 `bn/templates/A/03-coin-page-bn.js` 未被修改或取代，兩者的 8 個共用文字 helper 逐位元組相同。
+
+第 9.13 節第 19 條之 deferred 項目維持不變：D－03 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、版位 03 的 **JPG／72 dpi**（既有 LOCKED 規則，**版位 03 無 byte 容量上限**）實測 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
+
+**本次完成的是「D－03 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，樣式 D 在正式平台維持 fail-closed；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。D－04～17 尚未處理，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 41 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.3 節。
