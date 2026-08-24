@@ -40,7 +40,7 @@ export function serializeWorkspace(state) {
     {
       format: WORKSPACE_FORMAT,
       version: WORKSPACE_VERSION,
-      type: "A",
+      type: state.currentType,
       selectedBnId: state.selectedBnId,
       shared: state.shared,
       bnText: state.bnText,

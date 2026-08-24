@@ -20,6 +20,10 @@ const ALL_BN_IDS = Object.freeze([
   "10", "11", "12", "13", "14", "15", "16", "17"
 ]);
 
+// 目前正式支援的樣式 Type（Phase 1 Requirement 鎖定：只有 A、B）。
+// 這不是 Type 系統或 config layer，只是 Import／Restore 的最小 allow-list。
+const SUPPORTED_TYPES = Object.freeze(["A", "B"]);
+
 // 正式 A 工單固定 source cells（Phase 0 實測、Phase 1 Requirement 鎖定）。
 const REQUIRED_LABELS = Object.freeze({
   A15: "主標 (限8字內)",
@@ -32,7 +36,7 @@ function cellText(worksheet, address) {
   return cell && cell.v !== undefined && cell.v !== null ? String(cell.v) : "";
 }
 
-function parseThresholdModel(worksheet, errors) {
+function parseThresholdModel(worksheet, errors, type) {
   const mainTitle = cellText(worksheet, "I29");
 
   const logistics = LOGISTIC_COLUMNS.map((column) => ({
@@ -68,15 +72,23 @@ function parseThresholdModel(worksheet, errors) {
       pair.cells.some((cell) => cell.color.trim() !== "" || cell.amount.trim() !== "")
   );
   if (!hasLogistics || !hasThreshold) {
-    errors.push("A 工作表 17_門檻表 工單資料不完整：至少需要一個物流欄與一個門檻列。");
+    errors.push(`${type} 工作表 17_門檻表 工單資料不完整：至少需要一個物流欄與一個門檻列。`);
   }
 
   return { mainTitle, logistics, thresholds, vip };
 }
 
-export async function parseExcelFile(file, selectedBnId) {
+export async function parseExcelFile(file, type, selectedBnId) {
   if (!globalThis.XLSX) {
     throw new Error("Excel 解析程式庫尚未載入。");
+  }
+
+  // 在讀取任何 worksheet 之前先確認樣式；非正式支援的樣式一律明確失敗，
+  // 不得因工單內實際存在其他 worksheet 就被接受。
+  if (!SUPPORTED_TYPES.includes(type)) {
+    throw new ImportValidationError([
+      `目前正式支援的樣式只有 ${SUPPORTED_TYPES.join("／")}，無法匯入樣式 ${type} 的工單。`
+    ]);
   }
 
   let workbook;
@@ -89,15 +101,15 @@ export async function parseExcelFile(file, selectedBnId) {
     throw new ImportValidationError(["無法解析工單 Excel 檔案。"]);
   }
 
-  const worksheet = workbook.Sheets ? workbook.Sheets.A : undefined;
+  const worksheet = workbook.Sheets ? workbook.Sheets[type] : undefined;
   if (!worksheet) {
-    throw new ImportValidationError(["工單 Excel 沒有 A 工作表。"]);
+    throw new ImportValidationError([`工單 Excel 沒有 ${type} 工作表。`]);
   }
 
   const errors = [];
   Object.entries(REQUIRED_LABELS).forEach(([address, expected]) => {
     if (cellText(worksheet, address) !== expected) {
-      errors.push(`A 工作表 ${address} 必須為「${expected}」，無法確認為正式 A 工單。`);
+      errors.push(`${type} 工作表 ${address} 必須為「${expected}」，無法確認為正式 ${type} 工單。`);
     }
   });
 
@@ -119,7 +131,7 @@ export async function parseExcelFile(file, selectedBnId) {
     }
   };
 
-  const threshold = parseThresholdModel(worksheet, errors);
+  const threshold = parseThresholdModel(worksheet, errors, type);
 
   // A－12 專用 optional 值：只讀取與保存，不判斷掛標群組或素材是否存在，
   // 也不因掛標狀態使 Import 失敗；asset availability 由 Preview／Export runtime 判定。
@@ -130,7 +142,7 @@ export async function parseExcelFile(file, selectedBnId) {
   }
 
   return {
-    currentType: "A",
+    currentType: type,
     selectedBnId: ALL_BN_IDS.includes(selectedBnId) ? selectedBnId : "01",
     shared,
     bnText,
@@ -252,8 +264,8 @@ export function parseWorkspaceJson(text) {
   if (data.version !== WORKSPACE_VERSION) {
     errors.push("暫存檔版本不支援。");
   }
-  if (data.type !== "A") {
-    errors.push("此暫存檔不屬於樣式 A，本輪僅支援樣式 A 暫存。");
+  if (!SUPPORTED_TYPES.includes(data.type)) {
+    errors.push(`此暫存檔的樣式不在目前正式支援範圍（${SUPPORTED_TYPES.join("／")}）。`);
   }
   if (!ALL_BN_IDS.includes(data.selectedBnId)) {
     errors.push("暫存檔缺少有效的目前選取 BN。");
@@ -280,7 +292,7 @@ export function parseWorkspaceJson(text) {
   }
 
   return {
-    currentType: "A",
+    currentType: data.type,
     selectedBnId: data.selectedBnId,
     shared,
     bnText,

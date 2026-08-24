@@ -21,7 +21,12 @@ import {
   waitForThresholdTableFonts
 } from "../templates/A/17-threshold-table.js";
 
-const ASSET_BASE = "../assets/A/底圖/";
+// 正式底圖 base 依目前樣式 Type 解析；目前正式支援範圍只有 A、B。
+// 這不是 Type framework 或 config layer，只是既有單一 base 常數的最小 Type 對照。
+const ASSET_BASE_BY_TYPE = Object.freeze({
+  A: "../assets/A/底圖/",
+  B: "../assets/B/底圖/"
+});
 
 const A_TABLE = Object.freeze({
   "01": { render: renderDdcardBn, waitFonts: waitForDdcardBnFonts, background: "01_DDcard BN.jpg" },
@@ -70,8 +75,8 @@ function loadImage(url, label) {
   });
 }
 
-function getImage(fileName, label) {
-  const url = new URL(ASSET_BASE + fileName, import.meta.url).href;
+function getImage(assetBase, fileName, label) {
+  const url = new URL(assetBase + fileName, import.meta.url).href;
   if (!imageCache.has(url)) {
     const promise = loadImage(url, label).catch((error) => {
       imageCache.delete(url);
@@ -88,21 +93,32 @@ export async function renderBnToCanvas(canvas, state, bnId) {
     throw new Error(`不支援的 BN 版位：${bnId}`);
   }
 
+  // 目前樣式不在正式支援範圍時明確失敗，不 fallback 到 A 或 B 的底圖。
+  const assetBase = Object.prototype.hasOwnProperty.call(
+    ASSET_BASE_BY_TYPE,
+    state.currentType
+  )
+    ? ASSET_BASE_BY_TYPE[state.currentType]
+    : "";
+  if (!assetBase) {
+    throw new Error(`不支援的樣式：${state.currentType}。正式底圖只支援樣式 A 與 B。`);
+  }
+
   if (bnId === "17") {
     const model = state.threshold;
     if (!model) {
       throw new Error("17_門檻表 尚未匯入工單資料。");
     }
     const [titleImage, vipImage] = await Promise.all([
-      getImage(entry.titleImage, "17_門檻表 正式主標底圖"),
-      getImage(entry.vipImage, "17_門檻表 正式 VIP 底圖"),
+      getImage(assetBase, entry.titleImage, "17_門檻表 正式主標底圖"),
+      getImage(assetBase, entry.vipImage, "17_門檻表 正式 VIP 底圖"),
       entry.waitFonts()
     ]);
     return entry.render(canvas, { titleImage, vipImage }, model);
   }
 
   const [backgroundImage] = await Promise.all([
-    getImage(entry.background, `${bnId} 正式底圖`),
+    getImage(assetBase, entry.background, `${bnId} 正式底圖`),
     entry.waitFonts()
   ]);
   return entry.render(canvas, backgroundImage, getBnFieldValues(state, bnId));

@@ -237,7 +237,9 @@ function render(state, reason) {
   exportButton.disabled = !state.threshold;
 
   const showThresholdEditor =
-    state.currentType === "A" && state.selectedBnId === "17" && Boolean(state.threshold);
+    (state.currentType === "A" || state.currentType === "B") &&
+    state.selectedBnId === "17" &&
+    Boolean(state.threshold);
   if (thresholdEditButton) thresholdEditButton.hidden = !showThresholdEditor;
   if (thresholdModal && !showThresholdEditor) thresholdModal.hidden = true;
 
@@ -334,7 +336,7 @@ excelInput.addEventListener("change", async () => {
 
   try {
     const state = workspace.getState();
-    const candidate = await parseExcelFile(file, state.selectedBnId);
+    const candidate = await parseExcelFile(file, state.currentType, state.selectedBnId);
     workspace.replaceWorkspace(candidate);
     setStatus(importStatus, "已匯入工單 Excel。", "success");
   } catch (error) {
