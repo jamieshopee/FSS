@@ -107,6 +107,27 @@ B**：`SUPPORTED_TYPES` 仍為 A／B，正式 renderer registry 尚未 enable D�
 的已確認需求，不代表目前平台已可 Import D。D－02～17 尚未完成，C 不在本註記
 範圍；本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
 
+（落地註記：樣式 D 的 `02_MALL HBN`（D－02）亦已完成正式 Template 與人工對位
+驗證，Jamie 已確認 PASS，Code Commit 為
+`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`。D－02 底圖
+`bn/assets/D/底圖/02_MALL HBN.jpg`（1200 × 360）；固定 Logo 仍為共用
+`bn/assets/D/Logo.png`（原始 784 × 112），已由 D－01 納管，D－02 只引用、
+未新增第二份。與 D－01 不同的是：**D－02 三段文字的位置、字型、顏色、字數
+規則與 `$`／`%` formatting 完全沿用 A／B－02，未有任何文字位置差異**；D－02
+唯一的差異是新增固定 Logo，Logo box 為 `{left:98, top:96, width:351,
+height:50}`，水平靠左。D－02 採 D-specific template
+`bn/templates/D/02-mall-hbn.js` 與獨立校稿入口
+`bn/launch/D/02_MALL HBN.command`。
+
+前一則註記所述「本次只有 D－01 已完成」自本註記起更新為：**目前已完成實作與
+人工驗證的 D 版位為 D－01 與 D－02**；D－03～17 仍待逐一確認與開發，其文字
+位置差異與 Logo 位置一律尚未確認，不得由 D－01 或 D－02 推論。**目前正式支援
+的 Type 仍為 A 與 B**：`SUPPORTED_TYPES` 仍為 A／B，正式 renderer registry
+尚未 enable D，樣式 D 在正式平台維持 fail-closed；D 的正式 Import／Restore／
+Preview／Export 尚未 enable，版位 02 既有鎖定的 JPG／72 dpi／≤145,000 bytes
+亦尚未對 D 實測。C 不在本註記範圍；本註記不對 C 或未確認的 D 版位差異作任何
+新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

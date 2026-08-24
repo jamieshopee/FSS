@@ -3,8 +3,9 @@
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Proposal，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Proposal 文件；所有 D 版位的 Proposal 集中於本文件（見第 2 節）
 **Requirement 基準**：`bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md`
-**目前狀態**：D－01 Proposal 已完成並經 GPT Review PASS，Phase 4 Coding 已完成、Phase 6 Jamie 人工對位驗證 PASS；D－02～17 尚未進入 Phase 3
+**目前狀態**：D－01、D－02 Proposal 均已完成並經 GPT Review PASS，Phase 4 Coding 已完成、Phase 6 Jamie 人工對位驗證 PASS；D－03～17 尚未進入 Phase 3
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
+**D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 5 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -41,7 +42,7 @@
 | 版位 | Phase 進度 | Proposal 狀態 | 本文件對應章節 |
 |---|---|---|---|
 | `01_DDcard BN` | Phase 4 Coding 完成、Phase 6 Jamie 驗證 PASS | **已完成**（GPT Review PASS） | 第 4 節 |
-| `02_MALL HBN` | 尚未進入 Phase 2／3 | 未建立 | — |
+| `02_MALL HBN` | Phase 4 Coding 完成、Phase 6 Jamie 驗證 PASS | **已完成**（GPT Review PASS） | 第 7 節 |
 | `03_Coin page BN` | 尚未進入 Phase 2／3 | 未建立 | — |
 | `04_Loyalty BN` | 尚未進入 Phase 2／3 | 未建立 | — |
 | `05_MSBN` | 尚未進入 Phase 2／3 | 未建立 | — |
@@ -878,5 +879,74 @@ Phase 4 完成後須經 Jamie／GPT Review PASS 才進入 Phase 5 Verification�
 |---|---|---|
 | 2026-08-24 | 建立樣式 D 總 Proposal | 依 Jamie 裁決之樣式 D 文件策略，將 D－01 於 Phase 3 建立並經 GPT Review PASS 的原始 Proposal 全文整併為本文件第 4 節，未刪減任何技術裁決；同時新增第 2 節文件治理規則、第 3 節狀態索引、第 5 節 deferred 項目與本節。D－01 原本的 standalone Proposal 檔案於整併後移除（該檔從未進入任何 Commit，故不屬 Git tracked deletion）。 |
 | 2026-08-24 | 補記 D－01 Implementation Outcome | D－01 Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）。詳見第 4 節內部第 P 節。Proposal 原有的「預定／Phase 4 plan」語境未改寫，維持其 Proposal 歷史紀錄性質。 |
+| 2026-08-24 | 新增 D－02 Implementation Record | D－02（`02_MALL HBN`）Phase 3 Proposal 經 GPT Review PASS、Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）。新增第 7 節並更新第 3 節索引與文件標頭狀態；第 1～6 節既有條文（含 D－01 第 4 節）未改寫。為避免變動既有章節編號與交叉引用，D－02 章節以附加方式置於第 6 節之後。 |
 
 後續變更一律以新增列的方式追加，不改寫既有列。
+
+---
+
+## 7. D－02（`02_MALL HBN`）Implementation Record
+
+> 本節記錄 D－02 **實際採用並已落地**的實作決策。D－02 與 A／B－02 共用同一組文字 renderer 行為，唯一新增的是固定 Logo；因此本節只記錄實際差異與追蹤事實，不重複 D－01 第 4 節的背景說明。產品需求以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 第 8 節為準。
+
+### 7.1 實際採用的架構決策
+
+- **D-specific template**：新增 `bn/templates/D/02-mall-hbn.js`。**未修改**已封箱的 `bn/templates/A/02-mall-hbn.js`、**未**在其中加 D branch、**未**與 D－01 合併成 generic D renderer、**未**建立 D template registry framework。
+- **文字 renderer 行為**：以 A－02 為 baseline 等價承接。A－02 的 8 個共用文字 helper（`hasInk`、`measureRun`、`boundaryGlyphInkBottom`、`validateInkFitsBox`、`drawLeftTopText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawLeftTopMixedSubheadline`）在 D－02 template 中**與 A－02 逐位元組相同**；另兩個函式僅錯誤訊息措辭改為 D－02。因此文字 ink-bbox 靠左＋靠上定位與 `$`／`%` formatting 完全一致。
+- **exports 恰 2 個**：`waitForMallHbnFonts`、`renderMallHbn`；template 零 import。
+- **images object invocation**：`renderMallHbn(canvas, images, values)`，`images` 為 `{ backgroundImage, logoImage }`（沿用 A－17／D－01 既有慣例）；未新增第四參數、renderer 不自行 async 載圖、未建 image cache。
+- **fit validation 保留**：`renderMallHbn` 回傳 `{ headline, subheadline, protectionText }` 三個 fit 物件，與 A－02 行為等價。
+
+### 7.2 Logo geometry（實際落地值）
+
+source 784 × 112 → `scale = min(351/784, 50/112) = 25/56` → **destination 350 × 50 @ x = 98、y = 96**，落在 Logo box `{98, 96, 351, 50}` 內。
+
+- **水平靠左**：destination x 直接取 box `left`；未套用 D－01 的水平置中公式。
+- 垂直餘量為 0，故取 box `top`；四個 destination 值皆為整數，實作中**無** rounding／floor／ceil／trunc。
+- 保持原比例、完整顯示；**無** stretch、**無** cover、**無** crop —— `drawImage` source rect 為完整原圖。
+- Logo smoothing 為 renderer-local，自成一組 `save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage()` → `restore()`，與 Medium 2× 的那組彼此獨立、不嵌套；Logo 未放入 Medium 2× surface；未建立共用 Logo helper。
+- PNG alpha 由既有 `source-over` ＋ `globalAlpha = 1` 自然合成，未新增 blending／compositing。
+
+**draw order 實際為**：`background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline`。
+
+### 7.3 Medium local 2×（實際落地）
+
+template-local 2× 常數；offscreen **2400 × 720**；以同一組 1× layout 座標只繪製 headline ＋ protectionText；Bold subheadline 與 Logo 皆不進 2×；以高品質 smoothing 降回 1200 × 360。沿用 A－02 而非 A－01 的行為（**未**加入 A－01 式「兩者皆空即早退」guard）。未建立共用 scale helper。
+
+### 7.4 Viewer 最小 additive integration（實際落地）
+
+`bn/launch/viewer.html` 實際變更為 **+16／−1，僅 2 個 hunk**：
+
+1. 於 D－01 branch 之後、unsupported `else` 之前新增 `type === "D" && bn === "02_MALL HBN"` branch：dynamic import `../templates/D/02-mall-hbn.js`；`width = 1200`／`height = 360`；background `../assets/D/底圖/02_MALL HBN.jpg`；overlay `../assets/D/對位/02_MALL HBN.png`；logo `../assets/D/Logo.png`；`renderTemplate = template.renderMallHbn`；`waitForFonts = template.waitForMallHbnFonts`。
+2. unsupported 訊息最小補上 D／`02_MALL HBN`（唯一被移除的 1 行即舊訊息）。
+
+**D－02 未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字（`商城優選無限免運`／`宅配免運$490起`／`免運優惠須依店家適用之物流為主`），未新增 D－02 專屬測試資料、未改共用預設值。`logoSource`／`logoImage` 宣告、Logo 載入區、共用 `render()`、overlay decode、field binding、CSS、DOM 與所有 A branch **均未改動**（D－01 已建立可直接重用的機制）。對位圖仍只作 DOM overlay，未進入正式輸出；Logo 由 D－02 renderer 真正畫進 canvas。
+
+### 7.5 Launcher（實際落地）
+
+新增 `bn/launch/D/02_MALL HBN.command`，以 `bn/launch/A/02_MALL HBN.command` 為 baseline 最小複製，**僅 7 行差異**（URL 與識別名稱）；query 為 `?type=D&bn=02_MALL%20HBN`；Git mode `100755`。port 4173、host、repo root 推導、viewer path、server reuse、readiness marker、curl 判定、輪詢、port 占用處理、`trap`、`open`、pause、絕對工具路徑與 echo 文案全部原樣沿用；未重構 shell、未加 log／參數、未改 port。
+
+### 7.6 Asset scope（實際落地）
+
+本次納管 **2 個**素材：`bn/assets/D/底圖/02_MALL HBN.jpg`（JPEG 1200 × 360）、`bn/assets/D/對位/02_MALL HBN.png`（PNG 1200 × 360）。
+
+`bn/assets/D/Logo.png` **已由 D－01 Code Commit 納管**，D－02 僅引用，**未修改、未重存、未重新納管、未建立第二份副本**，亦不在本次 commit 內。D－03～16 的其餘素材維持 untracked、未處理。
+
+### 7.7 A／B regression boundary（實際落地驗證）
+
+以下於 D－02 Code Commit 中全部零修改：`bn/templates/A/*.js`（含 A－02）、`bn/launch/A/*.command`、`bn/templates/D/01-ddcard-bn.js`、`bn/launch/D/01_DDcard BN.command`、`bn/assets/A/*`、`bn/assets/B/*`、`bn/assets/D/Logo.png`、`bn/assets/LPBN掛標/*`、`bn/js/*`（含正式平台六個核心 JS）、`bn/index.html`、`bn/css/*`、`bn/js/vendor/*`、`fonts/*`、`bn/assets/banwords.xlsx` 與所有 `bn/docs/*`。
+
+A－01～16 於 viewer 中收到的第二參數仍為原本同一個 `backgroundImage` 物件（`logoSource` 賦值僅存在於 D branch 內）；A－17 獨立 threshold path 未變。
+
+### 7.8 Code Commit 與 Jamie Manual Verification
+
+Phase 6 **Jamie 親自開啟 `bn/launch/D/02_MALL HBN.command` 完成人工對位驗證並明確 PASS**。
+
+Code Commit 為 **`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`**（`feat(bn): add D02 MALL HBN template`，parent `e77fe6b96ebc32aba2159ddb9a010e88f3bbec4d`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑（1 個 M ＋ 4 個 A）：`bn/launch/viewer.html`（M）、`bn/templates/D/02-mall-hbn.js`、`bn/launch/D/02_MALL HBN.command`（mode `100755`）、`bn/assets/D/底圖/02_MALL HBN.jpg`、`bn/assets/D/對位/02_MALL HBN.png`。
+
+### 7.9 Deferred（維持不變）
+
+- **本次完成的是 D－02 renderer ＋ 人工對位驗證，不是 D 樣式正式平台整合。**
+- 正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，樣式 D 在正式平台**維持 fail-closed**。
+- 正式 D Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、版位 02 的 **JPG／72 dpi／≤ 145,000 bytes 實測**（既有鎖定規則，本次**未執行** D Export 實測）、樣式 D 完整 17 版位輸出行為，全部 **deferred until D platform integration**。本輪未為驗證這些項目而 enable Type D。
+- D－02 的技術裁決**只代表 D－02**，不得作為其餘 D 版位的預設方案。D－03～17 尚未進入 Phase 2／3，本文件不含其 implementation 設計。樣式 C 不在範圍。

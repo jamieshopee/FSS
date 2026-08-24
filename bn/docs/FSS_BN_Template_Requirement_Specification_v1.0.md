@@ -41,6 +41,8 @@
 > A－16 落地狀態同步日期：2026-08-16
 >
 > D－01 落地狀態同步日期：2026-08-24（樣式 D／`01_DDcard BN` 已完成正式 Template 與人工對位驗證並經 Jamie PASS；見第 5.2 節。其餘 D 版位仍待逐一確認）
+>
+> D－02 落地狀態同步日期：2026-08-24（樣式 D／`02_MALL HBN` 已完成正式 Template 與人工對位驗證並經 Jamie PASS；見第 5.2.2 節。D－03～17 仍待逐一確認）
 
 ## 1. 文件目的
 
@@ -1729,6 +1731,40 @@ D－01 route 為 `viewer.html?type=D&bn=01_DDcard%20BN`，沿用既有共用薄 
 - D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－01 的正式 Preview ↔ Export 一致性實測與版位 01 的 JPG／72 dpi／≤245,000 bytes 實測 **deferred until D platform integration**。
 - 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，是未來 D platform integration 應遵循的依據，**不代表目前平台已可 Import D**。
 - D－02～17 尚未完成。本節的 D-specific template 裁決**只代表 D－01**，不得據此推論其餘 D 版位都必須建立 D-specific template，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
+
+#### 5.2.2 `02_MALL HBN`
+
+##### 5.2.2.1 正式規格來源
+
+D－02 的完整正式規格、幾何、typography、Logo 裁決與 deferred 邊界以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 的「D－02 Requirement」章節為準，實作紀錄以 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－02 Implementation Record」章節為準。樣式 D 只維護這一份總 Requirement 與一份總 Proposal，**不建立逐版位 Requirement／Proposal 文件**。**本節只作狀態登錄與規格引用，不複製該兩份文件內容。**
+
+D－02 與樣式 A／B 的 `02_MALL HBN` 共用同一組已確認的文字內容模型與視覺樣式（Canvas 1200 × 360、主標 Medium 30pt `#ffffff`、副標 Bold 45pt `#fff285`、副標 `$`／`%` Bold 37pt 特殊 formatting、保護文字 Medium 18pt `#a6f4e6`、ink bounding-box 靠左＋靠上、8／7／17 字數規則、Medium template-local 2× rasterization）。**D－02 真正存在的差異只有一項**：
+
+1. 新增固定 Logo。Logo box `{left:98, top:96, width:351, height:50}`；source `bn/assets/D/Logo.png` 原始 784 × 112（已由 D－01 納管，D－02 僅引用，非本版位新增素材）；以 contain 等比例縮放並**水平靠左**，`scale = min(351/784, 50/112) = 25/56`，destination 350 × 50、`x = 98`、`y = 96`（垂直餘量為 0，靠上與置中結果相同）；禁止 rounding、禁止 stretch 成 351 × 50、禁止 cover／crop／source clipping。Logo 為固定 renderer asset，**不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON**。
+
+三個文字 box 與 A／B－02 **完全相同**：headline `{98,153,351,37}`、subheadline `{98,200,445,57}`、protectionText `{98,273,445,22}`。draw order 為 background → Logo → Medium local 2×（主標＋保護文字）→ Bold 副標。
+
+##### 5.2.2.2 正式落地與驗證狀態
+
+D－02 採 D-specific template definition（未在已封箱的 `bn/templates/A/02-mall-hbn.js` 加入 D 分支）。Jamie 已親自由 Finder 雙擊 D－02 `.command` 完成人工對位驗證並明確回覆 PASS。
+
+Code Commit 為 `9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`，parent `e77fe6b96ebc32aba2159ddb9a010e88f3bbec4d`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑：
+
+- `bn/templates/D/02-mall-hbn.js`
+- `bn/launch/D/02_MALL HBN.command`（Git mode `100755`）
+- `bn/launch/viewer.html`（只服務 D－02 的校稿 branch 最小修改）
+- `bn/assets/D/底圖/02_MALL HBN.jpg`（JPEG 1200 × 360）
+- `bn/assets/D/對位/02_MALL HBN.png`（PNG 1200 × 360，只供 Launch 視覺校稿）
+
+D－02 route 為 `viewer.html?type=D&bn=02_MALL%20HBN`，沿用既有共用薄 Viewer 與 A－02 launcher 既有 `127.0.0.1:4173`／marker／server reuse／`trap` 行為（僅 7 行識別差異）；對位 PNG 1:1 疊加，不合成進正式 Canvas。Viewer 的 D－02 分支**未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字；A－01～12 共用預設未修改。D－02 template 的 8 個共用文字 helper 與 A－02 逐位元組相同。
+
+##### 5.2.2.3 尚未完成的邊界
+
+- **本次完成的是「D－02 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。**
+- 目前正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed。
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－02 正式 Preview ↔ Export 一致性實測，以及版位 02 既有鎖定的 **JPG／72 dpi／≤ 145,000 bytes** 實測，**deferred until D platform integration**（本次未執行 D Export 實測，不得記為已驗證）。
+- 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
+- D－03～17 尚未完成。本節裁決**只代表 D－02**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
 ## 6. Launch 驗證原則
 
