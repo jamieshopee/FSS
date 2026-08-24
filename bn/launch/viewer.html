@@ -218,6 +218,10 @@
       let waitForFonts;
       let fieldConfig = null;
       let thresholdTable = null;
+      // D－01 固定 Logo 專用：預設 null，只有 D－01 branch 會設定。
+      // 樣式 A 的所有 branch 都不碰這兩個變數，因此 A 的載入與 render 行為完全不變。
+      let logoSource = null;
+      let logoImage = null;
 
       if (
         parameters.get("type") === "A" &&
@@ -458,9 +462,36 @@
           titleSource: "../assets/A/底圖/17_主標題.png",
           vipSource: "../assets/A/底圖/17_VIP.png",
         };
+      } else if (
+        parameters.get("type") === "D" &&
+        parameters.get("bn") === "01_DDcard BN"
+      ) {
+        const template = await import("../templates/D/01-ddcard-bn.js");
+        viewerTitle = "樣式 D－01_DDcard BN";
+        viewerLabel = "D－01";
+        width = 531;
+        height = 792;
+        backgroundSource = "../assets/D/底圖/01_DDcard BN.jpg";
+        overlaySource = "../assets/D/對位/01_DDcard BN.png";
+        logoSource = "../assets/D/Logo.png";
+        renderTemplate = template.renderDdcardBn;
+        waitForFonts = template.waitForDdcardBnFonts;
+        // D－01 校稿用測試資料（viewer-only，不是產品預設內容）。
+        // 三段皆取字數上限以最大化 ink 寬度；副標同時含 $ 與 %，
+        // 覆蓋 $→後方 ordinary run 與 %→前方 ordinary run 兩條 formatting 路徑。
+        fieldConfig = [
+          { id: "headline", label: "主標", value: "宅配免運無限加碼", limit: 8 },
+          { id: "subheadline", label: "副標", value: "宅配滿$490再9%", limit: 7 },
+          {
+            id: "protectionText",
+            label: "保護文字",
+            value: "免運優惠須依店家適用之物流方案為主",
+            limit: 17,
+          },
+        ];
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區 與 17_門檻表。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區、17_門檻表 與樣式 D／01_DDcard BN。",
         );
       }
 
@@ -576,8 +607,14 @@
         });
       }
 
+      // logoSource 只有 D－01 branch 會設定；A－01～16 恆為 null，
+      // 因此 A 收到的第二參數仍是原本完全相同的 backgroundImage 物件。
       function render() {
-        renderTemplate(canvas, backgroundImage, state);
+        renderTemplate(
+          canvas,
+          logoSource ? { backgroundImage, logoImage } : backgroundImage,
+          state,
+        );
       }
 
       function bindField(field) {
@@ -977,6 +1014,18 @@
               }
             }),
           ]);
+
+          // 固定 Logo 只在 D－01（logoSource 有值）時額外載入；
+          // A－01～16 恆為 null，不執行此區塊，載入流程與原本完全相同。
+          if (logoSource) {
+            logoImage = await loadImage(
+              new URL(logoSource, import.meta.url).href,
+              `${viewerLabel} 正式 Logo`,
+            );
+            if (!logoImage.complete || logoImage.naturalWidth === 0) {
+              throw new Error(`${viewerLabel} 正式 Logo 尚未完成解碼。`);
+            }
+          }
 
           render();
           fields.forEach((field) => {
