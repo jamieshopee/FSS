@@ -39,6 +39,8 @@
 > A－15 落地狀態同步日期：2026-08-16
 >
 > A－16 落地狀態同步日期：2026-08-16
+>
+> D－01 落地狀態同步日期：2026-08-24（樣式 D／`01_DDcard BN` 已完成正式 Template 與人工對位驗證並經 Jamie PASS；見第 5.2 節。其餘 D 版位仍待逐一確認）
 
 ## 1. 文件目的
 
@@ -1687,6 +1689,46 @@ Code Commit 為 `556a79c25ce9d7ddb77b25075484312f37ea4197`（`feat(bn): add A17 
 - `bn/launch/viewer.html`（A－17 branch 最小修改）
 - `bn/assets/A/底圖/17_主標題.png`（SHA-256 `ecf17ed1b9841fd62dd1535bb0573148361ddbc0cd22ed914457b8d38ac32bac`）
 - `bn/assets/A/底圖/17_VIP.png`（SHA-256 `34df2ee85c09e691a25de31a7f5595833b98c9e01697a7234cb52a845512ba2c`）
+
+### 5.2 樣式 D
+
+本節只登錄樣式 D 已完成的版位。樣式 D 採與樣式 A 相同的逐版位製作與驗證原則；未完成的 D 版位不預填、不建立空章節、不預先補完未確認差異。
+
+#### 5.2.1 `01_DDcard BN`
+
+##### 5.2.1.1 正式規格來源
+
+D－01 的完整正式規格、幾何、typography、Logo 裁決、Scope Boundary 與 Acceptance Criteria 以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 的「D－01 Requirement」章節為準，實作規劃以 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－01 Proposal」章節為準。樣式 D 只維護這一份總 Requirement 與一份總 Proposal，**不建立逐版位 Requirement／Proposal 文件**。**本節只作狀態登錄與規格引用，不複製該兩份文件內容，以免產生重複且可能不同步的第二份需求。**
+
+D－01 與樣式 A／B 的 `01_DDcard BN` 共用同一組已確認的文字內容模型與視覺樣式（Canvas 531 × 792、主標 Medium 30pt `#ffffff`、副標 Bold 45pt `#fff285`、副標 `$`／`%` Bold 37pt 特殊 formatting、保護文字 Medium 18pt `#a6f4e6`、ink bounding-box 水平＋垂直置中、8／7／17 字數規則、Medium template-local 2× rasterization）。D－01 真正存在的差異只有兩項：
+
+1. 文字 placement 為 A／B－01 對應框整體下移 29px：headline `{left:90, top:170, width:351, height:37}`、subheadline `{left:43, top:221, width:445, height:57}`、protectionText `{left:43, top:296, width:445, height:22}`。
+2. 新增固定 Logo。Logo box `{left:90, top:103, width:351, height:50}`；source `bn/assets/D/Logo.png` 原始 784 × 112；以 contain 等比例縮放並水平＋垂直置中，`scale = min(351/784, 50/112) = 25/56`，destination 350 × 50、`x = 90.5`、`y = 103`；保留 fractional `90.5`，禁止 rounding、禁止 stretch 成 351 × 50、禁止 cover／crop／source clipping。Logo 為固定 renderer asset，**不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON**。
+
+draw order 為 background → Logo → Medium local 2×（主標＋保護文字）→ Bold 副標；四個 box 互不重疊。
+
+##### 5.2.1.2 正式落地與驗證狀態
+
+D－01 是樣式 D 第一個已完成的正式 BN Template，採 D-specific template definition（未在已封箱的 `bn/templates/A/01-ddcard-bn.js` 加入 D 分支）。Jamie 已親自由 Finder 雙擊 D－01 `.command` 完成人工對位驗證並明確回覆 PASS。
+
+Code Commit 為 `1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`，parent `88bd112729a061d012c23d780c4d6718766c8823`），Code Commit 前後 `git diff --check` 與 `git diff --check HEAD^ HEAD` 均 PASS，精確包含：
+
+- `bn/templates/D/01-ddcard-bn.js`
+- `bn/launch/D/01_DDcard BN.command`（Git mode `100755`）
+- `bn/launch/viewer.html`（只服務 D－01 的校稿 branch 最小修改）
+- `bn/assets/D/Logo.png`（SHA-256 `99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`）
+- `bn/assets/D/底圖/01_DDcard BN.jpg`（SHA-256 `95e8748066cdb2e7ac9606d9b481473df5336f98e624aa0fbb0d51b6f313bf68`）
+- `bn/assets/D/對位/01_DDcard BN.png`（SHA-256 `9c573d804b95da0dd901874fcdaa71136e2255e5ce31d962a9580c1d7c8ce1f8`）
+
+D－01 route 為 `viewer.html?type=D&bn=01_DDcard%20BN`，沿用既有共用薄 Viewer 與 A launcher 既有 `127.0.0.1:4173`／marker／server reuse／`trap` 行為；Canvas、Preview 與 overlay 均為 531 × 792，對位 PNG 以原始 Alpha、同原點及原尺寸 1:1 疊加，不合成進正式 Canvas。Viewer 沿用既有 `fieldConfig` 機制提供 D－01 專用測試文字（主標 `宅配免運無限加碼` 8.0 units、副標 `宅配滿$490再9%` 7.0 units、保護文字 `免運優惠須依店家適用之物流方案為主` 17.0 units），副標同時覆蓋 `$`→後方 ordinary run 與 `%`→前方 ordinary run 兩條 formatting 路徑；A－01～12 共用預設測試字串未修改。
+
+##### 5.2.1.3 尚未完成的邊界
+
+- **本次完成的是「D－01 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。**
+- 目前正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed。
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－01 的正式 Preview ↔ Export 一致性實測與版位 01 的 JPG／72 dpi／≤245,000 bytes 實測 **deferred until D platform integration**。
+- 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，是未來 D platform integration 應遵循的依據，**不代表目前平台已可 Import D**。
+- D－02～17 尚未完成。本節的 D-specific template 裁決**只代表 D－01**，不得據此推論其餘 D 版位都必須建立 D-specific template，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
 ## 6. Launch 驗證原則
 

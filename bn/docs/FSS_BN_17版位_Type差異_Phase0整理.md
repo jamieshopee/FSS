@@ -83,6 +83,30 @@ Manual Editor A／B 相同。B 的正式 Code Commit 為
 C／D 仍未進入正式支援範圍，其上述已確認差異維持本節原記錄，本註記不對
 C／D 作任何新裁決。）
 
+（落地註記：樣式 D 的 `01_DDcard BN`（D－01）已完成正式 Template 與人工對位
+驗證，Jamie 已確認 PASS，Code Commit 為
+`1139a7c3eca005b15c24bef7751ebb0ada740fe1`。D－01 已落實本節記錄的
+「D 專用底圖＋額外 Logo 圖帶入」：底圖 `bn/assets/D/底圖/01_DDcard BN.jpg`
+（531 × 792），Logo `bn/assets/D/Logo.png`（原始 784 × 112）為固定 renderer
+asset，不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON；D－01
+文字位置與 A／B－01 不同（三框整體下移 29px），typography、顏色、字數規則、
+ink 置中與 `$`／`%` 特殊 formatting 沿用 A／B－01。D－01 採 D-specific
+template `bn/templates/D/01-ddcard-bn.js` 與獨立校稿入口
+`bn/launch/D/01_DDcard BN.command`。
+
+目前已知的 D 整體產品資訊為：D 有自己的 worksheet `D`，工單配置與 A／B
+相同；01、02、03、06、07、08、09、10、12 已知存在文字位置與額外 Logo 差異；
+01～14 使用 D 底圖；12 仍需掛標；15～17 與 A／B 相同。
+
+重要邊界：**本次只有 D－01 已完成實作與人工驗證**，其餘 D 版位仍待逐一確認
+與開發，上述 D 整體資訊不代表其他版位已完成或已定案，也不得據 D－01 推論
+其餘 D 版位都必須建立 D-specific template。**目前正式支援的 Type 仍為 A 與
+B**：`SUPPORTED_TYPES` 仍為 A／B，正式 renderer registry 尚未 enable D，
+樣式 D 在正式平台維持 fail-closed；D 的正式 Import／Restore／Preview／Export
+尚未 enable，「D 有自己的 worksheet」只是未來 D platform integration 應遵循
+的已確認需求，不代表目前平台已可 Import D。D－02～17 尚未完成，C 不在本註記
+範圍；本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize
