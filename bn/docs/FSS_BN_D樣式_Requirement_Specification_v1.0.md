@@ -2,11 +2,12 @@
 
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Requirement，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Requirement 文件；所有 D 版位的 Requirement 集中於本文件（見第 2 節）
-**目前狀態**：D－01、D－02、D－03、D－06 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－07～17 尚待逐一確認
+**目前狀態**：D－01、D－02、D－03、D－06、D－07 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－08～17 尚待逐一確認
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
 **D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
 **D－03 Code Commit**：`024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）
 **D－06 Code Commit**：`5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`）
+**D－07 Code Commit**：`b35507340ad12cb976bdc08d96278df756e9b272`（`feat(bn): add D07 FB POST template`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 6 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -85,7 +86,7 @@
 | `04_Loyalty BN` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `05_MSBN` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `06_IG` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48` | 第 10 節 |
-| `07_FB POST` | 尚待 Jamie 確認 | 尚未開發 | — |
+| `07_FB POST` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `b35507340ad12cb976bdc08d96278df756e9b272` | 第 11 節 |
 | `08_SPX TVBN_1` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `09_SPX TVBN_2` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `10_POP UP` | 尚待 Jamie 確認 | 尚未開發 | — |
@@ -556,6 +557,9 @@ D－01 必須沿用既有的「明確失敗、不靜默降級」原則：
 | 2026-08-24 | 新增 D－06 Requirement（Phase 1） | D－06（`06_IG`）Requirement 經 Jamie／GPT 正式裁決確認，**僅完成 Phase 1，尚未 Coding、尚未人工驗證、尚無 Code Commit**。canvas `900 × 1600`；正式四個 box 由對位圖 alpha 連通元件分析＋A－06 renderer `IG_LAYOUT` 交叉驗證後裁決為 Logo `{left:161, top:282, width:580, height:82}`、headline `{175,387,550,65}`、subheadline `{136,472,630,82}`、protectionText `{136,573,630,37}`；原 Photoshop／CSS 的 `left`（`2020`／`2034`／`1995`）判定為座標偏移資料（`Δleft = 1859`、`Δtop = 0`、width／height 一致），僅作更正依據保留、不得再作正式 geometry。Logo 於 box 內**水平＋垂直置中**（`scale = 41/56`、destination `574 × 82` @ `(164, 282)`、左右各 3px、上下 0px、四值皆整數），與 D－02／D－03 的靠左規則不同，只代表 D－06。新增第 10 節並更新第 4 節索引與文件標頭狀態；第 1～9 節既有條文（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節）未改寫。為避免變動既有章節編號與交叉引用，D－06 章節以附加方式置於第 9 節之後。D－04、D－05、D－07～17 狀態未變動，仍為尚待確認。 |
 | 2026-08-25 | 補記 D－06 完成狀態 | D－06（`06_IG`）Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS、Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`，parent `5a2ba2ffa40254f2b3c45cab5e8fa4051b9505db`），精確包含 5 paths（1 M ＋ 4 A），launcher Git mode `100755`；`bn/assets/D/Logo.png` 僅引用、未再次納管。新增第 10.16 節並更新文件標頭狀態、第 4 節索引，以及第 10 節導言、第 10.2、10.11、10.12 節中已因本次完成而過時的狀態文字；**第 10 節既有 LOCKED 規格（canvas、Logo box、三文字 geometry、typography、`$`／`%` formatting、centered ink alignment、Medium local 2×、draw order、Logo contain 算術）與 Acceptance Criteria 均未改值、未重寫**，第 1～9 節（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節）未改寫。正式平台仍維持 A／B fail-closed，D－04／05／07～17 與樣式 C 未處理。 |
 
+| 2026-08-25 | 新增 D－07 Requirement（Phase 1） | D－07（`07_FB POST`）Requirement 經 Jamie／GPT 正式裁決確認，**僅完成 Phase 1，尚未 Coding、尚未人工驗證、尚無 Code Commit**。canvas `1200 × 630`；正式四個 box 由對位圖 alpha 連通元件分析＋A－07 renderer `FB_POST_LAYOUT` 交叉驗證後裁決為 Logo `{left:54, top:201, width:365, height:52}`、headline `{54,266,405,49}`、subheadline `{54,325,475,62}`、protectionText `{54,401,475,28}`；原 Photoshop／CSS Logo `left`（`2877`）判定為座標偏移資料（`Δleft = 2823`、`Δtop = 0`、top／width／height 原值正確），僅作更正依據保留、不得再作正式 geometry。Logo 於 box 內**水平靠左＋垂直置中**（`scale = 13/28`、destination `364 × 52` @ `(54, 201)`、左 0px／右 1px／上 0px／下 0px、四值皆整數）。三文字沿用 A／B－07 的 **LeftCentered**（水平靠左＋垂直 ink 置中）與 typography；Medium local 2× = `2400 × 1260`。新增第 11 節並更新第 4 節索引與文件標頭狀態；第 1～10 節既有條文（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節、D－06 第 10 節）未改寫。為避免變動既有章節編號與交叉引用，D－07 章節以附加方式置於第 10 節之後。D－04、D－05、D－08～17 狀態未變動，仍為尚待確認。 |
+| 2026-08-25 | 補記 D－07 完成狀態 | D－07（`07_FB POST`）Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS、Code Commit `b35507340ad12cb976bdc08d96278df756e9b272`（`feat(bn): add D07 FB POST template`，parent `17249b983d4e0c9943a75f6f273865fda984d647`），精確包含 5 paths（1 M ＋ 4 A），launcher Git mode `100755`；`bn/assets/D/Logo.png` 僅引用既有 tracked asset、未再次納管。helper preservation 如實記錄為 **6/8 byte-identical ＋ 2/8 behavior-equivalent（`measureRun`、`boundaryGlyphInkBottom` 僅 runtime error message `A－07`→`D－07`），實質差異 0/8**，非 8/8。新增第 11.16 節並更新文件標頭狀態、第 4 節索引，以及第 11 節導言、第 11.2、11.11、11.12 節中已因本次完成而過時的狀態文字；**第 11 節既有 LOCKED 規格（canvas、四個 box、typography、LeftCentered、`$`／`%` formatting、Medium local 2×、draw order、Logo contain 算術）與 Acceptance Criteria 均未改值、未重寫**，第 1～10 節（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節、D－06 第 10 節）未改寫。正式平台仍維持 A／B fail-closed，D－04／05／08～17 與樣式 C 未處理。 |
+
 後續變更一律以新增列的方式追加，不改寫既有列。
 
 ---
@@ -1024,3 +1028,206 @@ D－06 使用獨立 `bn/templates/D/06-ig.js`（exports 恰 2、零 import、sig
 第 10.14 節第 21 條之 deferred 項目維持不變：D－06 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export，以及版位 06 的 **JPG／72 dpi**（既有 LOCKED 規則，`JPEG_QUALITY = 1.0`、**版位 06 無 byte 容量上限**）實際 Export 驗證 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
 
 **Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－06 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，樣式 D 在正式平台維持 fail-closed；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－06**；D－04、D－05、D－07～17 尚未處理，不得由 D－01／D－02／D－03／D－06 推論其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 42 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.4 節。
+
+---
+
+## 11. D－07（`07_FB POST`）Requirement
+
+> 本節為 D－07 正式 Requirement，**階段為 Phase 1**。D－07 與樣式 A／B 的 `07_FB POST` **共用同一組已確認的文字內容模型與視覺樣式**，真正的差異只有「新增固定 Logo」一項；因此本節只記錄 D－07 真正不同與需追蹤的內容，其餘一律引用第 3 節 D 樣式全域已確認規則與既有 A／B－07 正式規格，不重複複製背景說明。
+>
+> **本節條文與裁決均未改寫。** 本節原以「尚未實作的需求」寫成（Phase 1 當時 D－07 尚未 Coding）；D－07 現已完成 Phase 4 Coding 並經 Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS，Code Commit `b35507340ad12cb976bdc08d96278df756e9b272`（`feat(bn): add D07 FB POST template`）。完成狀態與實際落地內容補記於第 11.16 節；本節其餘敘述中的「未來／預定」語氣屬 Phase 1 歷史用語，其所定義的規格與驗收要求不變。**本次完成的是「D－07 renderer ＋ 人工 1:1 overlay 對位驗證」，不是「D 樣式正式平台整合完成」，也不是正式平台 Preview／Export PASS。**
+>
+> 本節依第 2 節文件治理規則以附加方式置於第 10 節之後，未變動第 1～10 節既有章節編號與交叉引用。D－04、D－05、D－08～17 的狀態不受本節影響，仍為「尚待 Jamie 確認」。
+
+### 11.1 版位與 canvas
+
+- 版位 ID `07`，名稱 `07_FB POST`。
+- 正式 canvas **1200 × 630**，與 A／B－07 相同（`bn/templates/A/07-fb-post.js` 的 `FB_POST_WIDTH = 1200`、`FB_POST_HEIGHT = 630`）。
+
+### 11.2 素材
+
+| 用途 | 路徑 | 實證 |
+|---|---|---|
+| 正式底圖 | `bn/assets/D/底圖/07_FB POST.jpg` | JPEG **1200 × 630**（與 canvas 完全一致） |
+| 人工對位圖 | `bn/assets/D/對位/07_FB POST.png` | PNG RGBA **1200 × 630**；只供人工 overlay 校稿，**不得**進入正式 Preview 或 Export 產出 |
+| 固定共用 Logo | `bn/assets/D/Logo.png` | PNG 原始 **784 × 112**；**既有 tracked 共用檔（由 D－01 Code Commit 納管），D－07 只引用，不新增第二份、不修改、不重存** |
+
+底圖與對位圖在 Phase 1 當時為 untracked；兩者已於 D－07 Code Commit `b35507340ad12cb976bdc08d96278df756e9b272` 正式納管（見第 11.16 節）。`bn/assets/D/Logo.png` 仍為既有 tracked 共用素材（由 D－01 納管），D－07 僅引用、未再次納管。
+
+### 11.3 資料來源
+
+沿用第 3.1 節：D 有自己的 worksheet `D`，工單配置與 A／B 相同；D－07 屬 01～12 區間，來源為 `B15 = headline`、`B16 = subheadline`、`B17 = protectionText`，字數規則沿用現有 shared LOCKED 規則。此為**已確認產品需求**，是未來 D platform integration 應遵循的依據；**目前平台尚未 enable D，不代表 D Excel Import 已可使用**（見第 11.12 節）。D－07 **不新增任何專屬資料欄位**。
+
+固定 Logo 不是資料：不由 Excel 帶入、不由使用者上傳、不進入 Editor、不進入 Workspace state、不進入暫存 JSON schema、不進入 Import mapping（沿用第 3.5 節全域規則）。本階段**不得修改正式 Import、不得 enable worksheet D**。
+
+### 11.4 Typography、字數與特殊 formatting（完全沿用 A／B－07）
+
+A－07 與 B－07 **共用同一個正式 renderer** `bn/templates/A/07-fb-post.js`（`bn/js/render-a.js` 的 `A_TABLE` 僅以版位 id 為 key、無 type 維度，A／B 差異只由 `ASSET_BASE_BY_TYPE` 在 rendering layer 切換底圖路徑）。D－07 的文字視覺樣式**完全沿用**該 renderer，不得重新設計：
+
+| 欄位 | font | color |
+|---|---|---|
+| headline | `39pt "ShopeeNotoSans Medium"` | `#ffffff` |
+| subheadline | `49pt "ShopeeNotoSans Bold"` | `#fff285` |
+| subheadline 的 `$`／`%` | `41pt "ShopeeNotoSans Bold"` | `#fff285` |
+| protectionText | `22.5pt "ShopeeNotoSans Medium"` | `#a6f4e6` |
+
+`$`／`%` 特殊 formatting 完整沿用既有機制，不得改寫：`tokenizeSubheadline` 將 `$`／`%` 切為獨立 symbol run 並改用 `symbolFont`；`adjacentOrdinaryRun` 決定對齊參考的相鄰 ordinary run（**`$` 取後方、`%` 取前方**，含既有反向 fallback）；`boundaryGlyphInkBottom` 使 symbol 的 ink-bottom 對齊該相鄰字符的 ink-bottom（`actualBoundingBoxDescent`，以 `Array.from` 逐 code point 檢查、`hasInk` 跳過無墨跡字符）。
+
+字數規則沿用 01～12 shared LOCKED 規則，D－07 **不改字數規則、不新增 overflow 警告、不自動縮字、不新增 padding／inset**。
+
+### 11.5 Geometry（正式 canvas 座標，已由 Jamie／GPT 裁決）
+
+四個正式 box（單位 px，相對 1200 × 630 canvas 原點）：
+
+| component | left | top | width | height |
+|---|---|---|---|---|
+| Logo | **54** | **201** | **365** | **52** |
+| headline | **54** | **266** | **405** | **49** |
+| subheadline | **54** | **325** | **475** | **62** |
+| protectionText | **54** | **401** | **475** | **28** |
+
+三個文字 box 與既有 A／B－07 renderer 的 `FB_POST_LAYOUT` **逐值完全相同**，D－07 不得改動。四個 box 互不重疊（Logo bottom = 253 < headline top = 266）。四者的 `left` 均為 54，即四個 component 共用同一條左基準線。
+
+### 11.6 Photoshop／CSS 原始座標之更正事實（歷史證據，不得作為正式 geometry）
+
+Jamie 提供的原始 Photoshop／CSS Logo box 為 `{left: 2877, top: 201, width: 365, height: 52}`。其 `left = 2877` 已大於 canvas 寬度 1200，`right = 3242` 超出 canvas 達 2042px，**在正式 canvas 上水平無效**；`top = 201`、`bottom = 253` 則落在 630 內、垂直有效。
+
+Phase 0 Investigation 以對位圖 alpha 連通元件分析（`bn/assets/D/對位/07_FB POST.png` 為 8-bit RGBA、RGB 全黑、alpha 恰 2 個 level：`26` 背景與 `95` 標記框，取最高 alpha 得 4 個 100% 實心矩形）並與 A－07 renderer 既有 `FB_POST_LAYOUT` 交叉驗證，其中三個 component 與 A－07 三文字 box 逐值精確吻合，剩餘唯一 component 即 Logo box。對照結果為：
+
+| component | Photoshop／CSS | 正式 canvas | Δleft | Δtop | width／height |
+|---|---|---|---|---|---|
+| Logo | `{2877, 201, 365, 52}` | `{54, 201, 365, 52}` | **2823** | **0** | 一致 |
+
+**`Δleft = 2823`、`Δtop = 0`，`top`／`width`／`height` 原值正確。** 本節僅作為座標更正依據與歷史證據保留；**原始 Photoshop／CSS 的 `left`（`2877`）一律不得寫成正式 geometry、不得再使用**。
+
+本次 Jamie 只提供 Logo 一組 Photoshop／CSS 座標，未提供三文字的原始值，因此三文字不存在同類 offset 記錄，其正式值即 A／B－07 既有 `FB_POST_LAYOUT` 本身。D－07 的 `Δleft = 2823` 為本版位獨立值，與 D－02／D－03 的 595、D－06 的 1859 皆不同，**不得互相推論**。
+
+### 11.7 Logo Rendering Requirement
+
+- Logo 必須在 box `{left:54, top:201, width:365, height:52}` 內保持比例 **contain** 完整顯示，**水平靠左＋垂直置中**；**禁止 stretch、禁止 cover、禁止 crop、禁止 source clipping**（source rect 必須為完整 `0, 0, 784, 112`）。
+- 以 source `784 × 112` 與 box `365 × 52` 計算，以下為 LOCKED 值：
+
+| 項目 | 值 |
+|---|---|
+| `scale` | `min(365/784, 52/112) = min(365/784, 13/28) = 13/28`（**height-bound**） |
+| destination width | **364** |
+| destination height | **52** |
+| `destinationX` | **`box.left` = 54**（水平靠左，**禁止水平置中**） |
+| `destinationY` | **`box.top + (box.height − destinationHeight) / 2` = 201**（垂直置中） |
+| 左／右剩餘 | 左 **0px**／右 **1px** |
+| 上／下剩餘 | 上 **0px**／下 **0px** |
+| aspect ratio | 保持 **7 : 1** |
+
+- 上述 destination 四值皆為整數，**不需要也禁止**額外的 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt` 或 bitwise truncation 等 geometry 取整。
+- D－07 的 Logo 為**水平靠左＋垂直置中**：水平規則與 D－02／D－03 同族，垂直規則本次明確鎖為置中（因 destination height 恰等於 box height，垂直餘量為 0，靠上與置中在現行素材下數值相同，但規則以置中為準）。本節裁決**只代表 D－07**，不得與 D－01／D－02／D－03／D－06 互相推論。
+- Logo rendering 必須 **template-local**，且以獨立一組 `save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage(...)` → `restore()` 處理，不依賴其他繪製階段的 smoothing state。
+- **Logo 不進 Medium 2× surface**；**不得建立共用 Logo helper／shared Logo abstraction**。
+- Logo 必須由 D－07 renderer **真正畫進 canvas**，不得以 DOM overlay／CSS background／`<img>` 疊圖等 Preview-only 技巧呈現。
+
+### 11.8 Alignment：LeftCentered ink bounding-box（完全沿用 A／B－07）
+
+三段文字都必須在各自 box 內採 **水平靠左 ＋ 垂直 ink bounding-box 置中**（A／B－07 現行 `LeftCentered` 行為），**不是水平置中、不是 left／top**，不得改寫：
+
+- 保留 `textAlign = "left"`、`textBaseline = "alphabetic"`；實際位置由 `measureText` 的 `actualBoundingBox*` measurement 自算；**無 inset、無 padding**。
+- 完整沿用 A／B－07 既有 helper 行為：`validateLeftCenteredInkFitsBox`（`inkLeft = box.left`；`inkTop = box.top + (box.height − inkHeight) / 2`；回傳 `fitsWidth`／`fitsHeight`）、`drawLeftCenteredText`（單一 run：`x = box.left − run.inkLeft`；`y = box.top + box.height / 2 − (run.inkTop + run.inkBottom) / 2`）、`drawLeftCenteredMixedSubheadline`（含 `$`／`%` mixed runs：`offsetX = box.left − inkLeft`；`offsetY = box.top + box.height / 2 − (inkTop + inkBottom) / 2`）。
+- **fit validation 必須保留**：renderer 回傳 headline／subheadline／protectionText 的 fit 結果，行為與 A／B－07 相同。
+- **不得**重新設計、**不得**抽成 shared alignment helper。
+
+### 11.9 Medium local 2×
+
+- 完全沿用 A／B－07 的 template-local 2×：`MEDIUM_RENDER_SCALE = 2`，offscreen 暫存 canvas 為 **2400 × 1260**（`FB_POST_WIDTH × 2` × `FB_POST_HEIGHT × 2`），`scale(2, 2)` 後只處理 **headline ＋ protectionText**，再以 `imageSmoothingEnabled = true`／`imageSmoothingQuality = "high"` 高品質縮回正式尺寸合成。
+- **Bold subheadline 與 Logo 都不得進入 2× surface。**
+- **不得新增 A－01 式「兩段 Medium 都空就跳過整個 surface」的整體 early-return**；沿用 A／B－07 每段文字自身的空字串處理（回傳零 ink 的 fit validation，非跳過整個 2× surface）。
+- **禁止**把 2× 抽成 shared helper／framework。
+
+### 11.10 完整 draw order
+
+**background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline。**
+
+`globalAlpha` 維持 `1`、`globalCompositeOperation` 維持 `source-over`，**不得新增 filter／blending／compositing**。
+
+### 11.11 Renderer 與人工對位驗證需求（已於 Phase 4 實作、Phase 6 人工 1:1 overlay 驗證 PASS）
+
+- D－07 **未來必須**使用 D-specific template（比照 D－01／02／03／06 慣例，預期命名為 `bn/templates/D/07-fb-post.js`）；**不得**修改已封箱的 `bn/templates/A/07-fb-post.js`、不得在其中加 D branch、不得與 D－01／02／03／06 合併成 generic D renderer、不得建立 D template registry。
+- D－07 renderer signature **應遵循既有 D－01／02／03／06 的 images-object 模式**：以 images object 取得 `backgroundImage` 與 `logoImage`（防禦式解構），並保留 Logo image guard（`instanceof HTMLImageElement`、已載入且已完成解碼）。固定素材須由 caller 載入完成後傳入，renderer 不自行 async 載圖、不建 image cache。**不得因此建立 shared Logo abstraction。**
+- D－07 **未來必須**有自己的獨立啟動檔（預期 `bn/launch/D/07_FB POST.command`），並在既有 `bn/launch/viewer.html` 以**最小 additive** 分支提供人工對位校稿；啟動檔與 viewer 僅為人工校稿工具，**不是**第二套正式 renderer、**不是**正式 Generator Preview、**不是**正式資料輸入流程。
+- 對位圖只作 DOM overlay 供人工 1:1 比對；對位圖與 canvas 同為 1200 × 630，可作 1:1 overlay 座標基準。**關閉 overlay 後，Logo 與三段文字仍須留在 canvas 上。**
+- **本階段不建立上述任何檔案**；檔名僅為依現有命名慣例的預期值，實際實作方式屬 Phase 3 Proposal 決定範圍。
+
+### 11.12 Export Locked Behavior 與正式平台 fail-closed
+
+- 版位 07 既有鎖定的 Export 規則（依 `bn/js/export.js` 唯讀實證）：`EXPORT_ITEMS` 中 `{ id: "07", name: "07_FB POST", format: "jpg" }` —— **JPG 格式**、**無 `maxBytes`（版位 07 無 byte 容量上限）**；`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`。`EXPORT_ITEMS` 以版位 id 提供，**與樣式 type 無關**。此為既有鎖定規則，D－07 **不得重新設計**，本階段**不得修改 `bn/js/export.js`、不得執行 Export**。
+- **D－07 已完成 Phase 1 Requirement、Phase 2 Repository Investigation、Phase 3 Proposal、Phase 4 Coding 與 Phase 6 Jamie 人工 1:1 overlay 對位驗證（PASS）**，並已建立 renderer／launcher／viewer 分支與 Code Commit `b35507340ad12cb976bdc08d96278df756e9b272`（見第 11.16 節）。已完成範圍**僅限單版位 renderer 與人工對位驗證**，以下正式平台項目仍未完成。
+- 目前正式支援的樣式仍為 **A 與 B**；`bn/js/import.js` 的 `SUPPORTED_TYPES` 仍為 `["A", "B"]`，`bn/js/render-a.js` 的 `ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 type 維度或任何 D entry，樣式 D 在正式平台**維持 fail-closed**（詳見第 6.1 節）。**本階段不得修改 `bn/js/import.js`、`bn/js/render-a.js`、`bn/js/export.js`、`bn/js/app.js`、`bn/js/workspace.js`、`bn/js/editor.js`。**
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**。
+- D－07 的正式 Preview ↔ Export 一致性實測，以及版位 07 的實際輸出格式與 **JPG／72 dpi** 驗證，**deferred until D platform integration**，不得記為已驗證，也不得為驗證而提前 enable Type D。
+- D－04、D－05、D－08～17 尚未確認；本節裁決**只代表 D－07**，不得預先補完其他版位的 geometry、Logo 位置、文字差異或 renderer 路徑。樣式 C 不在本節範圍。
+
+### 11.13 Explicit Non-Goals（本節明確不做）
+
+1. 不修改 A／B 任何 template、launcher、assets 或既有行為（含 `bn/templates/A/07-fb-post.js`）。
+2. 不修改 D－01、D－02、D－03、D－06 已完成的 template、launcher 或其 Requirement 條文。
+3. 不建立 generic abstraction／framework／plugin／registry redesign／shared Logo helper／shared 2× helper／shared alignment helper／D template registry。
+4. 不預建、不預留、不抽象化 D－04、D－05、D－08～17；不處理樣式 C。
+5. 不正式 enable Type D；不修改正式平台六個核心 JS。
+6. Logo 不進 Excel mapping／Editor／Workspace state／JSON schema；不重新納管 `Logo.png`。
+7. 不新增 D－07 專屬資料欄位、不改字數規則、不新增 overflow UI／自動縮字／額外 padding／inset。
+8. 不重新設計 Export 容量／格式／dpi 策略。
+9. 不重新裁決已 LOCKED 的 geometry；原 Photoshop／CSS 的 `left`（`2877`）已裁決為座標偏移資料，不得重新討論或使用。
+10. 本階段不 Coding、不建立 Proposal、不做 Documentation Update、不 Stage／Commit／Push／Tag／Release。
+
+### 11.14 Acceptance Criteria（可驗證，全部為未來驗收項目）
+
+1. D－07 正式輸出 canvas 為 **1200 × 630**。
+2. 使用 `bn/assets/D/底圖/07_FB POST.jpg`（JPEG 1200 × 630）作為底圖，1:1 鋪滿 canvas、未縮放、未裁切；`bn/assets/D/對位/07_FB POST.png`（PNG RGBA 1200 × 630）只作人工 overlay，未進入正式輸出。
+3. Logo 固定取自既有 tracked 的 `bn/assets/D/Logo.png`（784 × 112），非 Excel 帶入、非使用者上傳、非 Editor 欄位；**未新增第二份 Logo 素材、未修改、未重存**。
+4. Logo 正式 box 為 `{left:54, top:201, width:365, height:52}`。
+5. Logo 保持原始 aspect ratio **7 : 1**，以 **contain** 等比例縮放，**未變形、未 stretch、未 cover、未 crop**（source rect 完整 `0, 0, 784, 112`）。
+6. Logo `scale = 13/28`（height-bound），render size **364 × 52**，destination **x = 54、y = 201**；左餘量 **0px**、右餘量 **1px**、上餘量 **0px**、下餘量 **0px**；**水平靠左＋垂直置中**，未水平置中；**未做任何 rounding／truncation**。
+7. **正式 geometry 未使用**原始 Photoshop／CSS 的 `left`（`2877`）。
+8. 三個文字 box 座標為 headline `{54,266,405,49}`、subheadline `{54,325,475,62}`、protectionText `{54,401,475,28}`，與 A／B－07 `FB_POST_LAYOUT` 逐值相同。
+9. 三段文字採 **LeftCentered ink bounding-box**（水平靠左＋垂直 ink 置中，`textAlign="left"`／`textBaseline="alphabetic"`），沿用 A／B－07 既有 `validateLeftCenteredInkFitsBox`／`drawLeftCenteredText`／`drawLeftCenteredMixedSubheadline` 行為，未改用 centered 或 left／top、未加 padding／inset、未新增 alignment framework；fit validation 保留。
+10. 三段文字視覺樣式與 A／B－07 相同：`39pt Medium #ffffff`／`49pt Bold #fff285`／`22.5pt Medium #a6f4e6`。
+11. `$`／`%` 為 `41pt Bold #fff285`，且 `tokenizeSubheadline`／`adjacentOrdinaryRun`（`$` 取後方、`%` 取前方，含反向 fallback）／`boundaryGlyphInkBottom` 的 boundary glyph ink-bottom 對齊行為未改變。
+12. Medium 採 **template-local 2×**、offscreen **2400 × 1260**、只涵蓋 headline ＋ protectionText；**Bold subheadline 與 Logo 均未進 2× surface**；未建立 shared 2× helper；**未新增整體 early-return**（保留每段文字自身回傳零 ink fit validation 的既有行為）。
+13. draw order 為 **background → Logo → Medium local 2× → Bold subheadline**；`globalCompositeOperation` 維持 `source-over`、`globalAlpha` 維持 `1`，未新增 filter／blending／compositing。
+14. Logo smoothing 為 template-local 且自成一組 `save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage(...)` → `restore()`，未依賴 Medium 2× 的 smoothing state。
+15. D－07 使用 D-specific template，且 renderer 以 images object 取得 `backgroundImage` 與 `logoImage` 並保留 Logo image guard；**`bn/templates/A/07-fb-post.js` zero-diff、未被修改或取代**。
+16. D－07 有獨立 `.command` 啟動檔，且可經既有 viewer 以對位圖做 1:1 人工 overlay 校稿；**關閉 overlay 後 Logo 與三段文字仍留在 canvas 上**。
+17. A／B－01～17 與已完成的 D－01、D－02、D－03、D－06 的行為與輸出未改變（regression boundary）。
+18. `SUPPORTED_TYPES` 仍為 `["A", "B"]`；`ASSET_BASE_BY_TYPE` 仍只有 A 與 B；`A_TABLE` 未加入 D 或 type 維度；樣式 D 在正式平台仍 fail-closed。
+19. Workspace／暫存 JSON schema 未新增 Logo 欄位；Editor 未出現 Logo 欄位。
+20. D－04、D－05、D－08～17 無新增實作、無提前規格化；樣式 C 未展開；未建立 generic framework／plugin／shared helper。
+21. **Deferred（不在本階段驗收）**：D－07 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export，以及版位 07 的實際輸出格式與 **JPG／72 dpi**（`JPEG_QUALITY = 1.0`、版位 07 無 byte 容量上限）驗證 —— 全部 deferred until D platform integration。
+
+### 11.15 Phase Boundary
+
+- 本節為 **Phase 1 Requirement**，只定義「必須做到什麼」與「如何驗收」，**不指定實作方式**；模組切分、函式設計、參數介面、asset 載入時序等屬 Phase 2 Investigation 確認範圍與 Phase 3 Proposal 決定範圍。
+- 本階段**未** Coding、**未**建立 Proposal（`bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 本輪未修改，D－07 Proposal 留待 Phase 3）、**未**做 Documentation Update（Architecture、Template Requirement、17 版位差異、全域 Requirement 的同步屬 D－07 完成後的 Documentation Update 階段）、**未** Stage／Commit／Push／Tag／Release。
+- D－07 進入 Phase 2 之前，本節需經 Jamie／GPT Review PASS。
+
+（本節為 Phase 1 當時的階段邊界歷史紀錄，保留不改寫；D－07 後續各階段的實際完成狀態見第 11.16 節。）
+
+### 11.16 D－07 Implementation Outcome（完成狀態）
+
+本節全部 Requirement 條文與裁決均未改寫，僅補記完成狀態。
+
+D－07 已依第 11 節 Requirement 與 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－07」章節完成 Phase 2 Repository Investigation、Phase 3 Proposal、Phase 4 Coding，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/07_FB POST.command` 完成人工 1:1 overlay 對位驗證且明確 PASS**。
+
+Code Commit 為 **`b35507340ad12cb976bdc08d96278df756e9b272`**（`feat(bn): add D07 FB POST template`，parent `17249b983d4e0c9943a75f6f273865fda984d647`），`git diff --check HEAD^ HEAD` PASS，**精確包含 5 個路徑（1 個 M ＋ 4 個 A）**：
+
+- `M` `bn/launch/viewer.html`（最小 additive D－07 branch，+16／−1）
+- `A` `bn/templates/D/07-fb-post.js`（新增）
+- `A` `bn/launch/D/07_FB POST.command`（新增，Git mode `100755`）
+- `A` `bn/assets/D/底圖/07_FB POST.jpg`（新增納管，JPEG 1200 × 630）
+- `A` `bn/assets/D/對位/07_FB POST.png`（新增納管，PNG 1200 × 630）
+
+`bn/assets/D/Logo.png` **不在本次 commit 內**（既有 tracked 共用 asset，由 D－01 納管；D－07 僅引用、未修改、未重存、未再次納管、未建立第二份）。A／B templates、A／B launchers、A／B assets、D－01／D－02／D－03／D－06 template 與 launcher、正式平台六個核心 JS、CSS、`bn/index.html`、vendor、fonts、banwords、LPBN 掛標與所有文件於本次 Code Commit 全部零修改。
+
+已達成之 Acceptance Criteria：第 11.14 節第 1～20 條。落地實測值與第 11 節裁決完全一致 —— canvas **1200 × 630**；四個正式 box `logo {left:54, top:201, width:365, height:52}`、`headline {54,266,405,49}`、`subheadline {54,325,475,62}`、`protectionText {54,401,475,28}`，四者共用 `left = 54`（未使用已更正之原 Photoshop／CSS `left` `2877`）；Logo source 784 × 112 以 contain 縮放，`scale = min(365/784, 52/112) = 13/28`（height-bound），destination **364 × 52**、**水平靠左＋垂直置中** `destinationX = box.left = 54`、`destinationY = box.top + (box.height − destinationHeight) / 2 = 201`，左 0px／右 1px／上 0px／下 0px，四值皆整數，aspect 保持 7 : 1，source rect 完整（`0, 0, 784, 112`）、未 rounding／truncation、未 stretch／cover／crop；Logo smoothing 為 renderer-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`，Logo 未進 Medium 2×；三段文字 typography 沿用 A／B－07（`39pt Medium #ffffff`／`49pt Bold #fff285`／`$`／`%` `41pt Bold #fff285`／`22.5pt Medium #a6f4e6`），採 **LeftCentered**（水平靠左＋垂直 ink bounding-box 置中，`textAlign="left"`／`textBaseline="alphabetic"`），`$`／`%` 的 boundary glyph ink-bottom formatting 與 fit validation 保留；Medium template-local 2× offscreen **2400 × 1260**、只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均未進 2× surface，未新增 A－01 式整體 early-return；draw order **background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline**，`globalAlpha` 維持 `1`、`globalCompositeOperation` 維持 `source-over`。
+
+D－07 使用獨立 `bn/templates/D/07-fb-post.js`（exports 恰 2、零 import、signature 為 `renderFbPost(canvas, images, { headline, subheadline, protectionText } = {})`，以 images object 防禦式解構取得 `backgroundImage` 與 `logoImage`），已封箱的 `bn/templates/A/07-fb-post.js` 未被修改或取代。**A－07 的 8 個核心文字 helper 落地比對為 6/8 byte-identical ＋ 2/8 behavior-equivalent，實質差異 0/8**：byte-identical 者為 `hasInk`、`validateLeftCenteredInkFitsBox`、`drawLeftCenteredText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawLeftCenteredMixedSubheadline`；behavior-equivalent 者為 **`measureRun`** 與 **`boundaryGlyphInkBottom`**，其唯一差異為各一行 runtime error message 的版位標示由 `A－07` 改為 `D－07`（沿用 D－01～06「D template 不殘留 A 版位標示」慣例），**演算法、控制流與回傳值零差異**。**不得記為 8/8 byte-identical。** 另 A－07 專屬的 `assertLayoutFitsCanvas`、`drawFbPostMediumText`、`assertFontsReady` 在 `A－07 → D－07` 版位標示正規化後亦為 behavior-equivalent，算法與控制流未改；其中 **`assertLayoutFitsCanvas` 完整保留、仍由 `renderFbPost` 呼叫、仍遍歷 `Object.entries(FB_POST_LAYOUT)`，因此自然一併驗證新增的 Logo box**，四個 box 實測 right／bottom 為 logo 419／253、headline 459／315、subheadline 529／387、protectionText 529／429，全部落於 1200 × 630 內。
+
+第 11.14 節第 21 條之 deferred 項目維持不變：D－07 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export，以及版位 07 的 **JPG／72 dpi**（既有 LOCKED 規則，`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`、**版位 07 無 `maxBytes`／無 byte 容量上限**）實際 Export 驗證 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
+
+**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－07 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，正式 renderer registry 未 enable D，樣式 D 在正式平台維持 fail-closed；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－07**；D－04、D－05、D－08～17 尚未處理，不得由已完成的任何 D 版位推論其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 43 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.5 節。

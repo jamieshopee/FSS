@@ -1842,6 +1842,44 @@ D－06 route 為 `viewer.html?type=D&bn=06_IG`，沿用既有共用薄 Viewer �
 - 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
 - 目前已完成的樣式 D 版位為 D－01、D－02、D－03、D－06，皆為**個別** renderer 與人工對位流程，不代表整個 D 樣式完成。D－04、D－05、D－07～17 尚未完成。本節裁決**只代表 D－06**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
+（後續同步：D－07 已於 D－07 Code Commit 完成，見第 5.2.5 節；本節其餘內容維持不變。）
+
+#### 5.2.5 `07_FB POST`
+
+##### 5.2.5.1 正式規格來源
+
+D－07 的完整正式規格、幾何、typography、Logo 裁決與 deferred 邊界以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 的「D－07 Requirement」章節為準（完成狀態見該章節 11.16 節），實作紀錄以 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－07」章節（落地紀錄見其 10.21 節）為準。樣式 D 只維護這一份總 Requirement 與一份總 Proposal，**不建立逐版位 Requirement／Proposal 文件**。**本節只作狀態登錄與規格引用，不複製該兩份文件內容。**
+
+D－07 與樣式 A／B 的 `07_FB POST` 共用同一組已確認的文字內容模型與視覺樣式（Canvas **1200 × 630**、主標 Medium `39pt` `#ffffff`、副標 Bold `49pt` `#fff285`、副標 `$`／`%` Bold `41pt` `#fff285` 特殊 formatting、保護文字 Medium `22.5pt` `#a6f4e6`、**LeftCentered＝水平靠左＋垂直 ink bounding-box 置中**（`textAlign="left"`／`textBaseline="alphabetic"`）、8／7／17 字數規則、Medium template-local 2× rasterization）。A－07 與 B－07 共用同一正式 renderer `bn/templates/A/07-fb-post.js`（`A_TABLE` 僅以版位 id 為 key、無 type 維度，A／B 差異只由 `ASSET_BASE_BY_TYPE` 切換底圖路徑）。**D－07 真正存在的差異只有一項**：
+
+1. 新增固定 Logo。Logo box `{left:54, top:201, width:365, height:52}`；source `bn/assets/D/Logo.png` 原始 784 × 112（既有 tracked 共用 asset，由 D－01 納管，D－07 僅引用，非本版位新增素材）；以 contain 等比例縮放並在 box 內**水平靠左＋垂直置中**，`scale = min(365/784, 52/112) = 13/28`（height-bound），destination **364 × 52**、`destinationX = box.left = 54`、`destinationY = box.top + (box.height − destinationHeight) / 2 = 201`，左 0px／右 1px／上 0px／下 0px，四值皆為整數，aspect 保持 7 : 1；禁止 rounding／truncation、禁止 stretch 成 365 × 52、禁止 cover／crop／source clipping。Logo smoothing 為 renderer-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`；Logo **不進 Medium 2× surface**。Logo 為固定 renderer asset，**不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON**。
+
+三段文字 box 為 headline `{left:54, top:266, width:405, height:49}`、subheadline `{left:54, top:325, width:475, height:62}`、protectionText `{left:54, top:401, width:475, height:28}`，與 A／B－07 `FB_POST_LAYOUT` 逐值相同；四個 box 共用 `left = 54`。Medium local 2× 的 offscreen 為 **2400 × 1260**，只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均不進 2×，且未新增 A－01 式整體 early-return；draw order 為 **background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline**，`globalAlpha = 1`、`globalCompositeOperation = "source-over"`。原 Photoshop／CSS 的 Logo `left = 2877` 已裁決為座標偏移資料（`Δleft = 2823`、`Δtop = 0`），僅屬**已更正的歷史原始值，不得再作正式 geometry 使用**。
+
+##### 5.2.5.2 正式落地與驗證狀態
+
+D－07 採 D-specific template definition（未在已封箱的 `bn/templates/A/07-fb-post.js` 加入 D 分支，亦未修改或取代該檔）。Jamie 已**親自開啟 `bn/launch/D/07_FB POST.command` 完成 Phase 6 人工 1:1 overlay 對位驗證並明確 PASS**。
+
+Code Commit 為 **`b35507340ad12cb976bdc08d96278df756e9b272`**（`feat(bn): add D07 FB POST template`，parent `17249b983d4e0c9943a75f6f273865fda984d647`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑（1 個 M ＋ 4 個 A）：
+
+- `M` `bn/launch/viewer.html`（只服務 D－07 的校稿 branch 最小修改，+16／−1）
+- `A` `bn/templates/D/07-fb-post.js`（新增）
+- `A` `bn/launch/D/07_FB POST.command`（新增，Git mode `100755`）
+- `A` `bn/assets/D/底圖/07_FB POST.jpg`（新增納管，JPEG 1200 × 630）
+- `A` `bn/assets/D/對位/07_FB POST.png`（新增納管，PNG 1200 × 630）
+
+`bn/assets/D/Logo.png` 不在本次 commit 內（既有 tracked 共用 asset，由 D－01 納管；D－07 僅引用、未修改、未重存、未再次納管）。
+
+D－07 route 為 `viewer.html?type=D&bn=07_FB%20POST`（空白以 `%20` 編碼），沿用既有共用薄 Viewer 與 A－07 launcher 既有 `127.0.0.1:4173`／marker／server reuse／`trap` 行為（僅 7 行識別差異，未重構）；對位 PNG 1:1 疊加，不合成進正式 Canvas。Viewer 的 D－07 分支**未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字；A－01～12 共用預設未修改。D－07 template exports 恰 2（`waitForFbPostFonts`、`renderFbPost`）、零 import，signature 為 `renderFbPost(canvas, images, { headline, subheadline, protectionText } = {})`。**A－07 的 8 個核心文字 helper 落地比對為 6/8 byte-identical ＋ 2/8 behavior-equivalent，實質差異 0/8**（behavior-equivalent 者為 `measureRun` 與 `boundaryGlyphInkBottom`，唯一差異為各一行 runtime error message 的版位標示 `A－07` → `D－07`，演算法／控制流／回傳值零差異）；**不得記為 8/8 byte-identical**。A－07 專屬的 `assertLayoutFitsCanvas`、`drawFbPostMediumText`、`assertFontsReady` 在版位標示正規化後亦為 behavior-equivalent；其中 **`assertLayoutFitsCanvas` 完整保留並自然涵蓋新增的 Logo box**，四 box 實測 right／bottom 為 419／253、459／315、529／387、529／429，全部落於 1200 × 630 內。
+
+##### 5.2.5.3 尚未完成的邊界
+
+- **本次完成的是「D－07 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** Jamie 的 PASS 是**人工 1:1 overlay 對位 PASS**，**不是正式平台 Preview／Export PASS**，後者尚未做。
+- 目前正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed；正式平台六個核心 JS 於本次 Code Commit 全部零修改。
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－07 正式 Preview ↔ Export 一致性實測，以及版位 07 既有鎖定的 **JPG／72 dpi**（`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`、**版位 07 無 `maxBytes`／無 byte 容量上限**）實際 Export 驗證，**deferred until D platform integration**（本次未執行 D Export 實測，不得記為已驗證）。
+- 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
+- 目前已完成的樣式 D 版位為 D－01、D－02、D－03、D－06、D－07，皆為**個別** renderer 與人工對位流程，不代表整個 D 樣式完成。D－04、D－05、D－08～17 尚未完成。本節裁決**只代表 D－07**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：
