@@ -155,6 +155,40 @@ Restore／Preview／Export 尚未 enable，版位 03 既有鎖定的 JPG／72 dp
 renderer ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；
 本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
 
+（落地註記：樣式 D 的 `06_IG`（D－06）亦已完成正式 Template 與人工 1:1 overlay
+對位驗證，Jamie 已確認 PASS，Code Commit 為
+`5def9469d21336787dc35553ff7a17ffde9eac48`。D－06 底圖
+`bn/assets/D/底圖/06_IG.jpg`（JPEG 900 × 1600）與對位圖
+`bn/assets/D/對位/06_IG.png`（PNG 900 × 1600）已於該 Code Commit 納管；固定
+Logo 仍為共用 `bn/assets/D/Logo.png`（原始 784 × 112），已由 D－01 納管，
+D－06 只引用、未新增第二份、未再次納管。與 D－02／D－03 相同：**D－06 三段
+文字的位置、字型、顏色、字數規則與 `$`／`%` formatting 完全沿用 A／B－06，未有
+任何文字位置差異**；D－06 唯一的差異是新增固定 Logo。D－06 正式 canvas 為
+900 × 1600，四個正式 box 為 Logo `{left:161, top:282, width:580, height:82}`、
+主標 `{left:175, top:387, width:550, height:65}`、副標
+`{left:136, top:472, width:630, height:82}`、保護文字
+`{left:136, top:573, width:630, height:37}`。Logo 在 box 內**水平＋垂直置中**
+（contain 後 `scale = 41/56`、574 × 82 @ `x = 164`、`y = 282`，左右各 3px、
+上下各 0px），與 D－02／D－03 的靠左不同，只代表 D－06。原 Photoshop／CSS 的
+`left`（`2020`／`2034`／`1995`）已裁決為座標偏移的原始值，屬**已更正歷史資料，
+不得再作正式 geometry 使用**。D－06 採 D-specific template
+`bn/templates/D/06-ig.js` 與獨立校稿入口 `bn/launch/D/06_IG.command`，已封箱的
+`bn/templates/A/06-ig.js` 未被修改或取代。
+
+前一則註記所述「目前已完成實作與人工驗證的 D 版位為 D－01、D－02 與 D－03」自
+本註記起更新為：**目前已完成實作與人工驗證的 D 版位為 D－01、D－02、D－03 與
+D－06**，四者皆為個別 renderer 與人工對位流程，**不代表整個 D 樣式完成**；
+D－04、D－05、D－07～17 仍待逐一確認與開發，其文字位置差異與 Logo 位置一律
+尚未確認，不得由已完成的任何 D 版位推論，亦不得提前補上 geometry 或 typography。
+**目前正式支援的 Type 仍為 A 與 B**：`SUPPORTED_TYPES` 仍為 A／B，
+`ASSET_BASE_BY_TYPE` 仍只有 A／B，`A_TABLE` 未加入 D，正式 renderer registry
+尚未 enable D，樣式 D 在正式平台維持 fail-closed；D 的正式 Import／Restore／
+Preview／Export 尚未 enable，版位 06 既有鎖定的 JPG／72 dpi（`JPEG_QUALITY = 1.0`、
+版位 06 無 byte 容量上限）亦尚未對 D 實測，不得記為已驗證。Jamie 的 PASS 是
+「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」。本次
+完成的是「D－06 renderer ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在
+本註記範圍；本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

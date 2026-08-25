@@ -2,10 +2,11 @@
 
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Requirement，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Requirement 文件；所有 D 版位的 Requirement 集中於本文件（見第 2 節）
-**目前狀態**：D－01、D－02、D－03 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04～17 尚待逐一確認
+**目前狀態**：D－01、D－02、D－03、D－06 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－07～17 尚待逐一確認
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
 **D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
 **D－03 Code Commit**：`024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）
+**D－06 Code Commit**：`5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 6 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -83,7 +84,7 @@
 | `03_Coin page BN` | **已確認**（Jamie 正式裁決） | **已完成**；Phase 6 Jamie 人工對位驗證 PASS；Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273` | 第 9 節 |
 | `04_Loyalty BN` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `05_MSBN` | 尚待 Jamie 確認 | 尚未開發 | — |
-| `06_IG` | 尚待 Jamie 確認 | 尚未開發 | — |
+| `06_IG` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48` | 第 10 節 |
 | `07_FB POST` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `08_SPX TVBN_1` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `09_SPX TVBN_2` | 尚待 Jamie 確認 | 尚未開發 | — |
@@ -552,6 +553,8 @@ D－01 必須沿用既有的「明確失敗、不靜默降級」原則：
 | 2026-08-24 | 新增 D－02 Requirement | D－02（`02_MALL HBN`）Requirement 經 Jamie 確認、Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）。新增第 8 節並更新第 4 節索引與文件標頭狀態；第 1～7 節既有條文（含 D－01 第 5 節）未改寫。為避免變動既有章節編號與交叉引用，D－02 章節以附加方式置於第 7 節之後。 |
 | 2026-08-24 | 新增 D－03 Requirement（Phase 1） | D－03（`03_Coin page BN`）Requirement 經 Jamie 正式裁決確認，**僅完成 Phase 1，尚未 Coding、尚未人工驗證、尚無 Code Commit**。Logo box 正式採 `{left:92, top:107, width:351, height:50}`；原 Photoshop CSS `{687, 508, 351, 50}` 判定為誤植並已更正（該 `top` 在 1200 × 391 canvas 上垂直無效）。新增第 9 節並更新第 4 節索引與文件標頭狀態；第 1～8 節既有條文（含 D－01 第 5 節、D－02 第 8 節）未改寫。為避免變動既有章節編號與交叉引用，D－03 章節以附加方式置於第 8 節之後。 |
 | 2026-08-24 | 補記 D－03 完成狀態 | D－03（`03_Coin page BN`）Phase 4 Coding 完成、Phase 6 Jamie 人工對位驗證 PASS、Code Commit `024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`，parent `de1d98a70aa6e29e95397a913a46e0a30e01b7af`）。新增第 9.15 節並更新文件標頭狀態、第 4 節索引，以及第 9 節導言、第 9.2、9.9、9.11 節中已因本次完成而過時的狀態文字；**第 9 節既有 LOCKED 規格（canvas、Logo box、三文字 geometry、typography、`$`／`%` formatting、Medium local 2×、draw order）與 Acceptance Criteria 均未改值、未重寫**，第 1～8 節（含 D－01 第 5 節、D－02 第 8 節）未改寫。正式平台仍維持 A／B fail-closed，D－04～17 未處理。 |
+| 2026-08-24 | 新增 D－06 Requirement（Phase 1） | D－06（`06_IG`）Requirement 經 Jamie／GPT 正式裁決確認，**僅完成 Phase 1，尚未 Coding、尚未人工驗證、尚無 Code Commit**。canvas `900 × 1600`；正式四個 box 由對位圖 alpha 連通元件分析＋A－06 renderer `IG_LAYOUT` 交叉驗證後裁決為 Logo `{left:161, top:282, width:580, height:82}`、headline `{175,387,550,65}`、subheadline `{136,472,630,82}`、protectionText `{136,573,630,37}`；原 Photoshop／CSS 的 `left`（`2020`／`2034`／`1995`）判定為座標偏移資料（`Δleft = 1859`、`Δtop = 0`、width／height 一致），僅作更正依據保留、不得再作正式 geometry。Logo 於 box 內**水平＋垂直置中**（`scale = 41/56`、destination `574 × 82` @ `(164, 282)`、左右各 3px、上下 0px、四值皆整數），與 D－02／D－03 的靠左規則不同，只代表 D－06。新增第 10 節並更新第 4 節索引與文件標頭狀態；第 1～9 節既有條文（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節）未改寫。為避免變動既有章節編號與交叉引用，D－06 章節以附加方式置於第 9 節之後。D－04、D－05、D－07～17 狀態未變動，仍為尚待確認。 |
+| 2026-08-25 | 補記 D－06 完成狀態 | D－06（`06_IG`）Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS、Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`，parent `5a2ba2ffa40254f2b3c45cab5e8fa4051b9505db`），精確包含 5 paths（1 M ＋ 4 A），launcher Git mode `100755`；`bn/assets/D/Logo.png` 僅引用、未再次納管。新增第 10.16 節並更新文件標頭狀態、第 4 節索引，以及第 10 節導言、第 10.2、10.11、10.12 節中已因本次完成而過時的狀態文字；**第 10 節既有 LOCKED 規格（canvas、Logo box、三文字 geometry、typography、`$`／`%` formatting、centered ink alignment、Medium local 2×、draw order、Logo contain 算術）與 Acceptance Criteria 均未改值、未重寫**，第 1～9 節（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節）未改寫。正式平台仍維持 A／B fail-closed，D－04／05／07～17 與樣式 C 未處理。 |
 
 後續變更一律以新增列的方式追加，不改寫既有列。
 
@@ -819,3 +822,205 @@ Code Commit 為 **`024c621e2c61bd40d3b736af7487b22e332d0273`**（`feat(bn): add 
 第 9.13 節第 19 條之 deferred 項目維持不變：D－03 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、版位 03 的 **JPG／72 dpi**（既有 LOCKED 規則，**版位 03 無 byte 容量上限**）實測 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
 
 **本次完成的是「D－03 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，樣式 D 在正式平台維持 fail-closed；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。D－04～17 尚未處理，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 41 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.3 節。
+
+---
+
+## 10. D－06（`06_IG`）Requirement
+
+> 本節為 D－06 正式 Requirement，**階段為 Phase 1**。D－06 與樣式 A／B 的 `06_IG` **共用同一組已確認的文字內容模型與視覺樣式**，真正的差異只有「新增固定 Logo」一項；因此本節只記錄 D－06 真正不同與需追蹤的內容，其餘一律引用第 3 節 D 樣式全域已確認規則與既有 A／B－06 正式規格，不重複複製背景說明。
+>
+> **本節條文與裁決均未改寫。** 本節原以「尚未實作的需求」寫成（Phase 1 當時 D－06 尚未 Coding）；D－06 現已完成 Phase 4 Coding 並經 Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS，Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`）。完成狀態與實際落地內容補記於第 10.16 節；本節其餘敘述中的「未來／預定」語氣屬 Phase 1 歷史用語，其所定義的規格與驗收要求不變。**本次完成的是「D－06 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。**
+>
+> 本節依第 2 節文件治理規則以附加方式置於第 9 節之後，未變動第 1～9 節既有章節編號與交叉引用。D－04、D－05、D－07～17 的狀態不受本節影響，仍為「尚待 Jamie 確認」。
+
+### 10.1 版位與 canvas
+
+- 版位 ID `06`，名稱 `06_IG`。
+- 正式 canvas **900 × 1600**，與 A／B－06 相同（`bn/templates/A/06-ig.js` 的 `IG_WIDTH = 900`、`IG_HEIGHT = 1600`）。
+
+### 10.2 素材
+
+| 用途 | 路徑 | 實證 |
+|---|---|---|
+| 正式底圖 | `bn/assets/D/底圖/06_IG.jpg` | JPEG **900 × 1600**（與 canvas 完全一致） |
+| 人工對位圖 | `bn/assets/D/對位/06_IG.png` | PNG **900 × 1600**；只供人工 overlay 校稿，**不得**進入正式 Preview 或 Export 產出 |
+| 固定共用 Logo | `bn/assets/D/Logo.png` | PNG 原始 **784 × 112**；**已由 D－01 Code Commit 納管，D－06 只引用，不新增第二份、不修改、不重存** |
+
+底圖與對位圖在 Phase 1 當時為 untracked；兩者已於 D－06 Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48` 正式納管（見第 10.16 節）。`bn/assets/D/Logo.png` 仍為 D－01 納管之共用素材，D－06 僅引用、未重新納管。
+
+### 10.3 資料來源
+
+沿用第 3.1 節：D 有自己的 worksheet `D`，工單配置與 A／B 相同；D－06 屬 01～12 區間，來源為 `B15 = headline`、`B16 = subheadline`、`B17 = protectionText`，字數規則沿用現有 shared LOCKED 規則。此為**已確認產品需求**，是未來 D platform integration 應遵循的依據；**目前平台尚未 enable D，不代表 D Excel Import 已可使用**（見第 10.12 節）。D－06 **不新增任何專屬資料欄位**。
+
+固定 Logo 不是資料：不由 Excel 帶入、不由使用者上傳、不進入 Editor、不進入 Workspace state、不進入暫存 JSON schema、不進入 Import mapping（沿用第 3.5 節全域規則）。本階段**不得修改正式 Import、不得 enable worksheet D**。
+
+### 10.4 Typography、字數與特殊 formatting（完全沿用 A／B－06）
+
+A－06 與 B－06 **共用同一個正式 renderer** `bn/templates/A/06-ig.js`（`bn/js/render-a.js` 的 `A_TABLE` 僅以版位 id 為 key、無 type 維度，A／B 差異只由 `ASSET_BASE_BY_TYPE` 在 rendering layer 切換底圖路徑）。D－06 的文字視覺樣式**完全沿用**該 renderer，不得重新設計：
+
+| 欄位 | font | color |
+|---|---|---|
+| headline | `52.5pt "ShopeeNotoSans Medium"` | `#ffffff` |
+| subheadline | `65pt "ShopeeNotoSans Bold"` | `#fff285` |
+| subheadline 的 `$`／`%` | `55pt "ShopeeNotoSans Bold"` | `#fff285` |
+| protectionText | `30pt "ShopeeNotoSans Medium"` | `#a6f4e6` |
+
+`$`／`%` 特殊 formatting 完整沿用既有機制，不得改寫：`tokenizeSubheadline` 將 `$`／`%` 切為獨立 symbol run 並改用 `symbolFont`；`adjacentOrdinaryRun` 決定對齊參考的相鄰 ordinary run（`$` 取後方、`%` 取前方，含反向 fallback）；`boundaryGlyphInkBottom` 使 symbol 的 ink-bottom 對齊該相鄰字符的 ink-bottom。
+
+字數規則沿用 01～12 shared LOCKED 規則，D－06 **不改字數規則、不新增 overflow 警告、不自動縮字**。
+
+### 10.5 Geometry（正式 canvas 座標，已由 Jamie／GPT 裁決）
+
+四個正式 box（單位 px，相對 900 × 1600 canvas 原點）：
+
+| component | left | top | width | height |
+|---|---|---|---|---|
+| Logo | **161** | **282** | **580** | **82** |
+| headline | **175** | **387** | **550** | **65** |
+| subheadline | **136** | **472** | **630** | **82** |
+| protectionText | **136** | **573** | **630** | **37** |
+
+三個文字 box 與既有 A／B－06 renderer 的 `IG_LAYOUT` **逐值完全相同**，D－06 不得改動。四個 box 互不重疊（Logo bottom = 364 < headline top = 387）。
+
+### 10.6 Photoshop／CSS 原始座標之更正事實（歷史證據，不得作為正式 geometry）
+
+Jamie 提供的原始 Photoshop／CSS 四個 box 為 Logo `{2020, 282, 580, 82}`、headline `{2034, 387, 550, 65}`、subheadline `{1995, 472, 630, 82}`、protectionText `{1995, 573, 630, 37}`。四者的 `left` 均約 2000px，right 介於 2584～2625，**全部遠超 900px canvas 寬度，在正式 canvas 上水平無效**。
+
+Phase 0 Investigation 以對位圖 alpha 連通元件分析（`bn/assets/D/對位/06_IG.png` 為 8-bit RGBA、RGB 全黑、alpha 恰 2 個 level，取最高 alpha 得 4 個 100% 實心矩形）並與 A－06 renderer 既有 `IG_LAYOUT` 交叉驗證，其中三個 component 與 A－06 三文字 box 逐值精確吻合，剩餘唯一 component 即 Logo box。對照結果為：
+
+| component | Photoshop／CSS | 正式 canvas | Δleft | Δtop | width／height |
+|---|---|---|---|---|---|
+| Logo | `{2020,282,580,82}` | `{161,282,580,82}` | 1859 | 0 | 一致 |
+| headline | `{2034,387,550,65}` | `{175,387,550,65}` | 1859 | 0 | 一致 |
+| subheadline | `{1995,472,630,82}` | `{136,472,630,82}` | 1859 | 0 | 一致 |
+| protectionText | `{1995,573,630,37}` | `{136,573,630,37}` | 1859 | 0 | 一致 |
+
+**`Δleft = 1859`、`Δtop = 0`、width／height 四個 box 全部一致。** 本節僅作為座標更正依據與歷史證據保留；**原始 Photoshop／CSS 的 `left` 一律不得寫成正式 geometry、不得再使用**。
+
+### 10.7 Logo Rendering Requirement
+
+- Logo 必須在 box `{left:161, top:282, width:580, height:82}` 內**水平＋垂直置中**，保持原始 aspect ratio，以 **contain** 完整顯示；**禁止 stretch、禁止 cover、禁止 crop、禁止 source clipping**（source rect 必須為完整 `0, 0, 784, 112`）。
+- 以 source `784 × 112` 與 box `580 × 82` 計算，以下為 LOCKED 值：
+
+| 項目 | 值 |
+|---|---|
+| `scale` | `min(580/784, 82/112) = min(145/196, 41/56) = 41/56`（height-bound） |
+| destination width | **574** |
+| destination height | **82** |
+| destinationX | **164** |
+| destinationY | **282** |
+| 左／右剩餘 | 各 **3px** |
+| 上／下剩餘 | 各 **0px** |
+
+- 四個值皆為整數，**不需要也禁止**額外的 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt` 或 bitwise truncation 等 geometry 取整。
+- Logo 為**水平＋垂直置中**，**不是靠左**（與 D－02／D－03 的靠左規則不同；D－06 的裁決只代表 D－06）。
+- Logo 未來 rendering 必須使用 **renderer-local high-quality smoothing**，且自成獨立一組：`save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage()` → `restore()`，不依賴其他繪製階段的 smoothing state。
+- **Logo 不進 Medium 2× surface**；**不得建立共用 Logo helper**。
+- Logo 必須由 D－06 renderer **真正畫進 canvas**，不得以 DOM overlay／CSS background／`<img>` 疊圖等 Preview-only 技巧呈現。
+
+### 10.8 Alignment：centered ink bounding-box（完全沿用 A－06）
+
+三段文字都必須在各自 box 內採 **ink bounding-box 水平＋垂直置中**，這與 A－06 現行正式算法**完全一致**，不得改寫：
+
+- 保留 `textAlign = "left"`、`textBaseline = "alphabetic"`；實際位置由 `measureText` 的 `actualBoundingBox*` measurement 自算，**不得**改成 left／top 定位、**不得**新增 padding／inset、**不得**發明新的 alignment framework。
+- 完整沿用 A－06 既有 centered helper 行為：`validateCenteredInkFitsBox`（依 box 與 ink 尺寸計算置中後的 ink 邊界並回傳 `fitsWidth`／`fitsHeight`）、`drawCenteredText`（單一 run 的置中繪製）、`drawCenteredMixedSubheadline`（含 `$`／`%` mixed runs 的整體 ink bbox 置中繪製）。
+- **fit validation 必須保留**：renderer 回傳 headline／subheadline／protectionText 的 fit 結果，行為與 A－06 相同。
+- 本節核心要求是「D－06 完全沿用 A／B－06 的 centered ink behavior ＋ fit validation」，**不得**重新設計、**不得**抽成共用 alignment helper。
+
+### 10.9 Medium local 2×
+
+- 完全沿用 A－06 的 template-local 2×：`MEDIUM_RENDER_SCALE = 2`，offscreen 暫存 canvas 為 **1800 × 3200**（`IG_WIDTH × 2` × `IG_HEIGHT × 2`），`scale(2, 2)` 後只處理 **headline ＋ protectionText**，再以 `imageSmoothingEnabled = true`／`imageSmoothingQuality = "high"` 高品質縮回正式尺寸合成。
+- **Bold subheadline 與 Logo 都不得進入 2× surface。**
+- A－06 **沒有**整個 Medium surface 層級的 A－01 式「headline 與 protectionText 皆空即早退」guard，**D－06 也不得新增**。（A－06 僅有每段文字層級的空字串處理，回傳零 ink 的 fit validation，非跳過整個 2× surface；此行為一併沿用。）
+- **禁止**把 2× 抽成共用 helper／framework。
+
+### 10.10 完整 draw order
+
+**background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline。**
+
+`globalAlpha` 維持 `1`、`globalCompositeOperation` 維持 `source-over`，不得新增 blending／compositing。
+
+### 10.11 Renderer 與人工對位驗證需求（已於 Phase 4 實作、Phase 6 人工驗證 PASS）
+
+- D－06 **未來必須**使用 D-specific template（比照 D－01～03 慣例，預期命名為 `bn/templates/D/06-ig.js`）；**不得**修改已封箱的 `bn/templates/A/06-ig.js`、不得在其中加 D branch、不得與 D－01～03 合併成 generic D renderer、不得建立 D template registry。
+- 固定素材（底圖、Logo）須由 caller 載入完成後以 images object 傳入 renderer；renderer 不自行 async 載圖、不建 image cache。
+- D－06 **未來必須**有自己的獨立啟動檔（預期 `bn/launch/D/06_IG.command`），並在既有 `bn/launch/viewer.html` 以**最小 additive** 分支提供人工對位校稿；啟動檔與 viewer 僅為人工校稿工具，**不是**第二套正式 renderer、**不是**正式 Generator Preview、**不是**正式資料輸入流程。
+- 對位圖只作 DOM overlay 供人工比對；對位圖與 canvas 同為 900 × 1600，可作 1:1 overlay 座標基準。關閉 overlay 後，Logo 與三段文字仍須留在 canvas 上。
+- **本階段不建立上述任何檔案**；檔名僅為依現有命名慣例的預期值，實際實作方式屬 Phase 3 Proposal 決定範圍。
+
+### 10.12 Export Locked Behavior 與正式平台 fail-closed
+
+- 版位 06 既有鎖定的 Export 規則（依 `bn/js/export.js` 唯讀實證）：`EXPORT_ITEMS` 中 `{ id: "06", name: "06_IG", format: "jpg" }` —— **JPG 格式**、**無 `maxBytes`（版位 06 無 byte 容量上限）**；`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`。`EXPORT_ITEMS` 以版位 id 提供，**與樣式 type 無關**。此為既有鎖定規則，D－06 **不得重新設計**，本階段**不得修改 `bn/js/export.js`**。
+- **D－06 已完成 Phase 1 Requirement、Phase 2 Investigation、Phase 3 Proposal、Phase 4 Coding 與 Phase 6 Jamie 人工 1:1 overlay 對位驗證（PASS）**，並已建立 renderer／launcher／viewer 分支與 Code Commit `5def9469d21336787dc35553ff7a17ffde9eac48`（見第 10.16 節）。已完成範圍**僅限單版位 renderer 與人工對位驗證**，以下正式平台項目仍未完成。
+- 目前正式支援的樣式仍為 **A 與 B**；`bn/js/import.js` 的 `SUPPORTED_TYPES` 仍為 `["A", "B"]`，`bn/js/render-a.js` 的 `ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 type 維度或任何 D entry，樣式 D 在正式平台**維持 fail-closed**（詳見第 6.1 節）。**本階段不得修改 `SUPPORTED_TYPES`、不得在 `ASSET_BASE_BY_TYPE` 加入 D、不得修改正式 Import、不得修改六個核心 JS。**
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**。
+- D－06 的正式 Preview ↔ Export 一致性實測，以及版位 06 的 JPG／72 dpi 實測，**deferred until D platform integration**，不得記為已驗證，也不得為驗證而提前 enable Type D。
+- D－04、D－05、D－07～17 尚未確認；本節裁決**只代表 D－06**，不得預先補完其他版位的 geometry、Logo 位置、文字差異或 renderer 路徑。樣式 C 不在本節範圍。
+
+### 10.13 Explicit Non-Goals（本節明確不做）
+
+1. 不修改 A／B 任何 template、launcher、assets 或既有行為（含 `bn/templates/A/06-ig.js`）。
+2. 不修改 D－01、D－02、D－03 已完成的 template、launcher 或其 Requirement 條文。
+3. 不建立 generic abstraction／framework／plugin／registry redesign／共用 2× helper／共用 Logo helper／共用 alignment helper／D template registry。
+4. 不預建、不預留、不抽象化 D－04、D－05、D－07～17；不處理樣式 C。
+5. 不正式 enable Type D；不修改正式平台六個核心 JS。
+6. Logo 不進 Excel mapping／Editor／Workspace state／JSON schema。
+7. 不新增 D－06 專屬資料欄位、不改字數規則、不新增 overflow 警告或自動縮字。
+8. 不重新設計 Export 容量／格式／dpi 策略。
+9. 本階段不 Coding、不建立 Proposal、不做 Documentation Update、不 Stage／Commit／Push／Tag／Release。
+
+### 10.14 Acceptance Criteria（可驗證，全部為未來驗收項目）
+
+1. D－06 正式輸出 canvas 為 **900 × 1600**。
+2. 使用 `bn/assets/D/底圖/06_IG.jpg`（900 × 1600）作為底圖，1:1 鋪滿 canvas、未縮放、未裁切。
+3. Logo 固定取自 `bn/assets/D/Logo.png`，非 Excel 帶入、非使用者上傳、非 Editor 欄位；未新增第二份 Logo 素材。
+4. Logo 正式 box 為 `{left:161, top:282, width:580, height:82}`。
+5. Logo 保持原始 aspect ratio，以 **contain** 等比例縮放，**未變形、未 cover、未 crop**（source rect 完整）。
+6. Logo render size 為 **574 × 82**，destination **x = 164、y = 282**；左右各保留 **3px**、上下各 **0px**；未做任何 rounding。
+7. **未使用**原始 Photoshop／CSS 的 `left`（`2020`／`2034`／`1995`）作為正式 geometry。
+8. 三個文字 box 座標為 headline `{175,387,550,65}`、subheadline `{136,472,630,82}`、protectionText `{136,573,630,37}`，與 A／B－06 `IG_LAYOUT` 逐值相同。
+9. 三段文字採 **ink bounding-box 水平＋垂直置中**（`textAlign="left"`／`textBaseline="alphabetic"`），沿用 A－06 既有 `validateCenteredInkFitsBox`／`drawCenteredText`／`drawCenteredMixedSubheadline` 行為，未改用 left／top、未加 padding／inset、未新增 alignment framework；fit validation 保留。
+10. 三段文字視覺樣式與 A／B－06 相同：`52.5pt Medium #ffffff`／`65pt Bold #fff285`／`30pt Medium #a6f4e6`。
+11. `$`／`%` 為 `55pt Bold #fff285`，且 `tokenizeSubheadline`／`adjacentOrdinaryRun`／`boundaryGlyphInkBottom` 的 boundary glyph ink-bottom 對齊行為未改變。
+12. Medium 採 **template-local 2×**、offscreen **1800 × 3200**、只涵蓋 headline ＋ protectionText；**Bold subheadline 與 Logo 均未進 2× surface**；未建立共用 2× helper；未新增 A－01 式整個 Medium surface 的空字串早退。
+13. draw order 為 **background → Logo → Medium local 2× → Bold subheadline**；`globalCompositeOperation` 維持 `source-over`、`globalAlpha` 維持 `1`，未新增 blending／compositing。
+14. Logo smoothing 為 renderer-local 且自成一組 `save`／`restore`，未依賴 Medium 2× 的 smoothing state。
+15. D－06 使用 D-specific template；`bn/templates/A/06-ig.js` 未被修改或取代。
+16. D－06 有獨立 `.command` 啟動檔，且可經既有 viewer 以對位圖做 1:1 人工 overlay 校稿；**關閉 overlay 後 Logo 與三段文字仍留在 canvas 上**。
+17. A／B－01～17 與 D－01、D－02、D－03 的行為與輸出未改變。
+18. `SUPPORTED_TYPES` 仍為 `["A", "B"]`；`ASSET_BASE_BY_TYPE` 仍只有 A 與 B；樣式 D 在正式平台仍 fail-closed。
+19. Workspace／暫存 JSON schema 未新增 Logo 欄位；Editor 未出現 Logo 欄位。
+20. D－04、D－05、D－07～17 無新增實作；未建立 generic framework／plugin／共用 helper。
+21. **Deferred（不在本階段驗收）**：D－06 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、版位 06 的 **JPG／72 dpi**（版位 06 無 byte 容量上限）實測 —— 全部 deferred until D platform integration。
+
+### 10.15 Phase Boundary
+
+- 本節為 **Phase 1 Requirement**，只定義「必須做到什麼」與「如何驗收」，**不指定實作方式**；模組切分、函式設計、參數介面、asset 載入時序等屬 Phase 2 Investigation 確認範圍與 Phase 3 Proposal 決定範圍。
+- 本階段**未** Coding、**未**建立 Proposal（`bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 本輪未修改，D－06 Proposal 留待 Phase 3）、**未**做 Documentation Update（Architecture、Template Requirement、17 版位差異、全域 Requirement 的同步屬 D－06 完成後的 Documentation Update 階段）、**未** Stage／Commit／Push／Tag／Release。
+- D－06 進入 Phase 2 之前，本節需經 Jamie／GPT Review PASS。
+
+（本節為 Phase 1 當時的階段邊界歷史紀錄，保留不改寫；D－06 後續各階段的實際完成狀態見第 10.16 節。）
+
+### 10.16 D－06 Implementation Outcome（完成狀態）
+
+本節全部 Requirement 條文與裁決均未改寫，僅補記完成狀態。
+
+D－06 已依第 10 節 Requirement 與 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－06」章節完成 Phase 2 Investigation、Phase 3 Proposal、Phase 4 Coding，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/06_IG.command` 完成人工 1:1 overlay 對位驗證且明確 PASS**。
+
+Code Commit 為 **`5def9469d21336787dc35553ff7a17ffde9eac48`**（`feat(bn): add D06 IG template`，parent `5a2ba2ffa40254f2b3c45cab5e8fa4051b9505db`），`git diff --check HEAD^ HEAD` PASS，**精確包含 5 個路徑（1 個 M ＋ 4 個 A）**：
+
+- `A` `bn/templates/D/06-ig.js`（新增）
+- `A` `bn/launch/D/06_IG.command`（新增，Git mode `100755`）
+- `M` `bn/launch/viewer.html`（最小 additive D－06 branch，+16／−1）
+- `A` `bn/assets/D/底圖/06_IG.jpg`（新增納管，JPEG 900 × 1600）
+- `A` `bn/assets/D/對位/06_IG.png`（新增納管，PNG 900 × 1600）
+
+`bn/assets/D/Logo.png` **不在本次 commit 內**（已由 D－01 納管，D－06 僅引用既有 tracked asset、未修改、未重存、未再次納管、未建立第二份）。A／B templates、A／B launchers、A／B assets、D－01／D－02／D－03 template 與 launcher、正式平台六個核心 JS、CSS、`bn/index.html`、vendor、fonts、banwords、LPBN 掛標與所有文件於本次 Code Commit 全部零修改。
+
+已達成之 Acceptance Criteria：第 10.14 節第 1～20 條。落地實測值與第 10 節裁決完全一致 —— canvas **900 × 1600**；Logo box `{left:161, top:282, width:580, height:82}`（未使用已更正之原 Photoshop／CSS `left` `2020`／`2034`／`1995`）；Logo source 784 × 112 以 contain 縮放，`scale = min(580/784, 82/112) = 41/56`，destination **574 × 82**、**水平＋垂直置中** `destinationX = box.left + (box.width − destinationWidth) / 2 = 164`、`destinationY = box.top + (box.height − destinationHeight) / 2 = 282`，左右各 3px、上下各 0px，四值皆整數，source rect 完整、未 rounding／truncation、未 stretch／cover／crop；三文字 box `{175,387,550,65}`／`{136,472,630,82}`／`{136,573,630,37}`，typography 沿用 A／B－06（`52.5pt Medium #ffffff`／`65pt Bold #fff285`／`$`／`%` `55pt Bold #fff285`／`30pt Medium #a6f4e6`），採 actualBoundingBox-based ink bounding-box **水平＋垂直置中**（`textAlign="left"`／`textBaseline="alphabetic"`），`$`／`%` 的 boundary glyph ink-bottom formatting 與 fit validation 保留；Medium template-local 2× offscreen **1800 × 3200**、只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均未進 2× surface，未新增 A－01 式整體 early-return；Logo smoothing 為 renderer-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`；draw order **background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline**，`globalAlpha` 維持 `1`、`globalCompositeOperation` 維持 `source-over`。
+
+D－06 使用獨立 `bn/templates/D/06-ig.js`（exports 恰 2、零 import、signature 為 `renderIg(canvas, images, { headline, subheadline, protectionText } = {})`），已封箱的 `bn/templates/A/06-ig.js` 未被修改或取代。A－06 的 8 個共用文字 helper 落地比對為 **6/8 逐位元組相同**（`hasInk`、`validateCenteredInkFitsBox`、`drawCenteredText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawCenteredMixedSubheadline`）＋ **2/8 behavior-equivalent**（`measureRun`、`boundaryGlyphInkBottom`）；該 2 個的唯一差異為各一行 runtime error message 的版位標示由 `A－06` 改為 `D－06`（沿用 D－01～03「D template 不殘留 A 版位標示」慣例），**演算法、控制流與回傳值零差異**。
+
+第 10.14 節第 21 條之 deferred 項目維持不變：D－06 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export，以及版位 06 的 **JPG／72 dpi**（既有 LOCKED 規則，`JPEG_QUALITY = 1.0`、**版位 06 無 byte 容量上限**）實際 Export 驗證 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
+
+**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－06 renderer ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，樣式 D 在正式平台維持 fail-closed；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－06**；D－04、D－05、D－07～17 尚未處理，不得由 D－01／D－02／D－03／D－06 推論其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 42 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.4 節。
