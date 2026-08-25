@@ -278,6 +278,58 @@ Preview／Export 尚未 enable，版位 08 既有鎖定的 JPG／72 dpi（`JPEG_
 完成的是「D－08 renderer ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在
 本註記範圍；本註記不對 C 或未確認的 D 版位差異作任何新裁決。）
 
+（落地註記：樣式 D 的 `09_SPX TVBN_2`（D－09）亦已完成正式 Template 與人工 1:1
+overlay 對位驗證，Jamie 已親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 確認 PASS，
+Code Commit 為 `ac69478cfa90ee62d208e30d139a382718433699`。D－09 底圖
+`bn/assets/D/底圖/09_SPX TVBN_2.jpg`（JPEG 1599 × 1080）與對位圖
+`bn/assets/D/對位/09_SPX TVBN_2.png`（PNG 1599 × 1080）已於該 Code Commit 納管；
+固定 Logo 仍為既有共用 `bn/assets/D/Logo.png`（原始 784 × 112），由 D－01 納管，
+D－09 只引用、未新增第二份、未再次納管。與 D－02／D－03／D－06／D－07／D－08
+相同：**D－09 三段文字的位置、字型、顏色、字數規則與 `$`／`%` formatting 完全沿用
+A／B－09，未有任何文字位置差異**；D－09 唯一的差異是新增固定 Logo。D－09 正式
+canvas 為 1599 × 1080，四個正式 box 為 Logo
+`{left:51, top:362, width:569, height:81}`、主標
+`{left:51, top:465, width:620, height:75}`、副標
+`{left:51, top:557, width:740, height:97}`、保護文字
+`{left:51, top:674, width:740, height:44}`，四者共用 `left = 51`；四 box
+right／bottom 為 620／443、671／540、791／654、791／718，全部落於 1599 × 1080 內。
+三段文字採 **LeftCentered＝水平靠左＋垂直 ink bounding-box 置中**（與 D－08 的
+centered ink、D－02／D－03 的靠左靠上皆不同，與 D－07 同族）。Logo 在 box 內
+**水平靠左＋垂直置中**：contain 後 `scale = min(569/784, 81/112) = 81/112`
+（height-bound），destination 567 × 81 @ `x = 51`、`y = 362`，左 0px／右 2px、
+上 0px／下 0px，四值皆整數、未 rounding，aspect 保持 7 : 1，source rect 完整；
+`destinationX` 為 **51**，未寫成 52。上述只代表 D－09。原 Photoshop／CSS 的
+Logo `left`（`3077`）與 `top`（`2063`）已裁決為不可直接作 canvas geometry 的
+原始值（`Δleft = 3026`、`Δtop = 1701`，屬 D－09 自身獨立更正證據，**不得建立
+跨版位共用 offset 規則、不得推論至其他 D 版位**），屬**已更正歷史資料，不得再作
+正式 geometry 使用**。Medium template-local 2× 的 offscreen 為 3198 × 2160，
+只涵蓋主標＋保護文字，Bold 副標與 Logo 皆不進 2×；draw order 為 background →
+Logo → Medium local 2×（主標＋保護文字）→ Bold 副標。D－09 採 D-specific
+template `bn/templates/D/09-spx-tvbn-2.js` 與獨立校稿入口
+`bn/launch/D/09_SPX TVBN_2.command`（Git mode `100755`、query
+`?type=D&bn=09_SPX%20TVBN_2`），已封箱的
+`bn/templates/A/09-spx-tvbn-2.js` 未被修改或取代；11 個 baseline functions 比對
+為 6/11 byte-identical ＋ 5/11 message-only behavior-equivalent、實質差異 0/11
+（共 6 行，其中 `assertLayoutFitsCanvas` 因本身兩個 `throw` 而為 2 行，其餘各
+1 行，每行皆僅 `A－09`→`D－09`），**不得記為 11/11**。viewer 的 D－09 branch
+未設 `fieldConfig`（D－01 的 `fieldConfig` 為歷史例外，未套用）。
+
+前一則註記所述「目前已完成實作與人工驗證的 D 版位為 D－01、D－02、D－03、D－06、
+D－07 與 D－08」自本註記起更新為：**目前已完成實作與人工驗證的 D 版位為 D－01、
+D－02、D－03、D－06、D－07、D－08 與 D－09**，七者皆為個別 renderer 與人工對位
+流程，**不代表整個 D 樣式完成**；D－04、D－05、D－10～17 仍待逐一確認與開發，其
+文字位置差異與 Logo 位置一律尚未確認，不得由已完成的任何 D 版位推論，亦不得提前
+補上 geometry 或 typography。**目前正式支援的 Type 仍為 A 與 B**：
+`SUPPORTED_TYPES` 仍為 A／B，`ASSET_BASE_BY_TYPE` 仍只有 A／B，`A_TABLE` 未加入
+D，`render-a.js` 未 enable D，正式 renderer registry 尚未 enable D，樣式 D 在正式
+平台維持 fail-closed；D 的正式 Import／Restore／Preview／Export 尚未 enable，
+版位 09 既有鎖定的 JPG／72 dpi（`{id:"09", name:"09_SPX TVBN_2", format:"jpg"}`、
+無 `maxBytes`、`EXPORT_DPI = 72`、JPEG 品質既有全域行為不變）亦尚未對 D 實測，
+不得記為已驗證。Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，**不是「正式平台
+Preview／Export PASS」**。本次完成的是「D－09 renderer ＋ launcher ＋ assets
+納管 ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；本註記不對
+C 或未確認的 D 版位差異作任何新裁決。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

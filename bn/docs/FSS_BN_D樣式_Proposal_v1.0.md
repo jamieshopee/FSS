@@ -3,13 +3,14 @@
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Proposal，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Proposal 文件；所有 D 版位的 Proposal 集中於本文件（見第 2 節）
 **Requirement 基準**：`bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md`
-**目前狀態**：D－01、D－02、D－03、D－06、D－07、D－08 Proposal 均已完成並經 GPT Review PASS，Phase 4 Coding 已完成、Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－09～17 尚未進入 Phase 3
+**目前狀態**：D－01、D－02、D－03、D－06、D－07、D－08、D－09 Proposal 均已完成並經 GPT Review PASS，Phase 4 Coding 已完成、Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－10～17 尚未進入 Phase 3
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
 **D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
 **D－03 Code Commit**：`024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）
 **D－06 Code Commit**：`5def9469d21336787dc35553ff7a17ffde9eac48`（`feat(bn): add D06 IG template`）
 **D－07 Code Commit**：`b35507340ad12cb976bdc08d96278df756e9b272`（`feat(bn): add D07 FB POST template`）
 **D－08 Code Commit**：`d9359270fea1bd89e96a2eb27c4464b50e0ef6dc`（`feat(bn): add D08 SPX TVBN 1 template`，parent `1c9e12782279491395fa5e0f7c9a2da7629f1ac9`）
+**D－09 Code Commit**：`ac69478cfa90ee62d208e30d139a382718433699`（`feat(bn): add D09 SPX TVBN 2 template`，parent `2509764d8c41b83cccce209cc8e646ab809d796a`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 5 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -53,7 +54,7 @@
 | `06_IG` | Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 驗證 PASS | **已完成**（GPT Review PASS） | 第 9 節（落地紀錄見 9.19） |
 | `07_FB POST` | Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 驗證 PASS | **已完成**（GPT Review PASS） | 第 10 節（落地紀錄見 10.21） |
 | `08_SPX TVBN_1` | Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 驗證 PASS | **已完成**（GPT Review PASS） | 第 11 節（落地紀錄見 11.23） |
-| `09_SPX TVBN_2` | 尚未進入 Phase 2／3 | 未建立 | — |
+| `09_SPX TVBN_2` | Phase 4 Coding 完成、Phase 6 Jamie 人工 1:1 overlay 驗證 PASS | **已完成**（GPT Review PASS） | 第 12 節（落地紀錄見 12.27） |
 | `10_POP UP` | 尚未進入 Phase 2／3 | 未建立 | — |
 | `11_Line OA` | 尚未進入 Phase 2／3 | 未建立 | — |
 | `12_LPBN` | 尚未進入 Phase 2／3 | 未建立 | — |
@@ -895,6 +896,10 @@ Phase 4 完成後須經 Jamie／GPT Review PASS 才進入 Phase 5 Verification�
 | 2026-08-25 | 新增 D－08 Phase 3 Proposal | D－08（`08_SPX TVBN_1`）Phase 1 Requirement（Requirement 第 12 節）與 Phase 2 Repository Investigation 均經 Jamie／GPT Review PASS 且 substantive conflict = 0，本輪建立 Phase 3 Proposal。**D－08 尚未 Coding、尚未人工驗證、尚無 Code Commit**；本節內容全部為「設計」，不得解讀為已落地。render signature 採 `renderSpxTvbn1(canvas, images, {headline, subheadline, protectionText} = {})`（images object，沿用 D－01～07 precedent 與 viewer 現有 data flow）；Logo 採 **D－01／D－06 的水平＋垂直置中 contain 數學型態**但只用 D－08 自己的 box `{147,364,785,112}`，現行素材下得 `scale = 1`（height-bound、1:1 不縮放）、`784 × 112 @ (147.5, 364)`、左右各 0.5px、上下各 0px，**`147.5` 為 fractional destinationX，比照 D－01 的 `90.5` precedent 原值保留、不得取整**；三段文字以 `bn/templates/A/08-spx-tvbn-1.js` 為唯一 baseline，採 **centered ink**（水平＋垂直 ink bounding-box 置中）；helper preservation 依 Phase 2 實證裁決為 **6/11 byte-identical ＋ 5/11 message-only behavior-equivalent、實質差異 0/11**，不得寫成 11/11；A－08 獨有的 `assertFrameBounds` 必須保留並自然涵蓋 `logo` key；A－08 本身無 canvas-size guard，本輪正式裁決 D－08 比照 D－01／06／07 precedent 加入最小 canvas-size guard（`1080` × `1920`），不回頭修改 A－08；Medium local 2× = `2160 × 3840` 只處理 headline ＋ protectionText；protectionText 正式值採 A／B－08 的 `{94,759,890,51}`，對位標記 `{94,760,890,50}` 已裁決為 1px 標記差異、不得採用；launcher query LOCKED 為 `?type=D&bn=08_SPX%20TVBN_1`。新增第 11 節並更新第 3 節索引與文件標頭狀態；第 1～10 節既有條文（含 D－01 第 4 節、D－02 第 7 節、D－03 第 8 節、D－06 第 9 節、D－07 第 10 節）未改寫。為避免變動既有章節編號與交叉引用，D－08 章節以附加方式置於第 10 節之後。第 5 節既有的逐版位列舉語句未改寫；D－08 的實際 Phase 狀態以第 3 節索引與第 11 節為準。D－04、D－05、D－09～17 狀態未變動。 |
 
 | 2026-08-25 | 補記 D－08 Implementation Record | D－08（`08_SPX TVBN_1`）Phase 3 Proposal 經 GPT Review PASS、Phase 4 Coding 完成、Phase 6 Jamie 親自開啟 `bn/launch/D/08_SPX TVBN_1.command` 完成人工 1:1 overlay 對位驗證且明確 PASS、Code Commit `d9359270fea1bd89e96a2eb27c4464b50e0ef6dc`（`feat(bn): add D08 SPX TVBN 1 template`，parent `1c9e12782279491395fa5e0f7c9a2da7629f1ac9`）。新增第 11.23 節並更新文件標頭狀態、標頭 Code Commit 清單、第 3 節索引與第 11 節導言；**第 11.1～11.22 節設計條文與已 LOCKED 座標／typography／Logo 幾何未改寫**，第 1～10 節（含 D－01 第 4 節、D－02 第 7 節、D－03 第 8 節、D－06 第 9 節、D－07 第 10 節）未改寫。helper preservation 如實記錄為 6/11 byte-identical ＋ 5/11 message-only behavior-equivalent（`assertFrameBounds`、`measureRun`、`boundaryGlyphInkBottom`、`drawSpxTvbn1MediumText`、`assertFontsReady` 僅 runtime error message `A－08`→`D－08`），實質差異 0/11，非 11/11。`assertFrameBounds` 保留並自然涵蓋新增 Logo box；D－08 額外採 D precedent canvas-size guard，A－08 baseline 未被修改。protectionText 落地採 `{94,759,890,51}`，未採對位標記 `{94,760,890,50}`；Logo fractional `destinationX = 147.5` 原值保留未取整。正式平台六個核心 JS 零修改，D 仍 fail-closed；正式 D Preview／Export、Excel Import／Restore 與版位 08 Export 實測維持 deferred。 |
+
+| 2026-08-25 | 新增 D－09 Phase 3 Proposal | D－09（`09_SPX TVBN_2`）Phase 1 Requirement（Requirement 第 13 節）與 Phase 2 Repository Investigation 均經 Jamie／GPT Review PASS 且 **substantive conflict = 0**，本輪建立 Phase 3 Proposal。**D－09 尚未 Coding、尚未人工驗證、尚無 Code Commit**；本節內容全部為「設計」，不得解讀為已落地。canvas **1599 × 1080**；render signature 採 `renderSpxTvbn2(canvas, images, {headline, subheadline, protectionText} = {})`（images object，沿用 D－01～08 precedent 與 viewer 現有 data flow）；三段文字 geometry／typography／字數／`$`／`%` formatting 完全沿用 A／B－09，alignment 採 **LeftCentered**（水平靠左＋垂直 ink bounding-box 置中；**明確不是 D－08 的 centered ink、不是 D－02／03 的 left-top**）；Logo box `{51,362,569,81}`，contain 得 `scale = min(569/784, 81/112) = 81/112`（height-bound）、destination **567 × 81 @ (51, 362)**、左 0px／右 2px／上 0px／下 0px、四值皆整數（本版位不需 fractional rounding），採 **水平靠左＋垂直置中**（`destinationX = box.left = 51`，**不得為 52**），公式型態參考 D－07（唯一同型 precedent）但 geometry 只用 D－09 自身 LOCKED 值；A－09 獨有的 `assertLayoutFitsCanvas` 必須保留並自然涵蓋新增 `logo` key（四 box right／bottom = 620／443、671／540、791／654、791／718）；A－09 baseline 無 canvas-size guard，本節裁決 D－09 比照既有 D precedent 加入最小 additive canvas-size guard，不回改 A－09；Medium local 2× 完全沿用 baseline（`MEDIUM_RENDER_SCALE = 2`、offscreen **3198 × 2160**、只 headline ＋ protectionText）；helper preservation 為 **Phase 3 預期** 6/11 byte-identical ＋ 5/11 message-only ＋ 0/11 substantive，**必須待 Phase 4 Coding 後逐函式比對才可宣告最終數字**；launcher query LOCKED 為 `?type=D&bn=09_SPX%20TVBN_2`；viewer 最小 additive branch **不得新增 `fieldConfig`**（D－01 為歷史例外，不得套用）。新增第 12 節並更新第 3 節索引與文件標頭狀態；第 1～11 節既有條文（含 D－01 第 4 節、D－02 第 7 節、D－03 第 8 節、D－06 第 9 節、D－07 第 10 節、D－08 第 11 節）未改寫。第 5 節既有的逐版位列舉語句未改寫；D－09 的實際 Phase 狀態以第 3 節索引與第 12 節為準。D－04、D－05、D－10～17 狀態未變動，樣式 C 不在範圍；正式平台仍 fail-closed。 |
+
+| 2026-08-25 | 補記 D－09 Implementation Record | D－09（`09_SPX TVBN_2`）Phase 3 Proposal 經 Jamie／GPT Review PASS、Phase 4 Coding 完成、Phase 6 Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 完成人工 1:1 overlay 對位驗證且明確 PASS、Code Commit `ac69478cfa90ee62d208e30d139a382718433699`（`feat(bn): add D09 SPX TVBN 2 template`，parent `2509764d8c41b83cccce209cc8e646ab809d796a`），恰 5 paths = 1 M ＋ 4 A，launcher Git mode `100755`，`bn/assets/D/Logo.png` 僅引用未再次納管。新增第 12.27 節並更新文件標頭狀態、標頭 Code Commit 清單、第 3 節索引與第 12 節導言；**第 12.1～12.26 節設計條文與已 LOCKED 座標／typography／Logo 幾何／alignment／Medium 2× 未改寫**，第 1～11 節（含 D－01 第 4 節、D－02 第 7 節、D－03 第 8 節、D－06 第 9 節、D－07 第 10 節、D－08 第 11 節）未改寫。helper preservation 已於 Coding 後逐函式實測確認為 6/11 byte-identical ＋ 5/11 message-only behavior-equivalent（共 6 行，其中 `assertLayoutFitsCanvas` 因本身兩個 `throw` 而為 2 行，其餘各 1 行，每行皆僅 `A－09`→`D－09`）、實質差異 0/11，非 11/11。`assertLayoutFitsCanvas` 保留並自然涵蓋新增 Logo box；D－09 另採 D precedent canvas-size guard，A－09 baseline 未被修改。Logo `567 × 81 @ (51, 362)`、`destinationX = 51`（非 52）、餘量 0/2/0/0。viewer D－09 branch 未設 `fieldConfig`。正式平台六個核心 JS 零修改，D 仍 fail-closed；正式 D Preview／Export、Excel Import／Restore 與版位 09 Export 實測維持 deferred。 |
 
 後續變更一律以新增列的方式追加，不改寫既有列。
 
@@ -2139,3 +2144,438 @@ Code Commit 為 **`d9359270fea1bd89e96a2eb27c4464b50e0ef6dc`**（`feat(bn): add 
 - 啟動檔與 viewer **僅是人工對位工具**，不是第二套正式 renderer、不是正式 Generator Preview、不是正式資料輸入流程；**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」，後者尚未做。**
 - 第 11.20 節 deferred 維持不變：D－08 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、版位 08 的 **JPG／72 dpi**（既有 LOCKED 規則，`{ id: "08", name: "08_SPX TVBN_1", format: "jpg" }`、`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`、**版位 08 無 `maxBytes`／無 byte 容量上限**）實際 Export 驗證、樣式 D 完整 17 版位輸出行為，全部 **deferred until D platform integration**；本輪**未執行** D Export 實測，未為驗證這些項目而 enable Type D。
 - 目前已完成的僅為 D－01、D－02、D－03、D－06、D－07、D－08 **個別** renderer 與人工對位流程，**不代表整個 D 樣式完成**；D－04、D－05、D－09～17 尚未處理，不得提前規格化，樣式 C 不在範圍。
+---
+
+## 12. D－09（`09_SPX TVBN_2`）Proposal
+
+> **本節第 12.1～12.26 節原為 Phase 3 Proposal（設計）；D－09 現已依本節落地完成。** 本節設計條文均未改寫，「預定／計畫」語氣屬 Phase 3 歷史用語。
+>
+> D－09 已完成 Phase 4 Coding，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 完成人工 1:1 overlay 對位驗證且明確 PASS**；Code Commit 為 `ac69478cfa90ee62d208e30d139a382718433699`（`feat(bn): add D09 SPX TVBN 2 template`）。**實際落地紀錄與差異核對見第 12.27 節。** Jamie 的 PASS 只代表人工 1:1 overlay 對位 PASS，**不是正式平台 Preview／Export PASS**。
+>
+> D－09 已完成 Phase 1 Requirement（見 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 第 13 節，Jamie／GPT Review PASS）與 Phase 2 Repository Investigation（Jamie／GPT Review PASS，**substantive conflict = 0**，23 項逐項 MATCH）。
+>
+> 需求權威為 Requirement 第 13 節；設計事實權威為 Phase 2 Repository Investigation。本節不重新裁決任何已 LOCKED 的座標、typography、alignment、Logo 幾何或行為，不重做 Phase 1／2、不重新分析圖片，亦不重複複製 Requirement 背景說明。
+>
+> 本節依第 2 節文件治理規則以附加方式置於第 11 節之後，未重排既有章節、未改寫 D－01（第 4 節）、D－02（第 7 節）、D－03（第 8 節）、D－06（第 9 節）、D－07（第 10 節）、D－08（第 11 節）。
+
+### 12.1 最小實作目標
+
+僅兩件事：
+
+1. **D－09 renderer correctness** —— 新增 D-specific template，在 **1599 × 1080** canvas 上輸出：D－09 底圖 ＋ 固定 Logo（contain、**水平靠左＋垂直置中**）＋ 三段文字（geometry／typography／對齊完全沿用 A／B－09 的 **LeftCentered** 行為）。
+2. **D－09 人工對位驗證入口** —— 新增獨立啟動檔，並在既有 viewer 加一個最小 additive D－09 分支，使 Jamie 能以既有 1:1 overlay 機制人工校稿。
+
+**不做**：D platform integration、正式 D Preview／Import／Restore／Export、D－04／D－05／D－10～17、樣式 C、任何抽象化或重構。
+
+### 12.2 Exact File Change Plan（Phase 4 預定，恰 5 paths = 1 M ＋ 4 A）
+
+| 狀態 | 路徑 | 說明 |
+|---|---|---|
+| `A` | `bn/templates/D/09-spx-tvbn-2.js` | D－09 唯一 renderer，D-specific template definition，以 `bn/templates/A/09-spx-tvbn-2.js` 為唯一 baseline |
+| `A` | `bn/launch/D/09_SPX TVBN_2.command` | D－09 專用啟動入口，以 `bn/launch/A/09_SPX TVBN_2.command` 為 baseline，filesystem mode `700`／Git mode `100755` |
+| `M` | `bn/launch/viewer.html` | 只追加一個最小 additive `type=D && bn=09_SPX TVBN_2` 分支 ＋ unsupported message 最小追加 |
+| `A` | `bn/assets/D/底圖/09_SPX TVBN_2.jpg` | 現有 untracked 素材，JPEG **1599 × 1080**（Phase 2 實證 192,037 bytes、sha256 前綴 `aec1c8901db8d055`） |
+| `A` | `bn/assets/D/對位/09_SPX TVBN_2.png` | 現有 untracked 素材，PNG **1599 × 1080**（Phase 2 實證 32,566 bytes、sha256 前綴 `9983aa05a164c0d8`）；只供人工 overlay 校稿，**不進正式輸出** |
+
+**`bn/assets/D/Logo.png`（既有 tracked ＋ clean，784 × 112，sha256 前綴 `99813cf81a7963ff`）僅引用，禁止修改、禁止 stage、禁止再次納管、禁止建立第二份副本，不列為 D－09 的新增檔案。**
+
+**本輪（Phase 3）不得建立或修改上述任何檔案。** 兩份 Phase docs（Requirement、本 Proposal）在 Phase 4 Coding 前保持未提交修改狀態，但**不得 stage 進 Code Commit**。
+
+**明確不得納入 Code Commit、不得修改**：`bn/js/` 六個核心檔（`render-a.js`、`import.js`、`workspace.js`、`export.js`、`app.js`、`editor.js`）、`bn/templates/A/*`（含 `09-spx-tvbn-2.js`）、`bn/launch/A/*`、D－01／02／03／06／07／08 的 template 與 launcher、`bn/css/*`、`bn/index.html`、`bn/js/vendor/*`、`fonts/*`、`bn/js/banwords*`、`bn/js/lpbn-badges.js`、`bn/assets/LPBN掛標/*`、任何 A／B assets、D－04／D－05／D－10～16 其餘 18 個 untracked assets、任何 `bn/docs/*`（Coding 階段不含 docs）、樣式 C、D－04／D－05／D－10～17 implementation。
+
+### 12.3 Baseline strategy
+
+**baseline**：`HEAD:bn/templates/A/09-spx-tvbn-2.js`（Phase 2 實證 **360 行、10,117 bytes、sha256 前綴 `17399b338463591a`、零 import**）為 **D－09 renderer 的唯一 baseline**。
+
+- Phase 4 必須採**最小程式化轉換／最小 additive 修改**（優先精確 replacement 並對每個預期 replacement 做 count／assert），**禁止手工重寫任何既有 helper**。
+- **A／B－09 renderer 必須 zero-diff**：不得修改已封箱的 `bn/templates/A/09-spx-tvbn-2.js`、不得在其中加 D branch、不得取代該檔。
+- **B 無獨立 template**：Phase 2 實證 `bn/templates/B/` 不存在，`A_TABLE` 第 40 行 `"09": { render: renderSpxTvbn2, waitFonts: waitForSpxTvbn2Fonts, background: "09_SPX TVBN_2.jpg" }` 僅以版位 id 為 key、無 type 維度，A／B 差異只由 `ASSET_BASE_BY_TYPE` 切底圖路徑。**不得虛構 B template。**
+- 不得與 D－01／02／03／06／07／08 合併成 generic D renderer、不得建立 D template registry。
+
+### 12.4 `bn/templates/D/09-spx-tvbn-2.js` 精確設計（預定）
+
+**module 常數（template-local，不 export）**
+
+沿用 A－09：`SPX_TVBN_2_WIDTH = 1599`、`SPX_TVBN_2_HEIGHT = 1080`、`BACKGROUND_WIDTH = 1599`、`BACKGROUND_HEIGHT = 1080`、`MEDIUM_FAMILY = "ShopeeNotoSans Medium"`、`BOLD_FAMILY = "ShopeeNotoSans Bold"`、`HEADLINE_FONT = 60pt Medium`、`SUBHEADLINE_FONT = 76pt Bold`、`SUBHEADLINE_SYMBOL_FONT = 65pt Bold`、`PROTECTION_FONT = 35pt Medium`、`FONT_CHECKS`、`FONT_TEST_TEXT`、`MEDIUM_RENDER_SCALE = 2`。依 D－01～08 precedent（Phase 2 實證 6/6 皆如此），**`SPX_TVBN_2_WIDTH`／`SPX_TVBN_2_HEIGHT`／`SPX_TVBN_2_LAYOUT` 在 D template 中去 export、改為 template-local `const`**。
+
+**exports／imports**：exports 恰 **2** —— `waitForSpxTvbn2Fonts`、`renderSpxTvbn2`；**imports = 0**；**不得建立 shared module**。canvas 固定 **1599 × 1080**。
+
+**LAYOUT（在 A－09 `SPX_TVBN_2_LAYOUT` 之前新增 `logo` 區塊，其餘三文字逐值不變）**
+
+| key | left | top | width | height | font | color |
+|---|---|---|---|---|---|---|
+| `logo` | **51** | **362** | **569** | **81** | — | — |
+| `headline` | **51** | **465** | **620** | **75** | `60pt "ShopeeNotoSans Medium"` | `#ffffff` |
+| `subheadline` | **51** | **557** | **740** | **97** | `76pt "ShopeeNotoSans Bold"`；`symbolFont` `65pt "ShopeeNotoSans Bold"` | `#fff285` |
+| `protectionText` | **51** | **674** | **740** | **44** | `35pt "ShopeeNotoSans Medium"` | `#a6f4e6` |
+
+**四者共用 `left = 51`**（Logo 與三段文字同一左基準線）。三文字 box 與 A／B－09 `SPX_TVBN_2_LAYOUT` **逐值相同**（Phase 2 已逐值實證），**不得因 D－09 而變更**。
+
+原 Photoshop／CSS 的 Logo `{left:3077, top:2063, width:569, height:81}` 為**已更正歷史值**（Phase 2 實證 `left = 3077` 已大於 canvas 寬 1599、`right = 3646` 超出 2047 px；`bottom = 2144` 超出 canvas 高 1080 達 1064 px 且與實證 `top = 362` 不符）：**`3077` 與 `2063` 不得出現在正式 geometry。** D－09 自身 `Δleft = 3026`、`Δtop = 1701` **僅為 D－09 自身的歷史更正證據，不得建立跨版位共用 offset 規則、不得由其他 D 版位推論或推論至其他版位**（即使 `Δtop = 1701` 與 D－08 數值相同，亦為各版位獨立實證之巧合）。
+
+**render signature（LOCKED）**
+
+```
+renderSpxTvbn2(canvas, images, { headline = "", subheadline = "", protectionText = "" } = {})
+```
+
+自 images object 取得素材：`const { backgroundImage, logoImage } = images && typeof images === "object" ? images : {};`（防禦式解構，與 D－01／02／03／06／07／08 逐字同構）。
+
+**採用理由**：(a) `bn/launch/viewer.html` 現有 `render()` 已固定以 `logoSource ? { backgroundImage, logoImage } : backgroundImage` 傳參，凡設 `logoSource` 的 D branch 一律收到 images object；(b) 6 個既有 D template 全部採此形式，是唯一一致的 D precedent；(c) 沿用可使 viewer **完全不需修改 `render()` 主流程或 Logo 共用載入區**。**不得為此修改 viewer 的 render 主流程。**
+
+**驗證順序（沿用 A－09 並依 D precedent 補 Logo guard 與 canvas-size guard）**
+
+`canvas instanceof HTMLCanvasElement` → `backgroundImage instanceof HTMLImageElement` → `backgroundImage.complete && naturalWidth !== 0` → 底圖 intrinsic 必須 **`1599 × 1080`**（沿用 `BACKGROUND_WIDTH`／`BACKGROUND_HEIGHT`，與 A－09 同名）→ `logoImage instanceof HTMLImageElement` → `logoImage.complete === true && naturalWidth > 0 && naturalHeight > 0` → `assertLayoutFitsCanvas()` → **`assertFontsReady()`（保留）** → 設定 `canvas.width/height` → **canvas-size guard（見 12.5）** → 取得 2D context。**Logo guard 只檢查已載入與解碼，不硬編 784 × 112 intrinsic 斷言**（與 D－01～08 一致）。
+
+**回傳**：`Object.freeze({ headline, subheadline, protectionText })` 的 fit validation，行為與 A－09 相同（`{inkWidth, inkHeight, inkLeft, inkTop, inkRight, inkBottom, fitsWidth, fitsHeight}`）。
+
+**不得修改 `bn/templates/A/09-spx-tvbn-2.js`。**
+
+### 12.5 Canvas-size guard 之裁決（最小 additive）
+
+Phase 2 實證：**A－09 baseline 沒有 canvas-size guard**（全檔無 `canvas.width !== SPX_TVBN_2_WIDTH`），而 **6 個既有 D renderer 全部都有**（D－01／02／03 為多行寫法、D－06／07／08 為單行；訊息型態為「D－0N 正式 Canvas 尺寸設定失敗，已停止 Template render。」）。
+
+**本節裁決**：D－09 **比照既有 D precedent 加入最小 canvas-size guard** —— 於設定 `canvas.width`／`canvas.height` 後檢查 `canvas.width` 必須為 **1599**、`canvas.height` 必須為 **1080**，不符即 **fail-fast**（throw，停止 Template render）。此為 **D template 層的既有一致性加強**，**不得回頭修改 A－09**（必須 zero-diff）、**不得抽出 shared guard**、不得擴大為 validation framework。
+
+### 12.6 `assertLayoutFitsCanvas` preservation（A－09 既有 guard，必須原函式保留）
+
+Phase 2 實證：A－09 的 bounds guard **實際名稱為 `assertLayoutFitsCanvas`**（**不是** A－08 的 `assertFrameBounds`），宣告於行 53–69、由 renderer 行 332 呼叫恰 1 處，實作為遍歷 `Object.entries(SPX_TVBN_2_LAYOUT)` 並驗證：四座標皆 `Number.isFinite`、`box.width > 0`、`box.height > 0`、`box.left ≥ 0`、`box.top ≥ 0`、`box.left + box.width ≤ SPX_TVBN_2_WIDTH`、`box.top + box.height ≤ SPX_TVBN_2_HEIGHT`，違反即 throw。
+
+**D－09 必須原函式保留**：**不得換成 generic helper、不得弱化任何 `Number.isFinite`／`width > 0`／`height > 0`／四邊界檢查、不得刪除、不得繞過、不得另造 validation framework**；仍由 renderer 呼叫、仍遍歷 `Object.entries(SPX_TVBN_2_LAYOUT)`，因此 **新增 `logo` key 後自然涵蓋四個 box**（`logo` 無 `font`／`color`，該 guard 只讀四個座標欄位，不受影響）。僅其 runtime error message 的版位標示依 12.11 最小改為 `D－09`。
+
+**四 box right／bottom（Phase 2 已驗算，Proposal 鎖定）**
+
+| box | right | ≤ 1599 | bottom | ≤ 1080 |
+|---|---|---|---|---|
+| `logo` | **620** | ✔ | **443** | ✔ |
+| `headline` | **671** | ✔ | **540** | ✔ |
+| `subheadline` | **791** | ✔ | **654** | ✔ |
+| `protectionText` | **791** | ✔ | **718** | ✔ |
+
+四個 box 互不重疊（Logo bottom = 443 < headline top = 465）。
+
+### 12.7 Typography（完全沿用 A／B－09）
+
+| 段落 | font | 字重 | color |
+|---|---|---|---|
+| headline | `60pt "ShopeeNotoSans Medium"` | **Medium** | `#ffffff` |
+| subheadline | `76pt "ShopeeNotoSans Bold"` | **Bold** | `#fff285` |
+| subheadline 的 `$`／`%` | `65pt "ShopeeNotoSans Bold"`（`symbolFont`） | **Bold** | 沿用 `#fff285` |
+| protectionText | `35pt "ShopeeNotoSans Medium"` | **Medium** | `#a6f4e6` |
+
+- **不新增 `symbolColor`**（Phase 2 實證 A－09 全檔無 `symbolColor`，LAYOUT color 欄位僅 `#ffffff`／`#fff285`／`#a6f4e6`）。
+- **字數規則與既有 A／B－09 完全沿用，不重新設計**（Phase 2 實證字數規則不在 template 層）。不加 auto-fit／overflow UI／額外 padding／inset。
+
+### 12.8 Alignment：LeftCentered（完全沿用 A／B－09）
+
+三段文字採 **LeftCentered**（水平靠左 ＋ 垂直 ink bounding-box 置中）。Phase 2 實證 A－09 即為此族（實際使用 `validateLeftCenteredInkFitsBox`／`drawLeftCenteredText`／`drawLeftCenteredMixedSubheadline`，全檔**不存在** centered ink 族與 left-top 族函式），與 Jamie「靠左對齊」需求一致，**無 substantive conflict**。
+
+**明確禁止**：**不是** D－08 的 **centered ink**（水平＋垂直 ink 置中）；**不是** D－02／D－03 的 **left／top**。
+
+**必須逐字保留的六條核心公式**
+
+| 函式 | 公式 |
+|---|---|
+| `validateLeftCenteredInkFitsBox` | `inkLeft = box.left` |
+| `validateLeftCenteredInkFitsBox` | `inkTop = box.top + (box.height − inkHeight) / 2` |
+| `drawLeftCenteredText` | `x = box.left − run.inkLeft` |
+| `drawLeftCenteredText` | `y = box.top + box.height / 2 − (run.inkTop + run.inkBottom) / 2` |
+| `drawLeftCenteredMixedSubheadline` | `offsetX = box.left − inkLeft` |
+| `drawLeftCenteredMixedSubheadline` | `offsetY = box.top + box.height / 2 − (inkTop + inkBottom) / 2` |
+
+同時保留：`textAlign = "left"`、`textBaseline = "alphabetic"`（全檔無 `"center"`／`"middle"`）、`actualBoundingBoxLeft`／`actualBoundingBoxRight`／`actualBoundingBoxAscent`／`actualBoundingBoxDescent` measurement 與 `measureRun` 的 ink 轉換、既有 fit validation 回傳結構（8 欄）、以及**每段文字各自的空字串零 ink validation**（`if (text === "") return validateLeftCenteredInkFitsBox(box, 0, 0);`，Phase 2 實證恰 2 處）。
+
+**公式與控制流不得重新設計；不新增 padding／inset；禁止抽 shared alignment helper。**
+
+### 12.9 `$`／`%` formatting（完全沿用，不得重寫）
+
+`tokenizeSubheadline`、`adjacentOrdinaryRun`、`boundaryGlyphInkBottom` **全部保留**。
+
+- `tokenizeSubheadline`：以 `character === "$" || character === "%"` 切出 `{ text, symbol: true }` 的 symbol run，其餘為 ordinary run；繪製時 `run.symbol ? box.symbolFont : box.font`。
+- **`adjacentOrdinaryRun` 的真實 `preferred` → `fallback` 兩段式實作不得重寫**（Phase 2 實證原文）：`const preferred = preferNext ? runs[index + 1] : runs[index - 1]; if (preferred?.symbol === false) return preferred; const fallback = preferNext ? runs[index - 1] : runs[index + 1]; return fallback?.symbol === false ? fallback : null;`
+- 呼叫端維持 `adjacentOrdinaryRun(runs, index, run.text === "$")` → **`$` 主取後方 ordinary run、`%` 主取前方 ordinary run**，並保留 **reverse fallback**（主方向取不到時改取反方向，且僅接受 `symbol === false` 的 run）。
+- `boundaryGlyphInkBottom`：`Array.from(run.text)` 逐 code point、`if (!fromStart) glyphs.reverse();`、`hasInk` 跳空白、回傳 `actualBoundingBoxDescent`；並保留 **glyph ink-bottom alignment** `run.y = adjacentInkBottom - run.inkBottom;`。
+
+以上演算法、控制流與回傳值在 D－09 必須**零差異**保留。
+
+### 12.10 Medium local 2×（完全沿用，不需新設計）
+
+**直接沿用 A－09 現有的 `drawSpxTvbn2MediumText`（同名保留）**，Phase 2 已實證其現況即完全符合 Requirement 第 13.10 節，**無需新增任何新的 Medium function、不得修改 A／B**：
+
+- `MEDIUM_RENDER_SCALE = 2`；offscreen 暫存 canvas 為 `SPX_TVBN_2_WIDTH × 2` × `SPX_TVBN_2_HEIGHT × 2` = **3198 × 2160**。
+- `scale(2, 2)` 後**只有 headline ＋ protectionText 使用 `drawLeftCenteredText`**（Phase 2 實證恰 2 次呼叫）。
+- **Bold subheadline（含其 `$`／`%`）不得進入 2×**；**Logo 不得進入 2×**。
+- **不得新增**函式層「兩段 Medium 都空就整體 return」之 early-return（Phase 2 實證 A－09 無此 guard）；**每段文字各自保留零 ink fit validation** 行為。
+- 縮回正式 canvas 使用**既有獨立 high-quality smoothing**：`save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage(9 參數全 surface → 正式尺寸) → restore()`；2× 內不改 compositing。
+- **禁止抽 shared 2× helper／framework。** Logo 繪製置於 renderer body（background 之後、Medium 2× 之前），不放入 Medium function 內。
+
+### 12.11 文字 helper preservation（**Phase 3 預期**，最終數字須 Coding 後實測）
+
+Phase 2 實證 A－09 內部 function 共 **11 個**，全檔 `A－09` literal **12 處**（行 57、65、93、121、169、296、302、317、320、323、329、338）。**Phase 3 預期**分類如下：
+
+| # | function | 預期處理方式 |
+|---|---|---|
+| 1 | `hasInk` | **預期 byte-identical** |
+| 2 | `validateLeftCenteredInkFitsBox` | **預期 byte-identical** |
+| 3 | `drawLeftCenteredText` | **預期 byte-identical** |
+| 4 | `tokenizeSubheadline` | **預期 byte-identical** |
+| 5 | `adjacentOrdinaryRun` | **預期 byte-identical** |
+| 6 | `drawLeftCenteredMixedSubheadline` | **預期 byte-identical** |
+| 7 | `assertLayoutFitsCanvas` | **預期 message-only behavior-equivalent**（error message 版位標示 `A－09` → `D－09`） |
+| 8 | `measureRun` | **預期 message-only behavior-equivalent** |
+| 9 | `boundaryGlyphInkBottom` | **預期 message-only behavior-equivalent** |
+| 10 | `drawSpxTvbn2MediumText` | **預期 message-only behavior-equivalent** |
+| 11 | `assertFontsReady` | **預期 message-only behavior-equivalent** |
+
+即 **預期 6/11 byte-identical ＋ 5/11 message-only behavior-equivalent ＋ 預期 substantive difference = 0**。第 7～11 項**只允許 runtime error message 的 `A－09` → `D－09` 版位標示差異**，其**演算法、控制流與回傳值必須零差異**；D－09 template 最終**不得殘留錯誤的 `A－09` 版位標示**（既有 D－06／07／08 落地實測殘留皆為 0），但**不得藉版位標示正規化之名改動任何演算法、控制流或回傳值**。
+
+> **此為 Phase 3 預期，尚未驗證。Phase 4 Coding 後必須以 `HEAD:bn/templates/A/09-spx-tvbn-2.js` 逐函式精確比對（逐函式 sha256）後，才可宣告最終「6/11 ＋ 5/11 ＋ 0/11」。禁止把尚未 Coding 的預期寫成已驗證事實，亦禁止預先宣稱任何「N/N byte-identical」。**
+
+**不計入 baseline 11 helper 的 substantive difference 統計**：新增的 `drawSpxTvbn2Logo`（baseline 無此函式），以及 renderer body 的 signature 變更／images 防禦式解構／Logo readiness guard／canvas-size guard／Logo draw 插入（renderer 非 baseline helper）。
+
+### 12.12 Logo rendering 精確設計（預定）
+
+新增**唯一** template-local 函式 **`drawSpxTvbn2Logo(context, logoImage, box)`**（命名依 A－09 的 `renderSpxTvbn2`／`drawSpxTvbn2MediumText` 前綴，並與 D－01～08 的 `draw<Placement>Logo` 慣例同構）。公式型態**參考 D－07**（Phase 2 實證：D－07 是唯一同時採「水平靠左＋垂直置中」的既有 precedent；D－02／03 為靠左＋靠上，D－01／06／08 為雙軸置中），但 **geometry 只能用 D－09 自身 LOCKED 值**：
+
+```
+const sourceWidth  = logoImage.naturalWidth;
+const sourceHeight = logoImage.naturalHeight;
+const scale = Math.min(box.width / sourceWidth, box.height / sourceHeight);
+const destinationWidth  = sourceWidth  * scale;
+const destinationHeight = sourceHeight * scale;
+const destinationX = box.left;                                        // 水平靠左
+const destinationY = box.top + (box.height - destinationHeight) / 2;   // 垂直置中
+
+context.save();
+context.imageSmoothingEnabled = true;
+context.imageSmoothingQuality = "high";
+context.drawImage(logoImage, 0, 0, sourceWidth, sourceHeight,
+                  destinationX, destinationY, destinationWidth, destinationHeight);
+context.restore();
+```
+
+**現行素材下的純算術結果（LOCKED，Phase 1／2 皆已複驗）**
+
+| 項目 | 值 |
+|---|---|
+| source intrinsic | **784 × 112** |
+| box | `{left:51, top:362, width:569, height:81}` |
+| `scale` | `min(569/784, 81/112) = ` **`81/112`**（**height-bound**） |
+| destinationWidth | `784 × 81/112 = ` **567** |
+| destinationHeight | `112 × 81/112 = ` **81** |
+| `destinationX` | `box.left = ` **51**（水平靠左） |
+| `destinationY` | `362 + (81 − 81) / 2 = ` **362**（垂直置中） |
+| destination 總結 | **`567 × 81 @ (51, 362)`** |
+| 左／右剩餘 | 左 **0px**／右 **2px** |
+| 上／下剩餘 | 上 **0px**／下 **0px** |
+| aspect ratio | source `7` == destination `7`，保持 **7 : 1** |
+| source rect | 完整 **`(0, 0, 784, 112)`** |
+
+- **必須「水平靠左＋垂直置中」，明確不是水平置中。** Phase 2 已實證若誤用水平置中會得 `destinationX = 52`；**禁止使用 `destinationX = 52`**。
+- **本版位四個 destination 值皆為整數**（`567`／`81`／`51`／`362`），**不需要 fractional rounding**；仍**禁止** `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise 等任何不必要取整。
+- 硬性約束：保持原始 aspect ratio；**完整 source rect**；**禁止 stretch 成 569 × 81**；**禁止 cover／crop／source clipping**。
+- smoothing 必須 **template-local 且自成一組** `save()` → `imageSmoothingEnabled = true` → `imageSmoothingQuality = "high"` → `drawImage(...)` → `restore()`，不依賴其他繪製階段的 smoothing state（Phase 2 實證 6/6 既有 D template 皆如此）。
+- Logo 必須由 renderer **真正 draw 入 canvas**，**不得**以 DOM overlay／CSS background／`<img>` 疊圖呈現；**Logo 不進 Medium 2×**；**禁止建立 shared Logo helper**。
+- Logo 為**固定 renderer asset**：不由 Excel 帶入、不進 Editor、不進 Workspace state、不進暫存 JSON schema，**不新增 Logo 欄位**。
+
+### 12.13 完整 draw order（預定）
+
+**`background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline`**
+
+- Phase 2 實證 A－09 現行 draw order 為 `background → Medium 2× → Bold subheadline`；D－09 於 background 之後、Medium 2× 之前插入 Logo。
+- 維持 `context.globalAlpha = 1`、`context.globalCompositeOperation = "source-over"`（Phase 2 實證各恰 1 處，於 background 之前設定）。
+- **不得新增 filter／blend／crop／cover／clip／任何額外 compositing。** Logo 的 PNG alpha 由既有 `source-over` 與 `globalAlpha = 1` 自然合成。
+
+### 12.14 `bn/launch/viewer.html` 最小 additive integration（預定）
+
+只在既有 D－08 branch 之後、unsupported `else` 之前追加一個同構分支，**不重構既有 chain**：
+
+- 條件：`parameters.get("type") === "D" && parameters.get("bn") === "09_SPX TVBN_2"`
+- `const template = await import("../templates/D/09-spx-tvbn-2.js");`
+- `viewerTitle = "樣式 D－09_SPX TVBN_2"`；`viewerLabel = "D－09"`
+- `width = 1599`；`height = 1080`
+- `backgroundSource = "../assets/D/底圖/09_SPX TVBN_2.jpg"`
+- `overlaySource = "../assets/D/對位/09_SPX TVBN_2.png"`
+- `logoSource = "../assets/D/Logo.png"`
+- `renderTemplate = template.renderSpxTvbn2`；`waitForFonts = template.waitForSpxTvbn2Fonts`
+- 並於 unsupported message **僅做 D－09 所需最小追加**（追加 `09_SPX TVBN_2`）
+
+**不得新增 `fieldConfig`**，必須沿用既有 **01～12 shared default 測試文字**。Phase 2 實證依據：A－01～A－12（含 **A－09**）全部 0 個 `fieldConfig` 賦值，僅 A－13／14／15／16 各 1 個；D－02／03／06／07／08 亦皆 0 個。**D－01 的 `fieldConfig` 為樣式 D 最早建立時的歷史例外，不得套用至 D－09。**
+
+**不得修改、不得重寫**：`render()` 主流程與其 `logoSource ? { backgroundImage, logoImage } : backgroundImage` **images-object dispatch ternary**、`let logoSource = null; let logoImage = null;` 宣告、**共用 `logoSource`／`logoImage` 載入區** `if (logoSource) { ... }`、**overlay 1:1 尺寸 validation**、shared default 測試字串、A／B branches（含 A－09）、A－17 threshold path、D－01／02／03／06／07／08 既有 branches。A 分支收到的第二參數仍為原本同一個 `backgroundImage` 物件。
+
+### 12.15 `bn/launch/D/09_SPX TVBN_2.command` 最小方案（預定）
+
+以 `bn/launch/A/09_SPX TVBN_2.command` 為**唯一 baseline**（Phase 2 實證 **104 行**、2,426 bytes、filesystem mode `700`、Git mode `100755`），只做既有 D launcher 同構的**恰 7 行識別差異**（Phase 2 實證識別 literal 行號為 **12、38、39、41、49、94、100**；`FSS_A09_URL` 4 處 ＋ `open_a09_viewer` 3 處 = 7 處；6 個既有 D launcher 皆為同一組行號）：
+
+- `FSS_A09_URL` → **`FSS_D09_URL`**
+- `open_a09_viewer` → **`open_d09_viewer`**
+- query 由 `?type=A&bn=09_SPX%20TVBN_2` 改為 **`?type=D&bn=09_SPX%20TVBN_2`**
+
+**query encoding LOCKED 為 `?type=D&bn=09_SPX%20TVBN_2`，空白必須以 `%20` 編碼，禁止未編碼空白。** Phase 2 三重實證：A－09 現行行 12 即為 `?type=A&bn=09_SPX%20TVBN_2`；6 個既有 D launcher 對含空白版位名一律採 `%20`；viewer 以 `new URLSearchParams` 解析會自動 decode `%20`，與 branch 比對字串 `"09_SPX TVBN_2"` 相符。
+
+**必須原封不動保持 baseline 的 13 項機制**：`set -u`、`${0:A:h}`、`FSS_ROOT` repo root 推導、`FSS_HOST="127.0.0.1"`、`FSS_PORT="4173"`、`FSS_VIEWER_PATH="/bn/launch/viewer.html"`、viewer marker `data-fss-bn-viewer="true"`、`/usr/bin/python3`、`/usr/bin/curl`、`/usr/bin/open`、`stop_fss_server()`、`pause_before_exit`、`trap stop_fss_server EXIT INT TERM HUP`；以及 server reuse／curl readiness／open 行為。**104 行不變**；filesystem executable；**Git mode 必須 `100755`**。**不得建立 launcher abstraction／framework、不重新設計 launcher。**
+
+### 12.16 Assets（Phase 4 只納管 D－09 兩個素材）
+
+| 素材 | 格式 | intrinsic | sha256 前綴 | Phase 4 處理 |
+|---|---|---|---|---|
+| `bn/assets/D/底圖/09_SPX TVBN_2.jpg` | JPEG | **1599 × 1080** | `aec1c8901db8d055` | 新增納管（`A`） |
+| `bn/assets/D/對位/09_SPX TVBN_2.png` | PNG | **1599 × 1080** | `9983aa05a164c0d8` | 新增納管（`A`）；只作人工 overlay 校稿，**不進正式輸出** |
+| `bn/assets/D/Logo.png` | PNG | **784 × 112** | `99813cf81a7963ff` | **只引用**；必須保持 **tracked + clean**，不得修改、不得 stage、不得再次納管 |
+
+**本 Proposal 不得修改任何 asset。** D－04／D－05／D－10～16 其餘 18 個 untracked assets 維持未處理。
+
+### 12.17 Phase 4 Coding 順序（預定，保持最小）
+
+1. 以 `HEAD:bn/templates/A/09-spx-tvbn-2.js` 為 baseline 建立 `bn/templates/D/09-spx-tvbn-2.js`：三常數去 export、新增 `logo` layout 區塊、新增 template-local `drawSpxTvbn2Logo`、改 render signature 為 images object、補 Logo readiness guard 與 canvas-size guard、插入 Logo draw（background 之後、Medium 2× 之前）、版位標示依 12.11 最小改為 `D－09`。
+2. 以 `bn/launch/A/09_SPX TVBN_2.command` 為 baseline 建立 `bn/launch/D/09_SPX TVBN_2.command`，套用恰 7 行差異並 `chmod 700`。
+3. 於 `bn/launch/viewer.html` 追加 D－09 branch 與 unsupported message 最小修改。
+4. 執行 12.18 靜態自檢。
+5. 停止，等待 Jamie 依 12.19 做 Phase 6 人工驗證；**不得自行進 Code Commit**。
+
+### 12.18 Phase 5 靜態自驗清單（預定，禁止 AI visual verification）
+
+Node syntax check（D－09 template 與 viewer 內嵌 module，暫存於 `/tmp`、不寫入 repo）；launcher `bash -n`；renderer signature 為 images object ＋ 防禦式解構；guards 齊備（canvas instance、background instance／readiness／intrinsic `1599 × 1080`、Logo readiness、**canvas-size guard `1599` × `1080`**）；exports 恰 2（`waitForSpxTvbn2Fonts`、`renderSpxTvbn2`）、零 import；三常數 template-local；canvas `1599 × 1080`；四個 geometry 精確（`logo {51,362,569,81}`、`headline {51,465,620,75}`、`subheadline {51,557,740,97}`、`protectionText {51,674,740,44}`）；**正式使用處不得存在 `3077`／`2063`；不得存在 `3026`／`1701` 共用 offset 規則**；LeftCentered 六條公式保留、`textAlign="left"`／`textBaseline="alphabetic"`、無 center／middle、**無 centered ink 族與 left-top 族函式**；typography 四項精確（`60pt Medium #ffffff`／`76pt Bold #fff285`／`$`／`%` `65pt Bold #fff285`／`35pt Medium #a6f4e6`）、無 `symbolColor`；`$`／`%` 三 helper 與 `preferred`／`fallback` 兩段式實作、`$` 取後方／`%` 取前方、ink-bottom alignment 保留；fit validation 8 欄與每段空字串零 ink validation（2 處）保留；**helper 逐函式 sha256 對 `HEAD:bn/templates/A/09-spx-tvbn-2.js` 比對，實測是否為 6/11 byte-identical ＋ 5/11 message-only ＋ 0/11 substantive，並驗證 D template 零殘留 `A－09` literal**；**`assertLayoutFitsCanvas` preservation 且涵蓋 `logo` key、四 box right/bottom = 620/443、671/540、791/654、791/718 全部 PASS**；Logo `scale = 81/112 → 567 × 81 @ (51, 362)`、餘量 `0/2/0/0`、aspect 7:1、完整 source rect、**`destinationX` 必須為 51（不得為 52）**、全檔無 rounding／truncation；Logo smoothing 為獨立 `save`／`high`／`restore`；**Logo 不進 2×**；Medium 2× = **`3198 × 2160`** 且只兩段 Medium、Bold 不進 2×、無整體 early-return；draw order 為 `background → Logo → Medium 2× → Bold subheadline`；`globalAlpha = 1`／`source-over` 保留、無 filter／blend；launcher query 精確 `?type=D&bn=09_SPX%20TVBN_2`、恰 7 行同構差異、104 行、mode `100755`；viewer diff 為最小 additive（D－09 branch ＋ unsupported message）、**無 `fieldConfig`**、A／B、A－17、D－01～08 branch 與 shared strings 未動；**`bn/templates/A/09-spx-tvbn-2.js` zero-diff**；12.20 Regression Boundary 全數 zero-diff；**fail-closed 維持**；`git diff --check` PASS。
+
+**不做**：AI visual verification、生成圖片、screenshot、export output、golden image、啟動 viewer、執行 Export。
+
+### 12.19 Phase 6 Manual Verification Plan（僅 Jamie 執行）
+
+Phase 4／5 完成後**必須停止**。由 **Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command`**，以 `bn/assets/D/對位/09_SPX TVBN_2.png` 做 **1:1 overlay 人工對位驗證**，驗收包含：
+
+1. **Logo ＋ 三個文字框位置**均落在對位圖標記框內（Logo `{51,362,569,81}`、headline `{51,465,620,75}`、subheadline `{51,557,740,97}`、protectionText `{51,674,740,44}`）。
+2. Logo 在 box 內**水平靠左＋垂直置中**、contain 保持 **7 : 1**、未變形、未裁切。
+3. 三段文字為 **LeftCentered**（水平靠左＋垂直 ink 置中）；`$`／`%` 的 ink-bottom 對齊與 A／B－09 一致。
+4. **關閉 overlay 後，Logo 與三段文字仍真正存在於 canvas 上**（非 DOM 疊圖）。
+
+**在 Jamie 明確 PASS 前不得 Code Commit。** Jamie 的 PASS 是**人工 1:1 overlay 對位 PASS**，**不是正式平台 Preview／Export PASS**。**本輪（Phase 3）不得啟動 viewer、不得生成任何圖片／screenshot／golden image／export output。**
+
+### 12.20 Regression boundary（Phase 4 必須維持零修改）
+
+`bn/templates/A/09-spx-tvbn-2.js`、**全部其他 A templates**、`bn/launch/A/*.command`、已完成 D－01／02／03／06／07／08 的 template 與 launcher 及其 assets、`bn/assets/A/*`、`bn/assets/B/*`、`bn/assets/D/Logo.png`、`bn/assets/LPBN掛標/*`、`bn/css/*`、`bn/index.html`、`bn/js/vendor/*`、`fonts/*`、`bn/assets/banwords.xlsx`、`bn/js/banwords.js`、`bn/js/banwords-data.js`、`bn/js/lpbn-badges.js`，以及六個核心 JS（`bn/js/render-a.js`、`bn/js/import.js`、`bn/js/export.js`、`bn/js/app.js`、`bn/js/workspace.js`、`bn/js/editor.js`）。
+
+**D－04／D－05／D－10～16 assets 必須保持未處理（維持 untracked、不得納管）。** A／B－01～17 與 D－01／02／03／06／07／08 的行為與輸出不得改變。**不得擴大成全 repo 重構。**
+
+### 12.21 正式平台 fail-closed 邊界（Phase 3／4 皆須維持）
+
+- **禁止修改** `bn/js/import.js` 的 `SUPPORTED_TYPES`（仍 `["A", "B"]`）。
+- **禁止**在 `bn/js/render-a.js` 的 `ASSET_BASE_BY_TYPE` 加入 D（仍只有 A／B 兩個 key）。
+- **禁止**在 `A_TABLE` 加入 D entry 或增加 type 維度（Phase 2 實證 17 個版位 id、`"D"` 出現 0 次）。
+- **禁止** `render-a.js` import 任何 D template（Phase 2 實證 `templates/D` 出現 0 次）；查表未命中即 throw、不 fallback。
+- **D Excel Import／Restore／正式控制台 Preview／Export 全部仍 disabled。**
+- **D－09 個別 renderer ＋ launcher 完成不代表正式 enable Type D**；啟動檔與 viewer 僅是人工對位工具，不是第二套正式 renderer、不是正式 Generator Preview、不是正式資料輸入流程。
+- 六個核心 JS 於 Phase 3／4 必須維持 zero-diff。
+
+### 12.22 Export LOCKED 行為（僅記錄既有規格）
+
+依 `bn/js/export.js` 唯讀實證（Phase 2）：`EXPORT_ITEMS` 第 19 行 **`{ id: "09", name: "09_SPX TVBN_2", format: "jpg" }`** —— **JPG 格式、無 `maxBytes`**（Phase 2 實證有 `maxBytes` 者為版位 01／02／10，**版位 09 無**）；`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`。另 `JPEG_QUALITY_FLOOR = 0.5` 為**既有全域常數，不是 D－09 專屬、不是 D－09 已驗證項目**。
+
+**以上僅記錄既有 LOCKED 規格。** D－09 正式 Preview ↔ Export 一致性、版位 09 的 **JPG／72 dpi** 實際輸出驗證、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、樣式 D 完整 17 版位輸出行為 —— 全部 **deferred until D platform integration**，**不得寫成已驗證**。**Phase 3／4 不得執行 Export、不得修改 `export.js`。**
+
+### 12.23 Scope Boundary／Explicit Non-Goals
+
+1. **不得處理 D－04、D－05、D－10～17**；不預建其他 D template／launcher、不預留、不抽象化，不得提前補上其 geometry 或 typography。
+2. **不得處理樣式 C。**
+3. **不得建立** generic abstraction／framework／plugin／registry redesign／D template registry。
+4. **不得抽出** shared Logo helper／shared 2× helper／shared alignment helper／shared guard。
+5. 不改 Workspace／暫存 JSON schema／Editor／Excel mapping；**不新增 Logo 欄位**；不重新納管 `Logo.png`。
+6. **不改字數規則**；不做 auto-fit／overflow UI／自動縮字／額外 padding／inset。
+7. **不重新設計 Export** 容量／格式／dpi 策略。
+8. **不 enable Type D。**
+9. **不重新裁決** `3077`／`2063`、`3026`／`1701` 或其他 D 版位 geometry；不重做 Phase 1／2、不重新分析圖片。
+10. **不得**把 D－08 的 centered ink、D－01 的 `fieldConfig` 例外、或其他 D 版位的 alignment／Logo 位置／offset 套用到 D－09。
+11. 本輪（Phase 3）不 Coding、不 Documentation Update、不 Stage／Commit／Push／Tag／Release、不啟動 viewer、不執行 Export、不生成任何圖片。
+
+### 12.24 Acceptance Criteria（供 Phase 4／5 驗證的 checklist，**全部為未來驗收項目**）
+
+以下 30 項皆為**尚未執行**的驗收條件，**本階段不得寫成已 PASS**：
+
+1. canvas 為 **1599 × 1080**；底圖與對位圖 intrinsic 皆 1599 × 1080；對位圖未進入正式輸出。
+2. Coding scope **恰 5 paths = 1 M ＋ 4 A**（12.2 所列）；`Logo.png` 未列為新增、未 stage、維持 tracked + clean。
+3. D－09 template **exports 恰 2**（`waitForSpxTvbn2Fonts`、`renderSpxTvbn2`）、**imports = 0**；`SPX_TVBN_2_WIDTH`／`HEIGHT`／`LAYOUT` 均為 template-local。
+4. signature 為 `renderSpxTvbn2(canvas, images, { headline = "", subheadline = "", protectionText = "" } = {})`，並含防禦式解構 `images && typeof images === "object" ? images : {}`。
+5. guards 齊備：canvas instance、background instance／readiness／**intrinsic 1599 × 1080**、**Logo readiness**、**canvas-size guard（1599／1080 fail-fast）**、`assertFontsReady` 保留。
+6. 四個 geometry 精確：`logo {51,362,569,81}`、`headline {51,465,620,75}`、`subheadline {51,557,740,97}`、`protectionText {51,674,740,44}`；四者共用 `left = 51`。
+7. **正式 geometry 未使用** `3077`／`2063`；`Δleft = 3026`／`Δtop = 1701` 僅作 D－09 自身歷史更正證據，未建立跨版位共用 offset 規則、未推論至其他 D 版位。
+8. **`assertLayoutFitsCanvas` 原函式保留**、未換 generic helper、`Number.isFinite`／`width > 0`／`height > 0`／四邊界檢查未弱化、仍由 renderer 呼叫、仍遍歷 `Object.entries(SPX_TVBN_2_LAYOUT)`。
+9. 四 box right／bottom = **620/443、671/540、791/654、791/718**，全部落於 1599 × 1080 內。
+10. typography 四項精確：`60pt "ShopeeNotoSans Medium" #ffffff`／`76pt "ShopeeNotoSans Bold" #fff285`／`$`／`%` `65pt "ShopeeNotoSans Bold" #fff285`／`35pt "ShopeeNotoSans Medium" #a6f4e6`；**未新增 `symbolColor`**；字數規則未改。
+11. 三段文字採 **LeftCentered**；**六條核心公式**（12.8 表格）逐字保留；**未改成 centered ink、未改成 left/top**。
+12. `textAlign = "left"`／`textBaseline = "alphabetic"`、四項 `actualBoundingBox*` measurement、fit validation 8 欄保留；每段空字串零 ink validation 保留（2 處）。
+13. `$`／`%` 三 helper 全部保留；`adjacentOrdinaryRun` 的 `preferred` → `fallback` 兩段式實作未被重寫；`$` 主取後方、`%` 主取前方；reverse fallback 與 glyph ink-bottom alignment 保留。
+14. Medium local 2× offscreen 為 **3198 × 2160**；`scale(2, 2)` 後**只 headline ＋ protectionText 使用 `drawLeftCenteredText`**（恰 2 次）。
+15. **Bold subheadline（含 `$`／`%`）與 Logo 均未進入 2× surface**；未新增函式層整體 early-return；未抽 shared 2× helper；縮回使用既有獨立 high-quality smoothing。
+16. Logo `scale = min(569/784, 81/112) = 81/112`（height-bound）。
+17. Logo destination = **`567 × 81 @ (51, 362)`**。
+18. Logo 餘量：左 **0px**／右 **2px**／上 **0px**／下 **0px**。
+19. Logo **水平靠左**（`destinationX = box.left = 51`）**＋垂直置中**（`destinationY = 362`）；**`destinationX` 不得為 52**；未水平置中。
+20. Logo 使用**完整 source rect**（`0, 0, 784, 112`）、aspect 保持 **7 : 1**；未 stretch／cover／crop／clip。
+21. 實作**不存在**任何 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise truncation。
+22. Logo smoothing 為 template-local 且自成一組 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage → restore()`；未建立 shared Logo helper；Logo 真正 draw 入 canvas（非 DOM overlay）。
+23. draw order 為 **`background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline`**；`globalAlpha = 1`／`globalCompositeOperation = "source-over"` 保留；未新增 filter／blend／crop／cover／clip／額外 compositing。
+24. **helper preservation：Coding 後必須以 `HEAD:bn/templates/A/09-spx-tvbn-2.js` 逐函式（sha256）實測**，確認是否為 **6/11 byte-identical ＋ 5/11 message-only behavior-equivalent ＋ 0/11 substantive**，5 個 message-only 各只差 1 行 `A－09`→`D－09`，且 D template **零殘留 `A－09` literal**。**Phase 3 僅為預期，不得在 Coding 前宣告最終數字。**
+25. viewer 僅為最小 additive D－09 branch ＋ unsupported message 最小追加；**未新增 `fieldConfig`**；共用 `logoSource`／`logoImage` 載入、images-object ternary、overlay 1:1 validation、shared default 測試文字、A／B（含 A－09）、A－17、D－01～08 branches 零污染。
+26. launcher query 精確為 **`?type=D&bn=09_SPX%20TVBN_2`**（無未編碼空白、無 `type=A`）；恰 7 行同構差異（行 12、38、39、41、49、94、100）；**104 行不變**；13 項 baseline 機制保留；**Git mode `100755`**。
+27. assets：底圖 JPEG 1599 × 1080 / sha256 前綴 `aec1c8901db8d055`；對位圖 PNG 1599 × 1080 / sha256 前綴 `9983aa05a164c0d8`；`Logo.png` 784 × 112 / sha256 前綴 `99813cf81a7963ff` 且維持 tracked + clean、bytes 未改。
+28. **12.20 Regression Boundary 全部 zero-diff**；D－04／05／10～16 assets 維持未處理。
+29. **fail-closed 維持**：`SUPPORTED_TYPES` 仍 `["A", "B"]`、`ASSET_BASE_BY_TYPE` 仍只有 A／B、`A_TABLE` 無 D entry 與 type 維度、`render-a.js` 未 import D template、六個核心 JS zero-diff；D Import／Restore／控制台 Preview／Export 仍 disabled。
+30. **Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 完成 Phase 6 人工 1:1 overlay 對位驗證並明確 PASS**（含關閉 overlay 後 Logo 與三文字仍真正存在於 canvas）；在此之前**不得 Code Commit**。正式平台 Export 驗證維持 **deferred until D platform integration**。
+
+### 12.25 Rollback／Stop Conditions（Phase 4 遇到即停止並回報）
+
+- Phase 4 若發現 repo 現況與 Requirement 第 13 節有直接矛盾（例如 A－09 `SPX_TVBN_2_LAYOUT` 與三文字 geometry 不符、素材 intrinsic 尺寸不符 1599 × 1080 或 784 × 112），**立即停止並回報「Requirement vs Repository Conflict」**，不得自行裁決或改值。
+- 若靜態自檢出現無法在 12.2 允許範圍內修正的失敗，**立即停止並回報**，不得擴大修改範圍。
+- 若 Git 狀態出現本 Proposal 未預期的 tracked／staged drift，**立即停止並回報**，不得自行 restore／stash／clean。
+- 若需要修改 12.20 Regression Boundary 內的任何檔案才能完成，**立即停止並回報**，不得逕行修改。
+- Rollback 方式：D－09 的三個實作變更彼此獨立且皆為 additive，新增檔案可直接移除、`bn/launch/viewer.html` 的 additive branch 可原樣移除，不影響 A／B 與 D－01／02／03／06／07／08 既有行為。
+
+### 12.26 Phase Boundary
+
+本節僅為 **Phase 3 Proposal**。**本輪不 Coding、不 Documentation Update、不 Stage、不 Commit、不 Push、不 Tag、不 Release、不啟動 viewer、不執行 Export、不生成任何圖片**，亦未建立任何 `FSS_BN_D09_*` standalone MD。
+
+本節需經 **Jamie／GPT Review PASS** 後才可進入 **Phase 4 Coding**；Phase 4 完成後須經 **Phase 6 Jamie 人工 1:1 overlay 對位驗證明確 PASS**，方可進入 Code Commit，其後才是 Documentation Update 與 Docs Commit。
+
+### 12.27 D－09 Implementation Record（實際落地狀態）
+
+第 12.1～12.26 節之設計條文均未改寫；本節僅記錄實際落地結果。D－09 已完成 Phase 4 Coding，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 完成人工 1:1 overlay 對位驗證且明確 PASS**。
+
+**實際檔案變更（與第 12.2 節計畫一致，恰 5 paths = 1 M ＋ 4 A，無額外檔案）**
+
+- 修改 `bn/launch/viewer.html` —— 只加一個最小 additive D－09 分支（**+16／−1**，含 unsupported message 追加 `09_SPX TVBN_2`）。D－09 分支**未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字（**D－01 的 `fieldConfig` 為歷史例外，未套用**）；A／B（含 A－09）、D－01～08、A－17 threshold path、shared 預設測試字串、`logoSource`／`logoImage` 宣告、共用 Logo 載入區與 `render()` 的 images-object dispatch ternary、overlay 1:1 validation 全部未改。
+- 新增 `bn/templates/D/09-spx-tvbn-2.js` —— D－09 唯一 renderer，**421 行**，canvas 1599 × 1080；對外只 export `waitForSpxTvbn2Fonts` 與 `renderSpxTvbn2`，**零 import**；signature 為 `renderSpxTvbn2(canvas, images, { headline = "", subheadline = "", protectionText = "" } = {})`，以 `const { backgroundImage, logoImage } = images && typeof images === "object" ? images : {};` 防禦式解構；`SPX_TVBN_2_WIDTH`／`SPX_TVBN_2_HEIGHT`／`SPX_TVBN_2_LAYOUT` 均去 export、維持 template-local；background readiness／intrinsic size guard、Logo readiness guard 與第 12.5 節裁決的 canvas-size guard 齊備。`bn/templates/A/09-spx-tvbn-2.js` 未被修改或取代（zero-diff）。
+- 新增 `bn/launch/D/09_SPX TVBN_2.command` —— Git mode `100755`，**104 行**（與 A－09 baseline 相同），query 精確為 **`?type=D&bn=09_SPX%20TVBN_2`**（空白以 `%20` 編碼，無未編碼空白、無 `type=A` 殘留）；相對 A－09 launcher **恰 7 行識別差異（L12、38、39、41、49、94、100）**，`set -u`／`${0:A:h}`／repo root 推導／`127.0.0.1:4173`／viewer path／reuse marker／`/usr/bin/python3`／`/usr/bin/curl`／`/usr/bin/open`／`stop_fss_server`／`trap stop_fss_server EXIT INT TERM HUP`／`pause_before_exit` 全部沿用，未重構。
+- 新增納管 `bn/assets/D/底圖/09_SPX TVBN_2.jpg`（JPEG 1599 × 1080、192,037 bytes）與 `bn/assets/D/對位/09_SPX TVBN_2.png`（PNG 1599 × 1080、32,566 bytes，只作 DOM overlay 校稿，未合成進正式 canvas）。
+- **共用既有 `bn/assets/D/Logo.png`**（PNG 784 × 112）—— 既有 tracked 共用 asset（由 D－01 納管），D－09 僅引用，**未修改、未重存、未再次納管、未建立第二份副本**，亦不在本次 commit 內。
+
+**實際落地幾何（與 Requirement 第 13 節 LOCKED 值一致，未改值）**
+
+四個正式 box：`logo {left:51, top:362, width:569, height:81}`、`headline {51,465,620,75}`、`subheadline {51,557,740,97}`、`protectionText {51,674,740,44}`，**四者共用 `left = 51`**；四 box right／bottom = logo **620／443**、headline **671／540**、subheadline **791／654**、protectionText **791／718**，全部落於 1599 × 1080 內。原 Photoshop／CSS 的 `left`（`3077`）與 `top`（`2063`）已裁決為不可直接作 canvas geometry 的歷史原始值，未出現於實作；`Δleft = 3026`／`Δtop = 1701` 僅為 D－09 自身歷史更正證據，未建立跨版位共用 offset 規則。
+
+Logo：source **784 × 112**，`scale = min(569/784, 81/112) = 81/112`（height-bound），destination **567 × 81**，**水平靠左＋垂直置中**：`destinationX = box.left = ` **51**、`destinationY = box.top + (box.height − destinationHeight) / 2 = ` **362**，即 **`567 × 81 @ (51, 362)`**，左 0px／右 2px／上 0px／下 0px，aspect 保持 7 : 1；source rect 完整（`0, 0, 784, 112`）。四值皆整數，實測未 rounding（無 `Math.round`／`floor`／`ceil`／`trunc`／`toFixed`／`parseInt`／bitwise truncation）、未 stretch／cover／crop／clip；**`destinationX` 為 51，未寫成 52**；smoothing 為 template-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`；Logo 真正畫入 canvas（非 DOM overlay）、未進 Medium 2×、未建立 shared Logo helper（新增函式僅 `drawSpxTvbn2Logo`）。
+
+三段文字 typography 沿用 A／B－09（`60pt "ShopeeNotoSans Medium" #ffffff`／`76pt "ShopeeNotoSans Bold" #fff285`／`$`／`%` `65pt "ShopeeNotoSans Bold" #fff285`／`35pt "ShopeeNotoSans Medium" #a6f4e6`；未新增 `symbolColor`），採 **LeftCentered**（水平靠左＋垂直 ink bounding-box 置中，**不是 centered ink、不是 left／top**），六條核心公式、`textAlign="left"`／`textBaseline="alphabetic"`、`actualBoundingBox*` measurement、fit validation 與每段空字串零 ink validation 全部保留；`tokenizeSubheadline`／`adjacentOrdinaryRun`（`$` 取後方、`%` 取前方，含 reverse fallback 的 `preferred` → `fallback` 兩段式實作未被重寫）／`boundaryGlyphInkBottom` 的 ink-bottom alignment 保留。Medium template-local 2× offscreen **3198 × 2160**，只處理 headline ＋ protectionText，Bold subheadline 與 Logo 均未進 2× surface，未建立共用 2× helper，未新增函式層整體 early-return，縮回沿用既有獨立 high-quality smoothing。draw order **background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline**，`globalAlpha` 維持 `1`、`globalCompositeOperation` 維持 `source-over`，未新增 filter／blend／crop／cover／clip／額外 compositing。
+
+**helper preservation（如實記錄，符合第 12.11 節之 Phase 3 預期並已於 Coding 後實測確認）**
+
+11 個 baseline functions 對 `HEAD:bn/templates/A/09-spx-tvbn-2.js` 的落地比對（逐函式 sha256）為 **6/11 byte-identical ＋ 5/11 message-only behavior-equivalent，實質差異 0/11**：byte-identical 者為 `hasInk`、`validateLeftCenteredInkFitsBox`、`drawLeftCenteredText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawLeftCenteredMixedSubheadline`；behavior-equivalent 者為 **`assertLayoutFitsCanvas`**、**`measureRun`**、**`boundaryGlyphInkBottom`**、**`drawSpxTvbn2MediumText`**、**`assertFontsReady`**，五者合計 **6 行** runtime error message 差異 —— 其中 **`assertLayoutFitsCanvas` 因函式本身含兩個 `throw` 而為 2 行**，其餘四者各 1 行 —— **每一行皆僅為版位標示 `A－09` → `D－09`**，正規化後逐字等價，**演算法、控制流與回傳值零差異**；D template 殘留 `A－09` literal = 0。**不得記為 11/11 byte-identical。** 新增的 `drawSpxTvbn2Logo` 與 renderer body 必要的 Logo 接線（signature、images 防禦式解構、Logo readiness guard、canvas-size guard、Logo draw 插入）**不納入此 11 個 baseline helper 統計**。
+
+**`assertLayoutFitsCanvas` preservation 與 canvas-size guard（符合第 12.5、12.6 節）**
+
+`assertLayoutFitsCanvas` 完整保留、未換 generic helper、未刪除、未繞過、未弱化，仍由 `renderSpxTvbn2` 呼叫、仍遍歷 `Object.entries(SPX_TVBN_2_LAYOUT)`，`Number.isFinite`／`width > 0`／`height > 0` 與四邊界檢查齊備，因此**自然一併涵蓋新增的 `logo` box**。第 12.5 節裁決之最小 canvas-size guard 已落地（`canvas.width` 必須 1599、`canvas.height` 必須 1080，不符即 fail-fast）；**A－09 baseline 本身未被修改，亦未抽出 shared guard**。
+
+**Regression boundary（實際落地驗證）**
+
+以下於 D－09 Code Commit 中全部零修改：`bn/templates/A/*.js`（含 A－09）、`bn/launch/A/*.command`、D－01／02／03／06／07／08 的 6 個 template 與 6 個 launcher 及其 assets、`bn/assets/A/*`、`bn/assets/B/*`、`bn/assets/D/Logo.png`、`bn/assets/LPBN掛標/*`、`bn/js/*`（含正式平台六個核心 JS、`vendor/*`、`banwords*`、`lpbn-badges.js`）、`bn/index.html`、`bn/css/*`、`fonts/*`、`bn/assets/banwords.xlsx` 與所有 `bn/docs/*`。未建立任何 generic abstraction／framework／plugin／shared Logo helper／shared 2× helper／shared alignment helper／D template registry。D－04／05／10～16 其餘 18 個素材維持 untracked、未處理；樣式 C 不在範圍。
+
+**Code Commit 與 Jamie Manual Verification**
+
+Code Commit 為 **`ac69478cfa90ee62d208e30d139a382718433699`**（`feat(bn): add D09 SPX TVBN 2 template`，parent `2509764d8c41b83cccce209cc8e646ab809d796a`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑（1 個 M ＋ 4 個 A）：`M bn/launch/viewer.html`、`A bn/templates/D/09-spx-tvbn-2.js`、`A bn/launch/D/09_SPX TVBN_2.command`（mode `100755`）、`A bn/assets/D/底圖/09_SPX TVBN_2.jpg`、`A bn/assets/D/對位/09_SPX TVBN_2.png`。commit message 為 LOCKED 字串，無 body。
+
+**正式平台邊界（未改，D 仍 fail-closed）**
+
+- 正式平台六個核心 JS（`bn/js/render-a.js`、`bn/js/import.js`、`bn/js/workspace.js`、`bn/js/export.js`、`bn/js/app.js`、`bn/js/editor.js`）**全部零修改**。
+- 正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`render-a.js` 未 enable D，正式 renderer registry 未 enable D，樣式 D 在正式平台**維持 fail-closed**。
+- 啟動檔與 viewer **僅是人工對位工具**，不是第二套正式 renderer、不是正式 Generator Preview、不是正式資料輸入流程；**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」，後者尚未做。**
+- 第 12.22 節 Export LOCKED 與 deferred 維持不變：`{ id: "09", name: "09_SPX TVBN_2", format: "jpg" }`（**無 `maxBytes`**，亦無任何 D-specific `maxBytes`）、`EXPORT_DPI = 72`、JPEG 品質既有全域行為不變；D－09 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、版位 09 的 JPG／72 dpi 實際輸出驗證、樣式 D 完整 17 版位輸出行為，全部 **deferred until D platform integration**；本輪**未執行** Export。
+- 目前已完成的僅為 D－01、D－02、D－03、D－06、D－07、D－08、D－09 **個別** renderer ＋ launcher ＋ assets 納管與人工對位流程，**不代表整個 D 樣式完成**；D－04、D－05、D－10～17 仍須逐一確認與開發，**不得由 D－09 或其他已完成 D 版位推論**，樣式 C 不在範圍。
