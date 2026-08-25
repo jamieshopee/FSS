@@ -519,9 +519,24 @@
         renderTemplate = template.renderCoinPageBn;
         waitForFonts = template.waitForCoinPageBnFonts;
         // D－03 不設 fieldConfig，沿用既有 01～12 shared default 測試文字。
+      } else if (
+        parameters.get("type") === "D" &&
+        parameters.get("bn") === "06_IG"
+      ) {
+        const template = await import("../templates/D/06-ig.js");
+        viewerTitle = "樣式 D－06_IG";
+        viewerLabel = "D－06";
+        width = 900;
+        height = 1600;
+        backgroundSource = "../assets/D/底圖/06_IG.jpg";
+        overlaySource = "../assets/D/對位/06_IG.png";
+        logoSource = "../assets/D/Logo.png";
+        renderTemplate = template.renderIg;
+        waitForFonts = template.waitForIgFonts;
+        // D－06 不設 fieldConfig，沿用既有 01～12 shared default 測試文字。
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區、17_門檻表 與樣式 D／01_DDcard BN、02_MALL HBN、03_Coin page BN。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區、17_門檻表 與樣式 D／01_DDcard BN、02_MALL HBN、03_Coin page BN、06_IG。",
         );
       }
 
