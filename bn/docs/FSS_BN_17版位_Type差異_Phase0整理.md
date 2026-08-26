@@ -330,6 +330,71 @@ Preview／Export PASS」**。本次完成的是「D－09 renderer ＋ launcher �
 納管 ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；本註記不對
 C 或未確認的 D 版位差異作任何新裁決。）
 
+（落地註記：樣式 D 的 `10_POP UP`（D－10）亦已完成正式 Template 與人工 1:1 overlay
+對位驗證，Jamie 已親自開啟 `bn/launch/D/10_POP UP.command` 確認 PASS，Code Commit
+為 `1e2cdb939936de18d2665bafc27229bc7a032e3b`。D－10 底圖
+`bn/assets/D/底圖/10_POP UP.png`（PNG RGBA 475 × 673）與對位圖
+`bn/assets/D/對位/10_POP UP.png`（PNG RGBA 580 × 720）已於該 Code Commit
+納管；固定 Logo 仍為既有共用 `bn/assets/D/Logo.png`（原始 784 × 112），由 D－01
+納管，D－10 只引用、未新增第二份、未再次納管。**`10_POP UP` 是 17 個版位中唯一 canvas 尺寸（580 ×
+720）不等於底圖 intrinsic 尺寸（475 × 673）者**，此 A－10 特例在 D－10 完整保存：底圖繪於精確目的地
+`(53, 27, 475, 673)`、未 stretch 成整張 canvas，`clearRect(0, 0, 580,
+720)` 保留且仍位於 background 之前，`globalAlpha = 1`、`source-over`、A－10 原有
+canvas-size guard、background guard、`assertFontsReady` 與
+`assertSpecificationFitsCanvas` 全部保留。與 D－02～D－09 不同：**D－10
+三段文字的字型、顏色、字數規則與 `$`／`%` formatting 完全沿用 A／B－10，但文字框位置存在差異** —— 三框的
+`left`／`width`／`height` 逐值不變，僅 `top` 各下移 **+44px**（`128 → 172`、`181
+→ 225`、`242 → 286`）；此 `+44` 僅為 D－10 自身對位圖像素實證所得之差異，**不得建立
+generic／shared offset 規則、不得推論至其他 D 版位**。D－10 另一項差異是新增固定 Logo。D－10 正式
+canvas 為 580 × 720，四個正式 box 為 Logo `{left:129, top:109, width:323,
+height:46}`、主標 `{left:129, top:172, width:323, height:38}`、副標
+`{left:85, top:225, width:410, height:51}`、保護文字 `{left:85, top:286,
+width:410, height:25}`，`logo` 為 `POP_UP_LAYOUT` 第一個 key；四 box
+right／bottom 為 452／155、452／210、495／276、495／311，全部落於 580 × 720
+內。三段文字採 **centered ink＝水平＋垂直 ink bounding-box 置中**（與 D－07／D－09 的
+LeftCentered、D－02／D－03 的靠左靠上皆不同，與 D－01／D－06／D－08 同族）。Logo 在 box
+內**水平置中＋垂直置中**：contain／no-upscale 後 `scale = min(323/784, 46/112) =
+23/56`（height-bound），destination 322 × 46 @ `x = 129.5`、`y = 109`，左
+0.5px／右 0.5px、上 0px／下 0px，aspect 保持 7 : 1，source rect
+完整；**`destinationX = 129.5` 以 fractional 原值保留，全檔無
+rounding／truncation**。上述只代表 D－10。原 Photoshop／CSS 的 四框原始標記
+`867`／`807`／`870`／`823`／`923`／`984` 與 D－10 自身 `Δleft = 738`、`Δtop =
+698`，屬**已裁決為不可直接作 canvas geometry 的歷史 evidence，不得建立跨版位共用 offset
+規則、不得推論至其他 D 版位**，實測未出現於 runtime geometry。Medium template-local 2× 的
+offscreen 為 1160 × 1440，只涵蓋 主標＋保護文字，Bold 副標與 Logo 皆不進 2×；draw order
+為 clearRect → background → Logo → Medium local 2×（主標＋保護文字）→ Bold 副標
+—— 此順序是 A－10 `clearRect` 特例與既有 D Logo precedent 的最小組合，**A－10 是第一個帶
+`clearRect` 的 Logo D 版位，repository 中並不存在完全相同的直接 precedent**。D－10 採
+D-specific template `bn/templates/D/10-pop-up.js`（exports 恰 2、零
+import、signature 為 images object）與獨立校稿入口 `bn/launch/D/10_POP
+UP.command`（Git mode `100755`、query `?type=D&bn=10_POP%20UP`、104 行、恰
+7 行識別差異），已封箱的 `bn/templates/A/10-pop-up.js` 未被修改或取代；13 個 baseline
+functions 比對 為 5/13 byte-identical ＋ 7/13 message-only
+behavior-equivalent ＋ 1/13 substantive（`renderPopUp`，因 images
+object、Logo guard、Logo draw 與 draw-order 接線），7 者合計 11 行且每行皆僅
+`A－10`→`D－10`，殘留 `A－10` literal = 0；新增 `drawPopUpLogo` 不納入該 13
+統計，**不得記為 5+8+0**。`assertSpecificationFitsCanvas` 完整保留、仍遍歷
+`Object.entries(POP_UP_LAYOUT)`、四邊界與 background placement
+驗證未弱化，自然涵蓋新增 Logo box。viewer 的 D－10 branch 未設 `fieldConfig`（D－01 的
+`fieldConfig` 為歷史例外，未套用）。）
+
+前一則註記所述「目前已完成實作與人工驗證的 D 版位為 D－01、D－02、D－03、D－06、D－07、D－08 與
+D－09」自本註記起更新為：**目前已完成實作與人工驗證的 D 版位為
+D－01、D－02、D－03、D－06、D－07、D－08、D－09 與 D－10**，八者皆為個別 renderer
+與人工對位流程，**不代表整個 D 樣式完成**；D－04、D－05、D－11～17 仍待逐一確認與開發，其文字位置差異與 Logo
+位置一律尚未確認，不得由已完成的任何 D 版位推論，亦不得提前補上 geometry 或 typography。**目前正式支援的
+Type 仍為 A 與 B**：`SUPPORTED_TYPES` 仍為 A／B，`ASSET_BASE_BY_TYPE` 仍只有
+A／B，`A_TABLE` 未加入 D，`render-a.js` 未 enable D，正式 renderer registry 尚未
+enable D，樣式 D 在正式平台維持 fail-closed；D 的正式
+Import／Restore／Preview／Export 尚未 enable，版位 10 既有鎖定的 PNG／72
+dpi／`maxBytes: 250000`（`{id:"10", name:"10_POP UP", format:"png",
+maxBytes:250000}`、`EXPORT_DPI = 72`；既有 PNG 72 dpi pHYs patch
+與容量鏈目前只在 A／B 正式路徑實際運行）亦尚未對 D 實測，**本次 Code Commit 與 Manual PASS
+不代表已驗證 D－10 的 250,000 bytes**，不得記為已驗證。Jamie 的 PASS 是「人工 1:1 overlay
+對位 PASS」，**不是「正式平台 Preview／Export PASS」**。本次完成的是「D－10 renderer ＋
+launcher ＋ assets 納管 ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；本註記不對 C
+或未確認的 D 版位差異作任何新裁決。
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

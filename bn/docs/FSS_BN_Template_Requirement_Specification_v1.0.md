@@ -1952,6 +1952,49 @@ D－09 route 為 `viewer.html?type=D&bn=09_SPX%20TVBN_2`（空白以 `%20` 編�
 - 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
 - 目前已完成的樣式 D 版位為 D－01、D－02、D－03、D－06、D－07、D－08、D－09，皆為**個別** renderer 與人工對位流程，不代表整個 D 樣式完成。D－04、D－05、D－10～17 仍須逐一確認與開發。本節裁決**只代表 D－09**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
+#### 5.2.8 `10_POP UP`
+
+##### 5.2.8.1 正式規格來源
+
+D－10 的完整正式規格、幾何、typography、Logo 裁決與 deferred 邊界以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 的「D－10 Requirement」章節為準（含 14.6【JAMIE/GPT LOCKED DECISION】geometry 裁決，完成狀態見該章節 14.20 節），實作紀錄以 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－10」章節（落地紀錄見其 13.27 節）為準。樣式 D 只維護這一份總 Requirement 與一份總 Proposal，**不建立逐版位 Requirement／Proposal 文件**。**本節只作狀態登錄與規格引用，不複製該兩份文件內容。**
+
+D－10 與樣式 A／B 的 `10_POP UP` 共用同一組已確認的文字內容模型與視覺樣式（Canvas **580 × 720**、主標 Medium `30pt` `#ffffff`、副標 Bold `40pt` `#fff285`、副標 `$`／`%` Bold `35pt` `#fff285` 特殊 formatting、保護文字 Medium `20pt` `#a6f4e6`、**centered ink＝水平＋垂直 ink bounding-box 置中**（`textAlign="left"`／`textBaseline="alphabetic"`）、既有字數規則、Medium template-local 2× rasterization）。A－10 與 B－10 共用同一正式 renderer `bn/templates/A/10-pop-up.js`（`A_TABLE` 僅以版位 id 為 key、無 type 維度，A／B 差異只由 `ASSET_BASE_BY_TYPE` 切換底圖路徑）；**A／B－10 既有規格未被本節修改**。
+
+**`10_POP UP` 為 17 版位中唯一 canvas 尺寸 ≠ 底圖 intrinsic 尺寸者**，此 A－10 特例在 D－10 完整保存：canvas **580 × 720**、background intrinsic **475 × 673**、background 繪製目的地精確為 **`(53, 27, 475, 673)`**（未 stretch 成整張 canvas）；`context.clearRect(0, 0, 580, 720)` 保留且仍位於 background 之前；`globalAlpha = 1`、`globalCompositeOperation = "source-over"`；canvas instance guard、background instance／readiness／intrinsic（475 × 673 硬斷言）guard、**A－10 原本已存在的 canvas-size guard**、`assertFontsReady` 與 `assertSpecificationFitsCanvas` 全部保留。
+
+**D－10 真正存在的差異有兩項**：
+
+1. 新增固定 Logo。Logo box `{left:129, top:109, width:323, height:46}`；source `bn/assets/D/Logo.png` 原始 784 × 112（既有 tracked 共用 asset，由 D－01 納管，D－10 僅引用，**非本版位新增素材，未在本次 Code Commit 再次納管**）；以 contain／no-upscale 等比例縮放並在 box 內**水平置中＋垂直置中**，`scale = min(323/784, 46/112) = ` **`23/56`**（height-bound），destination **322 × 46**、`destinationX = box.left + (box.width − destinationWidth) / 2 = ` **129.5**、`destinationY = box.top + (box.height − destinationHeight) / 2 = ` **109**，即 **`322 × 46 @ (129.5, 109)`**，左 **0.5px**／右 **0.5px**／上 **0px**／下 **0px**，aspect 保持 **7 : 1**；**`destinationX = 129.5` 必須以 fractional 原值保留**，禁止 rounding／truncation（實作實測全檔無 `Math.round`／`floor`／`ceil`／`trunc`／`toFixed`／`parseInt`／bitwise），禁止 stretch 成 323 × 46、禁止 cover／crop／source clipping（source rect 完整 `0, 0, sourceWidth, sourceHeight`）。Logo smoothing 為 template-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`；Logo 由 renderer **真正畫入 canvas**（非 DOM overlay）、**不進 Medium 2× surface**、**未建立 shared Logo helper**。Logo 為固定 renderer asset，**不由 Excel 帶入、不進 Editor、不進 Workspace、不進暫存 JSON**。
+2. 三段文字框相對 A／B－10 `POP_UP_LAYOUT` **僅 `top` 各下移 +44px**（`left`／`width`／`height` 逐值不變）。此為 D－10 對位圖像素實證所得之 D－10 自身差異，**不得建立 generic／shared offset 規則、不得推論至其他 D 版位**。
+
+三段文字 box 為 headline `{left:129, top:172, width:323, height:38}`、subheadline `{left:85, top:225, width:410, height:51}`、protectionText `{left:85, top:286, width:410, height:25}`；四 box right／bottom 為 **452／155、452／210、495／276、495／311**，全部落於 580 × 720 內，`logo` 為 `POP_UP_LAYOUT` 第一個 key。Medium local 2× 的 offscreen 為 **1160 × 1440**（既有尺寸硬斷言保留），只涵蓋 headline ＋ protectionText，Bold subheadline 與 Logo 均不進 2×，且未新增函式層「兩段 Medium 都空就整體 early-return」，每段文字空字串各自回傳零 ink fit validation 之既有行為保留；draw order 為 **`clearRect → background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline`**。此 draw order 是**「A－10 唯一既有 `clearRect` 位於 background 之前」與「既有 7/7 已完成 D Logo renderer 一致的 `background → Logo → Medium2x → BoldSub`」兩項既有 evidence 的最小組合**；**A－10 是第一個帶 `clearRect` 的 Logo D 版位，repository 中並不存在完全相同的直接 precedent。** 原 Photoshop／CSS 四框原始標記 `867`／`807`／`870`／`823`／`923`／`984` 與 D－10 自身 `Δleft = 738`／`Δtop = 698` 屬**歷史 evidence，不可直接作 canvas geometry**（實測未出現於 runtime geometry），**不得建立跨版位共用 offset 規則、不得推論至其他 D 版位**。
+
+##### 5.2.8.2 正式落地與驗證狀態
+
+D－10 採 D-specific template definition（未在已封箱的 `bn/templates/A/10-pop-up.js` 加入 D 分支，亦未修改或取代該檔；該檔 sha256 維持 `3b555271cdaccae7fc5cf5a49d481f923318eba5f0965ec001ea6e4065e656ed`）。Jamie 已**親自開啟 `bn/launch/D/10_POP UP.command` 完成 Phase 6 人工 1:1 overlay 對位驗證並明確 PASS**。
+
+Code Commit 為 **`1e2cdb939936de18d2665bafc27229bc7a032e3b`**（`feat(bn): add D10 POP UP template`，parent `30be4920277042d05e10d6185fcee5923bafb0e3`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 個路徑（1 個 M ＋ 4 個 A）：
+
+- `M` `bn/launch/viewer.html`（只服務 D－10 的校稿 branch 最小修改，+16／−1，branch 本體 15 行）
+- `A` `bn/templates/D/10-pop-up.js`（新增，465 行）
+- `A` `bn/launch/D/10_POP UP.command`（新增，Git mode `100755`）
+- `A` `bn/assets/D/底圖/10_POP UP.png`（新增納管，PNG RGBA 475 × 673、202,577 bytes）
+- `A` `bn/assets/D/對位/10_POP UP.png`（新增納管，PNG RGBA 580 × 720、19,744 bytes）
+
+`bn/assets/D/Logo.png` 不在本次 commit 內（既有 tracked 共用 asset，由 D－01 納管；D－10 僅引用、未修改、未重存、未再次納管）。
+
+D－10 route 為 `viewer.html?type=D&bn=10_POP%20UP`（空白以 `%20` 編碼），沿用既有共用薄 Viewer 與 A－10 launcher 既有 `127.0.0.1:4173`／marker／server reuse／`trap` 行為（**104 行不變、僅 7 行識別差異（L12、38、39、41、49、94、100）**，未重構）；對位 PNG 為 580 × 720，與 canvas 1:1 疊加，不合成進正式 Canvas。Viewer 的 D－10 分支**未設 `fieldConfig`**，沿用既有 01～12 shared default 測試文字（**D－01 的 `fieldConfig` 為歷史例外，未套用至 D－10**）；A－01～12 共用預設未修改，共用 Logo loader、images-object dispatch ternary、overlay 1:1 validation、A／B（含 A－10）、A－17 與 D－01～09 branches 全部未改。D－10 template exports 恰 2（`waitForPopUpFonts`、`renderPopUp`）、**零 import**，`POP_UP_WIDTH`／`POP_UP_HEIGHT`／`POP_UP_BACKGROUND`／`POP_UP_LAYOUT` 均為 module-local，signature 為 `renderPopUp(canvas, images, { headline, subheadline, protectionText } = {})` 並以防禦式 `images && typeof images === "object" ? images : {}` 解構。
+
+**A－10 的 13 個 baseline functions 落地比對為 5/13 byte-identical ＋ 7/13 message-only behavior-equivalent ＋ 1/13 substantive**：byte-identical 者為 `hasInk`、`drawCenteredText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawCenteredMixedSubheadline`；message-only behavior-equivalent 者為 `assertSpecificationFitsCanvas`（4 行）、`measureRun`（1 行）、`boundaryGlyphInkBottom`（1 行）、`validateCenteredInkFitsBox`（1 行）、`drawPopUpMediumText`（2 行）、`assertFontsReady`（1 行）、`waitForPopUpFonts`（1 行），七者合計 **11 行** runtime error message 差異，每一行皆僅為版位標示 `A－10` → `D－10`，演算法／控制流／回傳值零差異；substantive 者僅 **`renderPopUp`**，且只因 images object 解構、Logo readiness guard、Logo draw 與 draw-order 接線及版位標示。D template 殘留 `A－10` literal = 0。新增的 template-local `drawPopUpLogo` 為 D-specific 新函式，**不納入此 13 個 baseline function 統計**；**不得記為 5+8+0 或任何其他數字**。其中 **`assertSpecificationFitsCanvas` 完整保留、未改名、未換 generic helper、仍遍歷 `Object.entries(POP_UP_LAYOUT)`、`Number.isFinite`／`width > 0`／`height > 0`／四邊界與 background placement 驗證均未弱化，因此自然一併涵蓋新增的 Logo box**。**A－10 baseline 本身未被修改，亦未抽出 shared guard**；D－10 未另行新增 canvas-size guard（A－10 原本已內建）。
+
+##### 5.2.8.3 尚未完成的邊界
+
+- **本次完成的是「D－10 renderer ＋ launcher ＋ assets 納管 ＋ 人工 1:1 overlay 對位驗證」，不是「D 樣式正式平台整合完成」。** Jamie 的 PASS 是**人工 1:1 overlay 對位 PASS**，**不是正式平台 Preview／Export PASS**，後者尚未做。
+- 目前正式支援的樣式仍為 **A 與 B**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`bn/js/render-a.js` 未 enable D、未 import 任何 D template，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed；正式平台六個核心 JS 於本次 Code Commit 全部零修改。
+- D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export **尚未 enable**；D－10 正式 Preview ↔ Export 一致性實測，以及版位 10 既有鎖定的 **PNG／72 dpi／`maxBytes: 250000`**（`EXPORT_ITEMS` 中 `{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`、`EXPORT_DPI = 72`；既有 PNG 72 dpi pHYs patch 與容量鏈**目前只在 A／B 正式路徑實際運行**）實際 Export 驗證，**deferred until D platform integration**。本次 Code Commit 與 Jamie Manual PASS **不代表已驗證 D－10 的 250,000 bytes**；本輪未執行 D Export 實測，不得記為已驗證，`bn/js/export.js` zero-diff。
+- 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
+- 目前已完成的樣式 D 版位為 D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10，皆為**個別** renderer 與人工對位流程，不代表整個 D 樣式完成。D－04、D－05、D－11～17 仍須逐一確認與開發。本節裁決**只代表 D－10**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：

@@ -2,7 +2,7 @@
 
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Requirement，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Requirement 文件；所有 D 版位的 Requirement 集中於本文件（見第 2 節）
-**目前狀態**：D－01、D－02、D－03、D－06、D－07、D－08、D－09 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－10～17 尚待逐一確認
+**目前狀態**：D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－11～17 尚未進入 Phase 1
 **D－01 Code Commit**：`1139a7c3eca005b15c24bef7751ebb0ada740fe1`（`feat(bn): add D01 DDcard template`）
 **D－02 Code Commit**：`9c9272704517743ae7d8ccdd73c5a5a7bae8c534`（`feat(bn): add D02 MALL HBN template`）
 **D－03 Code Commit**：`024c621e2c61bd40d3b736af7487b22e332d0273`（`feat(bn): add D03 Coin page BN template`）
@@ -10,6 +10,7 @@
 **D－07 Code Commit**：`b35507340ad12cb976bdc08d96278df756e9b272`（`feat(bn): add D07 FB POST template`）
 **D－08 Code Commit**：`d9359270fea1bd89e96a2eb27c4464b50e0ef6dc`（`feat(bn): add D08 SPX TVBN 1 template`，parent `1c9e12782279491395fa5e0f7c9a2da7629f1ac9`）
 **D－09 Code Commit**：`ac69478cfa90ee62d208e30d139a382718433699`（`feat(bn): add D09 SPX TVBN 2 template`，parent `2509764d8c41b83cccce209cc8e646ab809d796a`）
+**D－10 Code Commit**：`1e2cdb939936de18d2665bafc27229bc7a032e3b`（`feat(bn): add D10 POP UP template`，parent `30be4920277042d05e10d6185fcee5923bafb0e3`）
 **正式平台支援**：仍為 **A 與 B**；樣式 D 尚未 enable，維持 fail-closed（見第 6 節）
 **Branch**：`main`
 **最後更新**：2026-08-24
@@ -91,7 +92,7 @@
 | `07_FB POST` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `b35507340ad12cb976bdc08d96278df756e9b272` | 第 11 節 |
 | `08_SPX TVBN_1` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `d9359270fea1bd89e96a2eb27c4464b50e0ef6dc` | 第 12 節 |
 | `09_SPX TVBN_2` | **已確認**（Jamie／GPT 正式裁決） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `ac69478cfa90ee62d208e30d139a382718433699` | 第 13 節 |
-| `10_POP UP` | 尚待 Jamie 確認 | 尚未開發 | — |
+| `10_POP UP` | **已確認**（Jamie／GPT 正式裁決；四個正式 geometry 已 LOCKED，原 §14.6 OPEN 已關閉） | **已完成**；Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS；Code Commit `1e2cdb939936de18d2665bafc27229bc7a032e3b` | 第 14 節（完成狀態見 14.20） |
 | `11_Line OA` | 尚待 Jamie 確認 | 尚未開發 | — |
 | `12_LPBN` | 尚待 Jamie 確認（已知需掛標） | 尚未開發 | — |
 | `13_Skinny BN_APP` | 尚待 Jamie 確認 | 尚未開發 | — |
@@ -570,6 +571,11 @@ D－01 必須沿用既有的「明確失敗、不靜默降級」原則：
 
 | 2026-08-25 | 補記 D－09 Implementation Outcome | D－09（`09_SPX TVBN_2`）Phase 2 Repository Investigation（substantive conflict = 0）、Phase 3 Proposal、Phase 4 Coding 完成，並經 Phase 6 Jamie 親自開啟 `bn/launch/D/09_SPX TVBN_2.command` 完成人工 1:1 overlay 對位驗證且明確 PASS；Code Commit `ac69478cfa90ee62d208e30d139a382718433699`（`feat(bn): add D09 SPX TVBN 2 template`，parent `2509764d8c41b83cccce209cc8e646ab809d796a`），恰 5 paths = 1 M ＋ 4 A，launcher Git mode `100755`，`bn/assets/D/Logo.png` 僅引用未再次納管。新增第 13.18 節並最小更新文件標頭狀態、標頭 Code Commit 清單、第 4 節索引、第 13 節導言、第 13.12 節標題與末條、第 13.17 節；**第 13.1～13.17 節的 LOCKED geometry／typography／Logo 算術／alignment／Medium 2×／Acceptance Criteria 數值一律未改寫**，第 1～12 節（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節、D－06 第 10 節、D－07 第 11 節、D－08 第 12 節）未改寫。helper preservation 如實記錄為 6/11 byte-identical ＋ 5/11 message-only behavior-equivalent（共 6 行、每行僅 `A－09`→`D－09`，其中 `assertLayoutFitsCanvas` 因本身兩個 `throw` 而為 2 行）、實質差異 0/11，非 11/11。`assertLayoutFitsCanvas` 保留並自然涵蓋新增 Logo box；D－09 另採 D precedent canvas-size guard，A－09 baseline 未被修改。Logo `destinationX = 51`（非 52）。正式平台六個核心 JS 零修改，D 仍 fail-closed；正式 D Preview／Export、Excel Import／Restore 與版位 09 Export 實測維持 deferred。 |
 
+| 2026-08-25 | 新增 D－10 Phase 1 Requirement（含 OPEN） | D－10（`10_POP UP`）依 Jamie 提供之 LOCKED 需求與本輪唯讀 Repository Investigation 建立 Requirement 第 14 節。**D－10 尚未 Coding、尚未建立 Proposal、尚未人工對位驗證、尚無 Code Commit。** Jamie 已 LOCK：版位 `10_POP UP`、三素材路徑、Photoshop／CSS 四框原始標記、三段文字之字型樣式／字級／顏色與 A／B－10 相同、Logo ＋ 三文字框皆在各自 box 內**水平＋垂直置中**、Medium 採 template-local local 2×、禁止套用任何其他 D 版位 offset。Repository 實證：A－10 baseline 為 `bn/templates/A/10-pop-up.js`（414 行、零 import、A／B 共用、`bn/templates/B/` 不存在）；**canvas 580 × 720，底圖 intrinsic 475 × 673 並繪於 offset (53, 27)**，屬「canvas ≠ 底圖尺寸」特例；A－10 alignment 實證即為 **centered ink**（與 Jamie 之水平＋垂直置中一致）；Medium local 2× offscreen 為 `580 × 2 × 720 × 2` = **1160 × 1440** 且 baseline 內建硬斷言；D－10 對位圖（580 × 720）alpha 連通元件實證四個 100 % 實心框 `logo {129,109,323,46}`、`headline {129,172,323,38}`、`subheadline {85,225,410,51}`、`protectionText {85,286,410,25}`，四框 width／height 與 Photoshop 逐值一致、Photoshop → canvas 存在唯一平移 `Δleft = 738`／`Δtop = 698`（僅 D－10 自身證據）；Logo contain 得 `scale = 23/56`（height-bound）、destination **322 × 46 @ (129.5, 109)**、左右各 0.5px／上下 0px、aspect 7 : 1、產生 fractional `destinationX = 129.5`。**OPEN（第 14.6 節）**：D－10 對位圖三文字框相對 A－10 `POP_UP_LAYOUT` 一致下移 `Δtop = +44`（left／width／height 完全相同），與 D－06／07／08／09「三文字與 A／B 逐值相同」之既有情形不同，是否採對位圖值為 D－10 正式 geometry 須由 Jamie／GPT 裁決，本輪不自行裁決。新增第 14 節並最小更新文件標頭狀態與第 4 節索引；第 1～13 節既有條文（含 D－01 第 5 節、D－02 第 8 節、D－03 第 9 節、D－06 第 10 節、D－07 第 11 節、D－08 第 12 節、D－09 第 13 節）未改寫。D－04、D－05、D－11～17 狀態未變動，樣式 C 不在範圍；正式平台仍 fail-closed。 |
+
+| 2026-08-25 | 關閉 D－10 §14.6 OPEN（Jamie／GPT 正式裁決落地） | D－10（`10_POP UP`）Phase 1 Requirement 第 14.6 節原 OPEN「三文字框正式 geometry 之取值」已由 Jamie／GPT 正式裁決並關閉。**裁決結果：三個文字框正式 canvas geometry 採 D－10 對位圖自身像素實證值，不沿用 A－10 原本 `top`，亦非套用任何其他 D 版位 offset。** 正式 LOCKED geometry 為 `logo {129,109,323,46}`、`headline {129,172,323,38}`、`subheadline {85,225,410,51}`、`protectionText {85,286,410,25}`；相對 A－10 `POP_UP_LAYOUT` 三文字之 `left`／`width`／`height` 完全不變、僅 `top` 各 **+44px**（`128→172`、`181→225`、`242→286`），**`+44` 僅為 D－10 自身 A→D 實證差異，禁止建立 generic／shared offset 規則、禁止套用至其他 D 版位**。裁決依據保留兩組互相吻合之 D－10 自身證據：(1) 對位圖 `580 × 720` 的 `alpha = 111` 唯一矩形標記層得四個 100 % 實心矩形，四框 `width`／`height` 與 Photoshop／CSS 原始標記逐值一致；(2) canvas 側 `Logo bottom = 155` → `headline top = 172` 間距 17px，與 Photoshop／CSS 側 `853` → `870` 間距 17px 完全吻合。Photoshop／CSS `867`／`807`／`870`／`823`／`923`／`984` 與 D－10 自身平移 `Δleft = 738`／`Δtop = 698` 繼續僅保留為 evidence／history，`738`／`698` 不得成為其他版位可重用規則。本輪最小更新文件標頭狀態、第 4 節索引、第 14 節導言（新增 **【JAMIE/GPT LOCKED DECISION】** 分類）、第 14.5 節表格（移除「候選」標記）、第 14.6 節（標題與內容改為正式裁決並追加正式 LOCKED geometry 表、`+44` 差異表與兩組依據）、第 14.9／14.12／14.18／14.19 節之交叉引用，使全節不再自相矛盾；**第 14 節其餘已 Review PASS 條文未重寫**，第 1～13 節（含 D－01～D－09）未改寫。Logo placement 維持上一輪計算結果不變：`scale = 23/56`、destination `322 × 46 @ (129.5, 109)`、左右各 0.5px／上下 0px、aspect 7 : 1、完整 source rect、`129.5` 原值保留禁止取整。typography 仍與 A／B－10 相同、alignment 仍為 centered ink、Medium local 2× 仍 `1160 × 1440` 且 Bold subheadline 與 Logo 不進 2×。**Export 未重新裁決：版位 10 之 `{ id:"10", name:"10_POP UP", format:"png", maxBytes:250000 }`、72 dpi 與 PNG 容量鏈仍僅為既有 A／B evidence；D－10 是否正式套用 250,000 bytes 繼續 deferred until D platform integration，未因本次 geometry 裁決而關閉，本輪未執行 Export。** Type D fail-closed 邊界完全未動（`SUPPORTED_TYPES` 仍 `["A","B"]`、`ASSET_BASE_BY_TYPE` 仍只有 A／B、`A_TABLE` 未加入 D、D Import／Restore／Preview／Export 未 enable）。本輪未 Coding、未建立 D－10 template／launcher、未修改任何非本文件之檔案、未新增 standalone MD。 |
+
+| 2026-08-26 | 補記 D－10 Implementation Outcome | D－10（`10_POP UP`）Phase 2 Repository Investigation（substantive conflict = 0）、Phase 3 Proposal、Phase 4 Coding 與 Phase 5 靜態自驗完成，並經 Phase 6 Jamie 親自開啟 `bn/launch/D/10_POP UP.command` 完成人工 1:1 overlay 對位驗證且明確 PASS；Code Commit `1e2cdb939936de18d2665bafc27229bc7a032e3b`（`feat(bn): add D10 POP UP template`，parent `30be4920277042d05e10d6185fcee5923bafb0e3`），`git diff --check HEAD^ HEAD` PASS，精確包含 5 paths（1 M ＋ 4 A），launcher Git mode `100755`；`bn/assets/D/Logo.png` 僅引用既有 tracked asset、未再次納管。D－10 為首個 canvas（580 × 720）≠ 底圖 intrinsic（475 × 673）之 D 版位，A－10 特殊結構完整保存：background 繪於 `(53, 27, 475, 673)`、`clearRect(0, 0, 580, 720)` 保留且仍在 background 之前、A－10 原有 canvas-size guard 與 `assertSpecificationFitsCanvas` 保留。四個正式 box 落地實測與 §14.5／§14.6 LOCKED 值完全一致（`logo {129,109,323,46}`、`headline {129,172,323,38}`、`subheadline {85,225,410,51}`、`protectionText {85,286,410,25}`，right／bottom 452／155、452／210、495／276、495／311）；三文字相對 A－10 僅 `top` 各 +44，未建立 generic／shared offset；`867`／`807`／`870`／`823`／`923`／`984` 與 `Δleft=738`／`Δtop=698` 實測未出現於 runtime geometry。Logo `scale = 23/56` → `322 × 46 @ (129.5, 109)`、左右各 0.5px／上下 0px、aspect 7:1、source rect 完整，`129.5` 以 fractional 原值保留、全檔無取整運算。draw order 為 `clearRect → background → Logo → Medium local 2× → Bold subheadline`（A－10 `clearRect` 特例與既有 D Logo precedent 之最小組合，repository 中並無完全相同之直接 precedent）。13 個 baseline functions 逐函式實測為 **5/13 byte-identical ＋ 7/13 message-only behavior-equivalent ＋ 1/13 substantive（`renderPopUp`）**，7 者合計 11 行且每行僅 `A－10`→`D－10`，殘留 `A－10` literal = 0；新增 `drawPopUpLogo` 不納入該 13 統計。viewer 僅新增 15 行最小 additive branch 且未設 `fieldConfig`；launcher query `?type=D&bn=10_POP%20UP`、104 行、恰 7 行識別差異。新增第 14.20 節並更新文件標頭狀態、第 4 節索引與第 14 節導言階段敘述；**第 14.1～14.19 節條文（含 14.6【JAMIE/GPT LOCKED DECISION】geometry 與 14.16 Export deferred）未改寫、未關閉**，第 1～13 節既有條文未改寫。正式平台六個核心 JS 零修改，D 仍 fail-closed；版位 10 的 PNG／72 dpi／`250,000 bytes` 實際輸出驗證維持 **deferred until D platform integration**，本輪未執行 Export。Jamie 的 PASS 是人工 1:1 overlay 對位 PASS，不是正式平台 Preview／Export PASS。D－04、D－05、D－11～17 狀態未變動，樣式 C 不在範圍。 |
 後續變更一律以新增列的方式追加，不改寫既有列。
 
 ---
@@ -1725,3 +1731,376 @@ D－09 使用獨立 `bn/templates/D/09-spx-tvbn-2.js`（exports 恰 2 —— `wa
 第 13.14 節之 Export LOCKED 與 deferred 維持不變：依 `bn/js/export.js` 唯讀實證，`EXPORT_ITEMS` 中 **`{ id: "09", name: "09_SPX TVBN_2", format: "jpg" }`**（**無 `maxBytes`**，亦無任何 D-specific `maxBytes`）、`EXPORT_DPI = 72`、JPEG 品質既有全域行為不變。D－09 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export，以及版位 09 的 **JPG／72 dpi** 實際輸出驗證、樣式 D 完整 17 版位輸出行為 —— 全部 **deferred until D platform integration**，本次**未執行** D Export 實測，不得記為已驗證。
 
 **Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－09 renderer ＋ launcher ＋ assets 納管 ＋ 人工對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`bn/js/render-a.js` 未 enable D，正式 renderer registry 未 enable D，樣式 D 在正式平台維持 fail-closed；`bn/js` 六個核心檔案均未修改；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－09**；D－04、D－05、D－10～17 仍須逐一確認與開發，**不得由 D－09 或其他已完成 D 版位推論**其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 45 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.7 節。
+---
+
+## 14. D－10（`10_POP UP`）Requirement
+
+> 本節為 D－10 正式 Requirement，**原階段為 Phase 1**；D－10 現已完成 Phase 3 Proposal、Phase 4 Coding 與 Phase 6 Jamie 人工 1:1 overlay 對位驗證 PASS，完成狀態見第 14.20 節。**第 14.1～14.19 節之 Requirement 條文與裁決均未改寫。**
+>
+> **本節第 14.1～14.19 節撰寫時全部內容為「尚未實作的需求」**：當時 D－10 尚未 Coding、尚未建立 Proposal、尚未建立 D-specific renderer／launcher、尚未做人工對位驗證、尚無 Code Commit。此為 Phase 1 當時之歷史語境，未改寫。**完成狀態以第 14.20 節為準**；即使已完成，仍不得解讀為已通過正式平台 Preview／Export 驗證 —— Jamie 的 PASS 是人工 1:1 overlay 對位 PASS，正式平台 Preview／Export 仍 deferred。
+>
+> **本節原第 14.6 節之 OPEN（三文字框正式 geometry 之取值）已由 Jamie／GPT 正式裁決並關閉；四個正式 canvas geometry 現為 LOCKED（見第 14.5、14.6 節）。** 其餘標記為 **【OPEN】** 之項目（14.9 Logo 繪製實作形式、14.13 Logo 與 `clearRect` 相對順序、14.14 renderer／launcher／`fieldConfig` 實證、14.16 Export deferred）**維持不變**，留待後續階段依既有規則處理。
+>
+> 本節條文分為五類並在各處標明：**【USER LOCKED】**（Jamie 已裁決之產品需求，不得由 AI 變更）、**【JAMIE/GPT LOCKED DECISION】**（經 Jamie／GPT 正式裁決而關閉之項目，效力同 LOCKED，不得由 AI 變更）、**【REPOSITORY EVIDENCE】**（唯讀調查所得，附可重現證據）、**【DERIVED／CALCULATED】**（由前述以純算術推導，非新裁決）、**【OPEN／Phase 2 待裁決】**（證據不足以唯一裁決或需 Jamie／GPT 決定者）。
+>
+> 本節依第 2 節文件治理規則以附加方式置於第 13 節之後，未變動第 1～13 節既有章節編號與交叉引用。D－04、D－05、D－11～17 的狀態不受本節影響，仍為「尚待 Jamie 確認」；樣式 C 不在本節範圍。
+
+### 14.1 Scope／Non-Goals
+
+**【USER LOCKED】本輪僅建立 D－10 Phase 1 Requirement 與其所需之唯讀前置實證。** 明確不做：
+
+1. 不 Coding、不建立 `bn/templates/D/10-pop-up.js`、不建立 D－10 launcher。
+2. 不修改 `bn/launch/viewer.html`、`bn/js/*`、CSS、HTML、任何 assets。
+3. 不生成任何圖片／screenshot／export output／golden image；不開啟 viewer 做視覺驗證；不執行 Export。
+4. 不 Stage／Commit／Push／Tag／Release；不 enable Type D。
+5. 不處理 D－04／D－05／D－11～17；不處理樣式 C。
+6. 不建立 generic abstraction／framework／shared Logo helper／shared 2× helper／shared alignment helper／D template registry。
+7. **不由 D－06／D－08／D－09 或任何其他 D 版位推論 offset、geometry、Logo 位置或 alignment。**
+
+### 14.2 正式素材
+
+**【USER LOCKED】** 底圖 `bn/assets/D/底圖/10_POP UP.png`；對位圖 `bn/assets/D/對位/10_POP UP.png`；Logo `bn/assets/D/Logo.png`。
+
+**【REPOSITORY EVIDENCE】** 本輪唯讀量測（未生成任何衍生圖片、未修改任何 byte）：
+
+| 素材 | 格式 | intrinsic | bytes | Git 狀態 | sha256 |
+|---|---|---|---|---|---|
+| 底圖 | PNG（8-bit RGBA） | **475 × 673** | 202,577 | untracked（未來 Code Commit 納管） | `2106d026cd4598394556ca2bd16fe4c1dea232ed31b6251ba8d0a84f0e2be155` |
+| 對位圖 | PNG（8-bit RGBA） | **580 × 720** | 19,744 | untracked（未來 Code Commit 納管） | `eadf8626650759a8496f460759cefabb5d300def34f5eb92be3ac5459b881b52` |
+| Logo | PNG（8-bit RGBA） | **784 × 112** | 48,618 | **tracked + clean** | `99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24` |
+
+- **底圖與對位圖 intrinsic 尺寸不同（475 × 673 vs 580 × 720），這在 D－10 屬正常而非衝突**：**【REPOSITORY EVIDENCE】** A－10 baseline 的 canvas 為 `POP_UP_WIDTH × POP_UP_HEIGHT = 580 × 720`，而底圖 intrinsic 被硬斷言為 `BACKGROUND_WIDTH × BACKGROUND_HEIGHT = 475 × 673` 並以 `BACKGROUND_LEFT = 53`／`BACKGROUND_TOP = 27` 繪入 canvas。故底圖對應「底圖 intrinsic」、對位圖對應「canvas 尺寸」，兩者本應不同。A－10 對位圖實測亦為 580 × 720（19,739 bytes），與 D－10 對位圖同尺寸，交叉佐證此結構。
+- **對位圖只作人工校稿證據**：以原始 alpha、同原點、原尺寸 1:1 疊加，**不得合成進正式 canvas、不得進入任何正式輸出**。
+- **`bn/assets/D/Logo.png` 為既有 tracked ＋ clean 的共用 asset**（由 D－01 納管）。D－10 **僅引用**：不得修改、不得複製、不得改名、不得重新納管、不得建立第二份副本，且**不得列為 D－10 的新增素材**。repo 內 `Logo*.png` 實測僅 1 份。
+- 其他未處理 D assets（D－04／05／11～16 共 16 筆）本輪僅列狀態、一個 byte 都未修改。
+
+### 14.3 Baseline strategy
+
+**【REPOSITORY EVIDENCE】** A－10 baseline 實際路徑為 **`bn/templates/A/10-pop-up.js`**（依 repo 實證，非猜測）：414 行、11,798 bytes、sha256 前綴 `3b555271cdaccae7`、**零 import**；exports 6 個（`POP_UP_WIDTH`、`POP_UP_HEIGHT`、`POP_UP_BACKGROUND`、`POP_UP_LAYOUT`、`waitForPopUpFonts`、`renderPopUp`）。
+
+**A／B－10 共用同一 renderer**：`bn/js/render-a.js` 第 41 行 `"10": { render: renderPopUp, waitFonts: waitForPopUpFonts, background: "10_POP UP.png" }`，第 12 行僅 import `../templates/A/10-pop-up.js`；`bn/templates/B/` **不存在**；`A_TABLE` 僅以版位 id 為 key、**無 type 維度**（17 個 id）；A／B 差異只由 `ASSET_BASE_BY_TYPE`（僅 `A`／`B` 兩個 key）切換底圖路徑。**不得虛構 B－10 template。** A 與 B 的 `10_POP UP.png` 底圖實測皆為 475 × 673（299,881／301,830 bytes）。
+
+**【USER LOCKED／未來要求】** D－10 未來必須以 `HEAD:bn/templates/A/10-pop-up.js` 為**唯一 baseline** 做最小、可驗證的程式化轉換；**A／B－10 renderer 必須 zero-diff**；不得與既有 D 版位合併成 generic D renderer、不得建立 D template registry。
+
+### 14.4 Canvas
+
+**【REPOSITORY EVIDENCE】** canvas 固定 **580 × 720**（`POP_UP_WIDTH = 580`、`POP_UP_HEIGHT = 720`），與 D－10 對位圖 intrinsic 一致。
+
+**A－10 的特例結構（必須完整沿用，不得改設計）**：
+
+| 項目 | 值 | 證據 |
+|---|---|---|
+| canvas | **580 × 720** | `POP_UP_WIDTH`／`POP_UP_HEIGHT` |
+| 底圖 intrinsic 硬斷言 | **475 × 673** | `BACKGROUND_WIDTH`／`BACKGROUND_HEIGHT`；錯誤訊息「正式底圖必須為 475 × 673px」 |
+| 底圖繪製位置 | **(53, 27)** | `BACKGROUND_LEFT = 53`／`BACKGROUND_TOP = 27`；`POP_UP_BACKGROUND` 對外 export |
+| 底圖繪製區 right／bottom | **528 / 700** | `53 + 475` / `27 + 673`，皆 ≤ 580 / 720 |
+| canvas 清空 | `context.clearRect(0, 0, POP_UP_WIDTH, POP_UP_HEIGHT)` | A－10 特有，其他 A 版位無 |
+
+### 14.5 四個 box 的 Photoshop／CSS 原始標記與對位圖實證
+
+**【USER LOCKED】Jamie 提供之 Photoshop／CSS 原始標記**：
+
+| component | CSS selector | left | top | width | height |
+|---|---|---|---|---|---|
+| Logo | `.矩形_1878` | 867 | 807 | 323 | 46 |
+| headline | `.矩形_1879` | 867 | 870 | 323 | 38 |
+| subheadline | `.矩形_1880` | 823 | 923 | 410 | 51 |
+| protectionText | `.矩形_1881` | 823 | 984 | 410 | 25 |
+
+**【USER LOCKED】`867`／`807`／`870`／`823`／`923`／`984` 等目前只能視為 Photoshop／CSS 原始標記，不得直接作為正式 canvas geometry；正式 geometry 必須由 D－10 自己的對位圖、實際 canvas 尺寸、A／B－10 baseline 與可重現證據獨立裁決；禁止套用任何其他 D 版位的 offset。**
+
+**【REPOSITORY EVIDENCE】D－10 對位圖 alpha 連通元件實證（方法與證據）** —— 手動解碼 PNG（zlib 解壓 IDAT → 逐列 un-filter → 取 RGBA alpha 通道）＋ 4-connected component labeling，**全程唯讀，未生成／未修改／未輸出任何圖片**：
+
+- 對位圖 alpha 實測共 **21 個 level**；其中 **`alpha = 111` 的像素總數為 58,292**，恰等於下列四框面積合計（`14,858 + 12,274 + 20,910 + 10,250 = 58,292`），故 **`alpha = 111` 為唯一標記層**；其餘 level（`26`／`49` 為底色主體，另 18 個中間值合計僅 278 px）屬對位圖底色漸層過渡，**未形成任何實心矩形**。
+- `alpha = 111` 的 4-connected components 共 **4 個，實心率皆為 1.0000**（完全實心矩形），且逐列／逐行剖面確認四框內部各列滿高、左右與上下外緣皆無標記 → **邊界銳利、無 anti-alias 過渡、無 1px 歧義**。
+
+| component | left | top | width | height | px | 實心率 | right | bottom |
+|---|---|---|---|---|---|---|---|---|
+| Logo | **129** | **109** | **323** | **46** | 14,858 | 1.0000 | 452 | 155 |
+| headline | **129** | **172** | **323** | **38** | 12,274 | 1.0000 | 452 | 210 |
+| subheadline | **85** | **225** | **410** | **51** | 20,910 | 1.0000 | 495 | 276 |
+| protectionText | **85** | **286** | **410** | **25** | 10,250 | 1.0000 | 495 | 311 |
+
+**【REPOSITORY EVIDENCE】Photoshop → 對位圖之單一平移檢驗**：四框的 `width`／`height` 與 Photoshop 原始標記**逐值完全一致**；且 Photoshop → 對位圖存在**唯一且四框同時成立**的平移：
+
+| component | Photoshop／CSS | 對位圖實證 | Δleft | Δtop | width／height |
+|---|---|---|---|---|---|
+| Logo | `{867, 807, 323, 46}` | `{129, 109, 323, 46}` | **738** | **698** | 一致 |
+| headline | `{867, 870, 323, 38}` | `{129, 172, 323, 38}` | **738** | **698** | 一致 |
+| subheadline | `{823, 923, 410, 51}` | `{85, 225, 410, 51}` | **738** | **698** | 一致 |
+| protectionText | `{823, 984, 410, 25}` | `{85, 286, 410, 25}` | **738** | **698** | 一致 |
+
+四框 `Δleft` 集合 = `{738}`、`Δtop` 集合 = `{698}`，皆為單一值。**此 offset 僅為 D－10 自身之座標更正證據**：**不得建立跨版位共用 offset 規則、不得由其他 D 版位推論而來、亦不得推論至其他 D 版位。** 原始 `left`／`top`（`867`／`807`／`870`／`823`／`923`／`984`）**一律不得寫成正式 canvas geometry**。
+
+四框 right／bottom 全部落於 canvas 580 × 720 內；`Logo bottom = 155 < headline top = 172`，四框互不重疊。
+
+### 14.6 **【JAMIE/GPT LOCKED DECISION】三文字框正式 geometry 之取值（原 OPEN 已關閉）**
+
+**【JAMIE/GPT LOCKED DECISION】本節原為本節唯一的 OPEN 項，現已由 Jamie／GPT 正式裁決並關閉。裁決結果：D－10 三個文字框的正式 canvas geometry 採 D－10 對位圖自身像素實證值，不沿用 A－10 原本的 `top`，也不是套用任何其他 D 版位的 offset。** 效力同 LOCKED，不得由 AI 變更。
+
+**【REPOSITORY EVIDENCE】** D－10 對位圖的三個文字框與 A－10 `POP_UP_LAYOUT` 逐值比較：
+
+| component | A－10 `POP_UP_LAYOUT` | D－10 對位圖實證 | Δleft | Δtop | Δwidth | Δheight |
+|---|---|---|---|---|---|---|
+| headline | `{129, 128, 323, 38}` | `{129, 172, 323, 38}` | 0 | **+44** | 0 | 0 |
+| subheadline | `{85, 181, 410, 51}` | `{85, 225, 410, 51}` | 0 | **+44** | 0 | 0 |
+| protectionText | `{85, 242, 410, 25}` | `{85, 286, 410, 25}` | 0 | **+44** | 0 | 0 |
+
+- 三框的 `left`／`width`／`height` 與 A－10 **完全相同**；`top` **一致下移 `Δtop = +44`**（差異集合為單一值 `{44}`）。
+- **這與 D－06／D－07／D－08／D－09 的既有情形不同** —— 該四個已完成版位的三文字框與 A／B 對應版位 `LAYOUT` 逐值完全相同。D－10 是**首次出現三文字框相對 A baseline 位移**的 D 版位。
+- 合理但**未經裁決**的解釋是：D－10 於三文字上方新增 Logo box（`{129,109,323,46}`，bottom = 155），故整組文字下移以留出 Logo 空間（`Logo bottom 155` → `headline top 172`，間距 17px；與 Photoshop 原始標記的 `Logo bottom 853` → `headline top 870` 間距 17px 一致）。**此為觀察，不是裁決。**
+
+**【JAMIE/GPT LOCKED DECISION】裁決內容**：
+
+1. **D－10 三文字框正式 canvas geometry 採對位圖實證值**：`headline {129,172,323,38}`、`subheadline {85,225,410,51}`、`protectionText {85,286,410,25}`，亦即**不沿用 A－10 `POP_UP_LAYOUT` 的 `top` 值**（`128`／`181`／`242`）。
+2. **Logo 正式 canvas geometry 為 `{left:129, top:109, width:323, height:46}`**（A－10 LAYOUT 本無 `logo` key；對位圖與 Photoshop 的 `width`／`height` 逐值一致並落在同一平移內，取值本身無歧義）。
+3. **`+44` 僅代表 D－10 相對 A－10 三文字框的實證差異**，**禁止建立 generic／shared offset 規則、禁止套用到任何其他 D 版位**。
+4. 併同裁決之事實記錄：D－10 template 的 `POP_UP_LAYOUT` 因此**不是**對 A－10 LAYOUT 的逐值沿用（三文字 `top` 各 +44、另新增 `logo` key）。`POP_UP_LAYOUT` 為 module 常數而非 function，**不計入 baseline function 比對統計**，但屬對 baseline 的實質數值變更，Phase 2／3／4 必須如實記錄，不得記為「LAYOUT 逐值沿用」。
+5. Jamie 原始 LOCK「三段文字的**字型樣式、字型大小、顏色**全部與 A／B－10 一樣」僅涵蓋 typography；geometry 依本節裁決獨立確立，兩者不衝突。
+
+**【JAMIE/GPT LOCKED DECISION】D－10 正式 canvas geometry（LOCKED，全文以此為準）**
+
+| component | left | top | width | height | right | bottom |
+|---|---|---|---|---|---|---|
+| `logo` | **129** | **109** | **323** | **46** | 452 | 155 |
+| `headline` | **129** | **172** | **323** | **38** | 452 | 210 |
+| `subheadline` | **85** | **225** | **410** | **51** | 495 | 276 |
+| `protectionText` | **85** | **286** | **410** | **25** | 495 | 311 |
+
+**相對 A－10 `POP_UP_LAYOUT` 的精確差異記錄**（僅 D－10 自身 A→D 比較語境）：
+
+| component | A－10 `POP_UP_LAYOUT` | D－10 正式 LOCKED | left | width | height | top |
+|---|---|---|---|---|---|---|
+| headline | `{129,128,323,38}` | **`{129,172,323,38}`** | 不變 | 不變 | 不變 | **+44** |
+| subheadline | `{85,181,410,51}` | **`{85,225,410,51}`** | 不變 | 不變 | 不變 | **+44** |
+| protectionText | `{85,242,410,25}` | **`{85,286,410,25}`** | 不變 | 不變 | 不變 | **+44** |
+
+三者 `left`／`width`／`height` **完全不變**，僅 `top` 各自 **+44px**。**`+44` 只代表 D－10 相對 A－10 三文字框的實證差異；禁止建立 generic／shared offset 規則，禁止套用到任何其他 D 版位。**
+
+**【REPOSITORY EVIDENCE】裁決依據（兩組互相吻合的 D－10 自身證據，皆可重現）**
+
+1. **對位圖像素實證**：D－10 對位圖 `580 × 720` 的 `alpha = 111` 唯一矩形標記層，經 4-connected component labeling 得四個 100 % 實心矩形 `{129,109,323,46}`、`{129,172,323,38}`、`{85,225,410,51}`、`{85,286,410,25}`；四框 `width`／`height` 與 Jamie 提供之 Photoshop／CSS 原始標記**逐值一致**（323×46、323×38、410×51、410×25）。
+2. **17px 間距交叉證據**：canvas 側 `Logo bottom = 109 + 46 = ` **155**、`headline top = ` **172** → 間距 **17px**；Photoshop／CSS 側 `Logo bottom = 807 + 46 = ` **853**、`headline top = ` **870** → 間距同為 **17px**。兩側間距完全吻合。
+
+故此 geometry 具**獨立且可重現的 D－10 自身證據，不是從 D－06／D－07／D－08／D－09 推論而來**。
+
+Photoshop／CSS 原始標記 `867`／`807`／`870`／`823`／`923`／`984`，以及 D－10 自身之 Photoshop → canvas 平移 `Δleft = 738`／`Δtop = 698`，**繼續僅保留為 evidence／history**：不得寫成正式 canvas geometry，且 **`738`／`698` 不得建立為其他版位可重用之規則**。
+
+### 14.7 Typography（完全沿用 A／B－10）
+
+**【USER LOCKED】** 主標／副標／保護文字的字型樣式、字型大小、顏色**全部與 A／B－10 一樣**。
+
+**【REPOSITORY EVIDENCE】** A－10 實測值：
+
+| 段落 | font | 字重 | color |
+|---|---|---|---|
+| headline | `30pt "ShopeeNotoSans Medium"` | **Medium** | `#ffffff` |
+| subheadline | `40pt "ShopeeNotoSans Bold"` | **Bold** | `#fff285` |
+| subheadline 的 `$`／`%` | `35pt "ShopeeNotoSans Bold"`（`symbolFont`） | **Bold** | 沿用 `#fff285` |
+| protectionText | `20pt "ShopeeNotoSans Medium"` | **Medium** | `#a6f4e6` |
+
+- `POP_UP_LAYOUT` 的 color 欄位實測恰為 `['#ffffff', '#fff285', '#a6f4e6']`；**全檔無 `symbolColor`**，D－10 不得新增。
+- `FONT_CHECKS` 含上述 4 個字型、`FONT_TEST_TEXT = "商城優選免運$490%"`；字數規則**不在 template 層**，D－10 不得新增或修改字數規則。
+
+### 14.8 Alignment：水平＋垂直置中（centered ink）
+
+**【USER LOCKED】** Logo ＋ 三個文字框都必須在各自 `width × height` box 範圍內**水平＋垂直置中**。
+
+**【REPOSITORY EVIDENCE：與 LOCKED 需求一致，無 conflict】** A－10 baseline 實測即為 **centered ink 族**（水平＋垂直 ink bounding-box 置中）：實際使用 `validateCenteredInkFitsBox`／`drawCenteredText`／`drawCenteredMixedSubheadline`；**全檔不存在 `LeftCentered` 族**（D－07／D－09 型）、**亦不存在 left-top 族 `drawLeftTopText`**（D－02／D－03 型）—— 此二者僅作為「**D－10 不沿用**」之對照語境列出。
+
+必須逐字保留的既有公式：
+
+| 函式 | 公式 |
+|---|---|
+| `validateCenteredInkFitsBox` | `inkLeft = box.left + (box.width − inkWidth) / 2`；`inkTop = box.top + (box.height − inkHeight) / 2` |
+| `drawCenteredText` | `x = box.left + (box.width − inkWidth) / 2 − run.inkLeft`；`y = box.top + box.height / 2 − (run.inkTop + run.inkBottom) / 2` |
+| `drawCenteredMixedSubheadline` | `offsetX = box.left + box.width / 2 − (inkLeft + inkRight) / 2`；`offsetY = box.top + box.height / 2 − (inkTop + inkBottom) / 2` |
+
+同時保留：`textAlign = "left"`、`textBaseline = "alphabetic"`（全檔無 `"center"`／`"middle"`）、`actualBoundingBoxLeft`／`Right`／`Ascent`／`Descent` measurement、既有 fit validation 回傳結構（8 欄），以及**每段文字各自的空字串零 ink validation**（`if (text === "") return validateCenteredInkFitsBox(box, 0, 0);`，實測恰 2 處）。**不新增 padding／inset；不得抽 shared alignment helper。**
+
+### 14.9 Logo sizing／placement
+
+**【USER LOCKED】** Logo 必須在其 box 內**水平＋垂直置中**；不得 stretch／crop／cover／clip；不得擅自 rounding／truncation。
+
+**【DERIVED／CALCULATED】** 以 Logo intrinsic `784 × 112`（14.2 實證）與 **Logo box `{129, 109, 323, 46}`（第 14.6 節【JAMIE/GPT LOCKED DECISION】已 LOCKED）** 計算 contain：
+
+| 項目 | 值 | 計算 |
+|---|---|---|
+| source intrinsic | **784 × 112** | repo 實測 |
+| box | `{left:129, top:109, width:323, height:46}` | 對位圖實證 |
+| `scale` | **`23/56`**（≈ 0.410714，**height-bound**） | `min(323/784, 46/112) = min(323/784, 23/56) = 23/56` |
+| no-upscale 檢驗 | **成立**（`scale < 1`） | `23/56 < 1` |
+| destinationWidth | **322** | `784 × 23/56 = 14 × 23` |
+| destinationHeight | **46** | `112 × 23/56 = 2 × 23` |
+| `destinationX` | **129.5** | `129 + (323 − 322) / 2 = 259/2` |
+| `destinationY` | **109** | `109 + (46 − 46) / 2` |
+| destination 總結 | **`322 × 46 @ (129.5, 109)`** | — |
+| 左／右餘量 | 左 **0.5px**／右 **0.5px** | `129.5 − 129`／`(129+323) − (129.5+322)` |
+| 上／下餘量 | 上 **0px**／下 **0px** | — |
+| aspect ratio | source `7` == destination `7`，保持 **7 : 1** | `784/112`；`322/46` |
+| source rect | 完整 **`(0, 0, 784, 112)`** | — |
+
+- **本版位產生 fractional `destinationX = 129.5`**（box width 323 比 destination width 322 多 1px，水平餘量平分為左右各 0.5px）。**必須原值保留**，**禁止** `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise truncation 或任何其他取整。此與 D－01（`90.5`）、D－08（`147.5`）之既有 fractional precedent 同類，但**數值為 D－10 自身計算所得，非由其他版位推論**。
+- 硬性約束：保持原始 aspect ratio；**完整 source rect**；**禁止 stretch 成 323 × 46**；**禁止 cover／crop／source clipping**。
+- **【OPEN】** Logo 繪製之具體實作形式（template-local helper 命名、獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage → restore()` 之採用）屬既有 D－01～09 precedent，但**本輪未對 A－10 是否已有任何 image smoothing 慣例作出裁決**，實際實作方式留待 Phase 2 Investigation／Phase 3 Proposal 確認。**惟以下為 LOCKED 邊界**：Logo 必須由 renderer **真正 draw 入 canvas**（不得 DOM overlay）、**不得進入 Medium local 2× surface**、**不得建立 shared Logo helper**。
+- Logo 為**固定 renderer asset**：不由 Excel 帶入、不進 Editor、不進 Workspace state、不進暫存 JSON schema，**不得新增 Logo 欄位**。
+
+### 14.10 Medium local 2×
+
+**【USER LOCKED】** Medium 直接採 **template-local local 2×**。
+
+**【REPOSITORY EVIDENCE】** A－10 baseline **已內建** local 2×，與 LOCKED 需求一致，**D－10 沿用即可、不得修改 A／B**：
+
+- `MEDIUM_RENDER_SCALE = 2`；offscreen 為 `POP_UP_WIDTH × MEDIUM_RENDER_SCALE` × `POP_UP_HEIGHT × MEDIUM_RENDER_SCALE` = **1160 × 1440**；且 baseline **內建硬斷言** `if (mediumCanvas.width !== 1160 || mediumCanvas.height !== 1440) throw ...`（A－10 特有，其他 A 版位無此斷言）。
+- offscreen 另有 `clearRect(0, 0, mediumCanvas.width, mediumCanvas.height)`、`globalAlpha = 1`、`globalCompositeOperation = "source-over"`，再 `scale(2, 2)`。
+- **屬 Medium 而進入 2× 者可由 baseline 唯一實證**：`drawCenteredText` 在 2× 內恰呼叫 **2 次**，對象為 `POP_UP_LAYOUT.headline`（`30pt` **Medium**）與 `POP_UP_LAYOUT.protectionText`（`20pt` **Medium**）。
+- **Bold subheadline（`40pt` Bold，含其 `$`／`%` `35pt` Bold）不得進入 2×**（baseline 實測 `drawCenteredMixedSubheadline` 不在 Medium 函式內）；**Logo 亦不得因 local 2× 被放入 2×**。
+- **不得新增**函式層「兩段 Medium 都空就整體 return」之 early-return（baseline 實測無此 guard）；必須保留每段文字各自的空字串零 ink validation。
+- 縮回正式 canvas 使用既有獨立 high-quality smoothing：`save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage(9 參數全 surface → 580 × 720) → restore()`。**不得抽 shared 2× helper。**
+
+### 14.11 `$`／`%` formatting（完全沿用，不得改算法）
+
+**【REPOSITORY EVIDENCE ＋ 未來要求】** 必須完整保留 A－10 既有實作：
+
+- `tokenizeSubheadline`：以 `character === "$" || character === "%"` 切出 symbol run；繪製時 symbol run 改用 `box.symbolFont`（`35pt` Bold）。
+- `adjacentOrdinaryRun(runs, index, run.text === "$")` → **`$` 主取後方 ordinary run、`%` 主取前方 ordinary run**；保留 `preferred` → `fallback` 兩段式實作（`const preferred = preferNext ? runs[index + 1] : runs[index - 1];` … `const fallback = preferNext ? runs[index - 1] : runs[index + 1];`）與 reverse fallback 行為。
+- `boundaryGlyphInkBottom`：`Array.from(run.text)` 逐 code point、`hasInk` 跳空白、回傳 `actualBoundingBoxDescent`；保留 glyph ink-bottom alignment `run.y = adjacentInkBottom - run.inkBottom;`。
+
+以上演算法、控制流與回傳值在 D－10 必須**零差異**保留。
+
+### 14.12 Guards 與 layout validation
+
+**【REPOSITORY EVIDENCE】** A－10 既有 guards（D－10 必須保留，不得弱化）：
+
+| guard | 內容 |
+|---|---|
+| canvas instance | `canvas instanceof HTMLCanvasElement` |
+| background instance／readiness | `backgroundImage instanceof HTMLImageElement`；`!complete \|\| naturalWidth === 0` |
+| background intrinsic | `naturalWidth !== BACKGROUND_WIDTH \|\| naturalHeight !== BACKGROUND_HEIGHT` → 「正式底圖必須為 **475 × 673px**」 |
+| **canvas-size guard** | **A－10 baseline 已內建** `canvas.width !== POP_UP_WIDTH \|\| canvas.height !== POP_UP_HEIGHT` → fail-fast（與 A－08／A－09 不同，D－10 **無需**額外新增此 guard） |
+| font readiness | `assertFontsReady()`（`FONT_CHECKS.every(font => document.fonts.check(font, FONT_TEST_TEXT))`） |
+| layout validation | **`assertSpecificationFitsCanvas()`**（A－10 實際函式名，非 `assertLayoutFitsCanvas`／`assertFrameBounds`）；由 renderer 呼叫恰 1 處 |
+| Medium offscreen | `mediumCanvas.width !== 1160 \|\| mediumCanvas.height !== 1440` → fail-fast |
+
+**`assertSpecificationFitsCanvas` 之實作與 D－10 影響**：該函式先斷言 `POP_UP_WIDTH !== 580 || POP_UP_HEIGHT !== 720`，再驗證 background placement（四值有限、`width/height > 0`、`left/top ≥ 0`、`left + width ≤ POP_UP_WIDTH`、`top + height ≤ POP_UP_HEIGHT`），最後遍歷 `Object.entries(POP_UP_LAYOUT)` 驗證每個 box 四值有限、`width/height > 0`、`left/top ≥ 0`、`left + width ≤ POP_UP_WIDTH`、`top + height ≤ POP_UP_HEIGHT`。**因其以 `Object.entries(LAYOUT)` 迭代，新增 `logo` key 後會自動被涵蓋**；D－10 **必須完整保留原函式與控制流，不得弱化任何檢查、不得換 generic helper、不得另造 validation framework**。
+
+**【DERIVED／CALCULATED】** 依第 14.6 節【JAMIE/GPT LOCKED DECISION】之正式 LOCKED geometry，四 box 的 right／bottom 為 logo **452／155**、headline **452／210**、subheadline **495／276**、protectionText **495／311**，全部 ≤ 580／720，`assertSpecificationFitsCanvas` 可通過。
+
+### 14.13 Draw order
+
+**【REPOSITORY EVIDENCE】** A－10 現行 draw order 實測為 **`clearRect → background（繪於 53, 27）→ Medium local 2×（headline ＋ protectionText）→ Bold subheadline`**；`globalAlpha = 1`、`globalCompositeOperation = "source-over"` 各恰 1 處，於 background 之前設定。
+
+**【OPEN／Phase 2 待裁決】** D－10 的 Logo 插入位置（預期於 background 之後、Medium 2× 之前，即 `clearRect → background → Logo → Medium local 2× → Bold subheadline`）雖與 D－01～09 既有 precedent 一致，但 **A－10 額外具有 `clearRect` 前置步驟**，本輪未對 Logo 與 `clearRect` 的相對順序作出裁決。**LOCKED 邊界**：`globalAlpha = 1`、`globalCompositeOperation = "source-over"` 必須保留；**不得新增 filter／blend／crop／cover／clip／額外 compositing**。
+
+### 14.14 Viewer／launcher 未來最小接線邊界
+
+**【未來要求；本輪不得實作】**
+
+- renderer 預期路徑 `bn/templates/D/10-pop-up.js`；exports 預期恰 2（`waitForPopUpFonts`、`renderPopUp`）、零 import；`POP_UP_WIDTH`／`POP_UP_HEIGHT`／`POP_UP_LAYOUT` 依既有 D precedent 改為 template-local。**【OPEN】** A－10 另 export `POP_UP_BACKGROUND`，D－10 是否亦去 export 留待 Phase 2／3 確認。
+- renderer signature 依既有 D precedent 預期採 images-object 形式並含防禦式解構、Logo readiness guard。
+- launcher 預期 `bn/launch/D/10_POP UP.command`，以 `bn/launch/A/10_POP UP.command` 為 baseline 做最小同構轉換，query 預期 `?type=D&bn=10_POP%20UP`（空白 `%20`），Git mode `100755`。**【OPEN】** 實際 baseline 行數與識別 literal 行號留待 Phase 2 唯讀實證，本輪未調查以避免擴大範圍。
+- viewer 僅允許最小 additive `type === "D" && bn === "10_POP UP"` branch；**不得重寫**既有共用機制（`logoSource`／`logoImage` 宣告、共用 Logo 載入區、`render()` 的 images-object dispatch ternary、overlay 1:1 validation、shared default 測試文字、A／B branches、A－17 path、既有 D branches）。**【OPEN】** 10 屬 01～12 區間，`fieldConfig` 之判定留待 Phase 2 依 repo 實證確認，本輪不預先裁決。
+- 啟動檔與 viewer 僅為人工校稿工具，**不是**第二套正式 renderer、**不是**正式 Generator Preview、**不是**正式資料輸入流程。
+
+### 14.15 正式平台 fail-closed（本輪唯讀確認，維持不變）
+
+**【REPOSITORY EVIDENCE】**
+
+- `bn/js/import.js` `const SUPPORTED_TYPES = Object.freeze(["A", "B"]);` — 仍只有 A／B。
+- `bn/js/render-a.js` `ASSET_BASE_BY_TYPE` key 實測恰 `["A", "B"]`。
+- `A_TABLE` 17 個版位 id、**無 D entry、無 type 維度**；`render-a.js` 中 `"D"` 出現 **0 次**、未 import 任何 `templates/D`；查表未命中即 throw（不 fallback）。
+- D 的 Excel Import／Restore／正式控制台 Preview／Export **尚未 enable**；六個核心 JS 本輪 zero-diff。
+- **D－10 個別 renderer／launcher 未來完成亦不得改變此邊界。**
+
+### 14.16 Export：既有事實與 deferred boundary
+
+**【REPOSITORY EVIDENCE：既有 A／B 正式 Export 規格，僅記錄】** 依 `bn/js/export.js` 唯讀實證（**本輪未執行 Export**）：
+
+- `EXPORT_ITEMS` 第 20 行 **`{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`** —— 版位 10 為 **PNG**，並帶 **`maxBytes = 250,000`**。
+- 全表中僅 3 個版位帶 `maxBytes`：`01`（jpg／245,000）、`02`（jpg／145,000）、**`10`（png／250,000）**；其餘 14 個版位無容量上限。
+- PNG 容量鏈實測為 `encodePngWithinLimit(canvas, maxBytes, itemName)`：先 `canvasToBlob(canvas, "image/png")` native encode → **72 dpi patch 後**以最終 bytes 判定；native 達標即直接採用、**不 quantize**；否則走 **256 色 PNG 量化**再 patch，仍超過上限則 throw「以 256 色 PNG 壓縮後仍為 N bytes，超過容量上限 250000 bytes」。
+- 72 dpi 規則實測為 `EXPORT_DPI = 72`，PNG 走 `patchPngDpiBytes`／`setPngDpi`（**byte-level pHYs chunk patch，不重新 encode、不動 IDAT pixel data**）；JPEG 走 `patchJpegDpiBytes`（JFIF APP0 patch）。另有 `JPEG_QUALITY = 1.0`、`JPEG_QUALITY_FLOOR = 0.5`（僅供帶 `maxBytes` 的 JPG 版位使用，與版位 10 無關）。
+- `EXPORT_ITEMS` **以版位 id 提供、與樣式 type 無關**（`export.js` 中 `"D"` 出現 0 次、未 import 任何 D template）。
+
+**【OPEN／deferred：D－10 尚未確認、不得寫成已繼承或已驗證】**
+
+- 上述 `250,000 bytes` 上限、PNG 量化 ladder 與 72 dpi patch **目前只在 A／B 正式 Export 路徑上實際運行過**；`SUPPORTED_TYPES` 仍為 `["A", "B"]`，樣式 D 尚未進入正式 Export 路徑。
+- 因 `EXPORT_ITEMS` 在資料結構上不帶 type 維度，**技術上未排除**未來 D platform integration 時版位 10 沿用同一組規則；但**是否對 D－10 正式套用 `maxBytes = 250,000`，屬 D platform integration 階段之確認事項**，本輪**不得裁決、不得宣告 D－10 已正式繼承**。
+- **deferred until D platform integration**：D－10 正式 Preview ↔ Export 一致性實測、版位 10 的 **PNG／72 dpi／250,000 bytes** 實際輸出驗證（含是否需觸發 256 色量化）、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、樣式 D 完整 17 版位輸出行為 —— 全部尚未執行，**不得記為已驗證**。
+- **Phase 1／2／3／4 皆不得修改 `export.js`、不得執行 Export。**
+
+### 14.17 Regression Boundary（未來 Coding 必須 zero-diff）
+
+`bn/templates/A/10-pop-up.js`、全部其他 `bn/templates/A/*`、`bn/launch/A/*`、已完成 D－01／02／03／06／07／08／09 的 template 與 launcher 及其 assets、`bn/assets/A/*`、`bn/assets/B/*`、`bn/assets/D/Logo.png`、`bn/assets/LPBN掛標/*`、`bn/css/*`、`bn/index.html`、`bn/js/vendor/*`、`fonts/*`、`bn/assets/banwords.xlsx`、`bn/js/banwords.js`、`bn/js/banwords-data.js`、`bn/js/lpbn-badges.js`，以及六個核心 JS（`render-a.js`、`import.js`、`export.js`、`app.js`、`workspace.js`、`editor.js`）。
+
+**D－04／D－05／D－11～16 assets 必須保持未處理（維持 untracked、不得納管）。** A／B－01～17 與已完成 D 版位的行為與輸出不得改變。
+
+### 14.18 Phase 4 前 Acceptance Criteria（**全部為未來驗收項目，本階段不得寫成已 PASS**）
+
+以下項目**皆尚未執行**；涉及四個 box geometry 者依第 14.6 節【JAMIE/GPT LOCKED DECISION】之正式 LOCKED 值驗收：
+
+1. canvas 為 **580 × 720**；底圖 intrinsic **475 × 673** 且繪於 **(53, 27)**；對位圖 **580 × 720** 僅供人工校稿、未進入正式輸出。
+2. 固定 Logo 唯一引用既有 `bn/assets/D/Logo.png`（784 × 112、sha256 前綴 `99813cf81a7963ff`），未修改、未複製、未改名、未重新納管、未列為新增素材。
+3. Logo box 為 **`{left:129, top:109, width:323, height:46}`**（第 14.6 節 LOCKED）。
+4. 三文字 box 為 **`headline {129,172,323,38}`**、**`subheadline {85,225,410,51}`**、**`protectionText {85,286,410,25}`**（第 14.6 節 LOCKED；相對 A－10 `POP_UP_LAYOUT` 僅 `top` 各 +44，`left`／`width`／`height` 不變）。
+5. **正式 geometry 未使用** Photoshop／CSS 的 `867`／`807`／`870`／`823`／`923`／`984`；`Δleft = 738`／`Δtop = 698` 僅作 **D－10 自身歷史更正證據**，未建立跨版位共用 offset 規則、未由其他 D 版位推論。
+6. Logo contain `scale = min(323/784, 46/112) = 23/56`（height-bound、no-upscale）。
+7. Logo destination = **`322 × 46 @ (129.5, 109)`**；左 **0.5px**／右 **0.5px**／上 **0px**／下 **0px**；aspect **7 : 1**；完整 source rect `(0, 0, 784, 112)`。
+8. **fractional `destinationX = 129.5` 原值保留**；實作不存在 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise truncation；未 stretch／cover／crop／clip。
+9. Logo 在 box 內**水平＋垂直置中**；由 renderer 真正 draw 入 canvas（非 DOM overlay）；**未進 Medium 2×**；**未建立 shared Logo helper**。
+10. 三段文字採 **centered ink**（水平＋垂直 ink bounding-box 置中）；14.8 六條公式逐字保留；**未改成 LeftCentered、未改成 left／top**。
+11. `textAlign = "left"`／`textBaseline = "alphabetic"`、四項 `actualBoundingBox*`、fit validation 8 欄、每段空字串零 ink validation（2 處）全部保留。
+12. typography 四項精確（`30pt Medium #ffffff`／`40pt Bold #fff285`／`$`／`%` `35pt Bold #fff285`／`20pt Medium #a6f4e6`）；**未新增 `symbolColor`**；字數規則未改。
+13. `$`／`%` 三 helper 保留；`adjacentOrdinaryRun` 的 `preferred` → `fallback` 控制流未被重寫；`$` 取後方、`%` 取前方；reverse fallback 與 glyph ink-bottom alignment 保留。
+14. Medium local 2× offscreen 為 **1160 × 1440**（含 baseline 既有硬斷言）；`scale(2, 2)` 後**只 headline ＋ protectionText 使用 `drawCenteredText`**（2 次）。
+15. **Bold subheadline（含 `$`／`%`）與 Logo 均未進入 2× surface**；未新增函式層整體 early-return；未抽 shared 2× helper；縮回沿用既有獨立 high-quality smoothing。
+16. draw order 依 14.13 裁決結果確立；`globalAlpha = 1`／`globalCompositeOperation = "source-over"` 保留；未新增 filter／blend／crop／cover／clip／額外 compositing。
+17. **`assertSpecificationFitsCanvas` 原函式保留**、未換 generic helper、所有檢查未弱化、仍由 renderer 呼叫、仍遍歷 `Object.entries(POP_UP_LAYOUT)` 並自然涵蓋新增 `logo` key。
+18. 四 box right／bottom 為 **452／155、452／210、495／276、495／311**，全部落於 580 × 720 內。
+19. D-specific renderer 位於 `bn/templates/D/10-pop-up.js`，零 import、signature 與 guards 依 Phase 3 Proposal 確立。
+20. launcher query 為 **`?type=D&bn=10_POP%20UP`**（空白 `%20`）、Git mode `100755`、與 A－10 baseline 最小同構。
+21. viewer 僅為最小 additive D－10 branch ＋ unsupported message 最小追加；共用機制與 A／B、A－17、既有 D branches 零污染。
+22. **Jamie 親自開啟 `bn/launch/D/10_POP UP.command` 完成 1:1 overlay 人工對位驗證並明確 PASS**，且**關閉 overlay 後 Logo 與三段文字仍真正存在於 canvas 上**；在此之前不得 Code Commit。
+23. 14.17 Regression Boundary 全部 zero-diff；D－04／05／11～16 assets 維持未處理。
+24. **fail-closed 維持**：`SUPPORTED_TYPES` 仍 `["A", "B"]`、`ASSET_BASE_BY_TYPE` 仍只有 A／B、`A_TABLE` 無 D entry 與 type 維度、`render-a.js` 未 enable D、六個核心 JS zero-diff。
+25. Export 相關：版位 10 的 PNG／72 dpi／`250,000 bytes` 實際輸出驗證維持 **deferred until D platform integration**，未執行、未記為已驗證。
+
+### 14.19 Phase Boundary
+
+- 本節為 **Phase 1 Requirement**，只定義「必須做到什麼」與「如何驗收」，**不指定實作方式**。
+- 本階段**未** Coding、**未**建立 Proposal、**未**做 Documentation Update（Architecture、Template Requirement、17 版位差異、全域 Requirement 的同步屬 D－10 完成後的 Documentation Update 階段）、**未** Stage／Commit／Push／Tag／Release、**未**啟動 viewer、**未**執行 Export、**未**生成任何圖片。
+- **本節第 14.6 節之 OPEN 已由 Jamie／GPT 正式裁決並關閉**（四個正式 canvas geometry 已 LOCKED）。其餘標記為 **【OPEN】** 者（14.9 Logo 繪製實作形式、14.13 Logo 與 `clearRect` 相對順序、14.14 `POP_UP_BACKGROUND` export／launcher 實證／`fieldConfig` 判定）**維持不變**，留待 Phase 2 Repository Investigation 以唯讀實證確認。第 14.16 節之 Export deferred 邊界**亦維持不變，未因本次 geometry 裁決而關閉**。
+
+### 14.20 D－10 Implementation Outcome（完成狀態）
+
+本節全部 Requirement 條文與裁決均未改寫，僅補記完成狀態。**第 14.6 節之【JAMIE/GPT LOCKED DECISION】geometry 裁決與第 14.16 節之 Export deferred 均未被重寫、未被關閉。**
+
+D－10 已依第 14 節 Requirement 與 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 的「D－10」章節完成 Phase 2 Repository Investigation（**substantive conflict = 0**）、Phase 3 Proposal、Phase 4 Coding 與 Phase 5 靜態自驗，並經 **Phase 6 Jamie 親自開啟 `bn/launch/D/10_POP UP.command` 完成人工 1:1 overlay 對位驗證且明確 PASS**。
+
+Code Commit 為 **`1e2cdb939936de18d2665bafc27229bc7a032e3b`**（`feat(bn): add D10 POP UP template`，parent `30be4920277042d05e10d6185fcee5923bafb0e3`），`git diff --check HEAD^ HEAD` PASS，**精確包含 5 個路徑（1 個 M ＋ 4 個 A）**：
+
+- `M` `bn/launch/viewer.html`（最小 additive D－10 branch，+16／−1）
+- `A` `bn/templates/D/10-pop-up.js`（新增，465 行）
+- `A` `bn/launch/D/10_POP UP.command`（新增，Git mode `100755`）
+- `A` `bn/assets/D/底圖/10_POP UP.png`（新增納管，PNG RGBA **475 × 673**、202,577 bytes）
+- `A` `bn/assets/D/對位/10_POP UP.png`（新增納管，PNG RGBA **580 × 720**、19,744 bytes）
+
+`bn/assets/D/Logo.png` **不在本次 commit 內**（既有 tracked 共用 asset，由 D－01 納管；D－10 僅引用、未修改、未重存、未再次納管、未建立第二份）。A／B templates、A／B launchers、A／B assets、D－01～09 template 與 launcher 及其 assets、正式平台六個核心 JS、CSS、`bn/index.html`、vendor、fonts、banwords、LPBN 掛標與所有文件於本次 Code Commit 全部零修改；已封箱的 `bn/templates/A/10-pop-up.js` 維持 zero-diff（sha256 `3b555271cdaccae7fc5cf5a49d481f923318eba5f0965ec001ea6e4065e656ed`）。
+
+**A－10 特殊結構完整保存**（D－10 為首個 canvas 尺寸 ≠ 底圖 intrinsic 尺寸的 D 版位）：canvas **580 × 720**；background intrinsic **475 × 673**；background 繪製目的地精確為 **`(53, 27, 475, 673)`**，未改成全 canvas stretch；**`clearRect(0, 0, 580, 720)` 完整保留且仍位於 background 之前**；`globalAlpha = 1`、`globalCompositeOperation = "source-over"` 保留；canvas instance guard、background instance／readiness／intrinsic（475 × 673 硬斷言）guard、**A－10 原本已存在的 canvas-size guard**、`assertFontsReady`（`waitForPopUpFonts` 與 `renderPopUp` 各 1 次、合計 2 次）與 `assertSpecificationFitsCanvas`（renderer 呼叫 1 次）全部保留。
+
+落地實測值與第 14 節裁決完全一致 —— 四個正式 box 為 `logo {left:129, top:109, width:323, height:46}`、`headline {129,172,323,38}`、`subheadline {85,225,410,51}`、`protectionText {85,286,410,25}`，`logo` 為 `POP_UP_LAYOUT` 第一個 key；四 box right／bottom 實測為 logo **452／155**、headline **452／210**、subheadline **495／276**、protectionText **495／311**，全部落於 580 × 720 內。三段文字相對 A－10 baseline 的 `left`／`width`／`height` **逐值不變，僅 `top` 各 +44px**（`128 → 172`、`181 → 225`、`242 → 286`）；**`+44` 僅代表 D－10 自身 A→D 的實證差異，未建立 generic／shared offset 規則、未套用至任何其他 D 版位、未寫成常數或共用轉換**。Photoshop／CSS 原始標記 `867`／`807`／`870`／`823`／`923`／`984` 與 D－10 自身 `Δleft = 738`／`Δtop = 698` 僅為歷史 evidence，實測確認**未出現於 runtime geometry**。
+
+Logo source `bn/assets/D/Logo.png` 原始 **784 × 112**，以 contain／no-upscale 縮放：`scale = min(323/784, 46/112) = ` **`23/56`**（**height-bound**），destination **322 × 46**、**水平置中＋垂直置中** `destinationX = box.left + (box.width − destinationWidth) / 2 = ` **129.5**、`destinationY = box.top + (box.height − destinationHeight) / 2 = ` **109**，即 **`322 × 46 @ (129.5, 109)`**，左 **0.5px**／右 **0.5px**／上 **0px**／下 **0px**，aspect 保持 **7 : 1**，source rect 完整（`0, 0, sourceWidth, sourceHeight`）。**`destinationX = 129.5` 以 fractional 原值保留**，實作實測全檔不存在 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise truncation，亦未 stretch／cover／crop／source clipping。Logo smoothing 為 template-local 獨立 `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`；Logo 由 renderer **真正畫入 canvas**（非 DOM overlay）、**未進 Medium 2×**、**未建立 shared Logo helper**（新增函式僅 template-local `drawPopUpLogo`）。
+
+三段文字 typography 沿用 A／B－10（headline `30pt "ShopeeNotoSans Medium"` `#ffffff`／subheadline `40pt "ShopeeNotoSans Bold"` `#fff285`／`$`／`%` `35pt "ShopeeNotoSans Bold"` `#fff285`／protectionText `20pt "ShopeeNotoSans Medium"` `#a6f4e6`；未新增 `symbolColor`），採 **centered ink**（水平＋垂直 ink bounding-box 置中，**不是 LeftCentered、不是 left／top**），保留 `validateCenteredInkFitsBox`／`drawCenteredText`／`drawCenteredMixedSubheadline`、`textAlign="left"`／`textBaseline="alphabetic"`、`actualBoundingBoxLeft`／`Right`／`Ascent`／`Descent` measurement、fit validation，以及每段文字空字串各自回傳零 ink fit validation 之既有行為；`$`／`%` 完整保留 `tokenizeSubheadline`、`adjacentOrdinaryRun`（**`$` 主取後方 ordinary glyph、`%` 主取前方 ordinary glyph**，含既有 `preferred` → `fallback` reverse fallback 兩段式實作）與 `boundaryGlyphInkBottom` 的 glyph ink-bottom alignment。Medium template-local 2× 為 `MEDIUM_RENDER_SCALE = 2`、offscreen **1160 × 1440**（既有尺寸硬斷言保留）、只涵蓋 headline ＋ protectionText，**Bold subheadline 與 Logo 均未進 2× surface**，未新增函式層整體 early-return，縮回沿用既有獨立 high-quality smoothing。
+
+完整 draw order 為 **`clearRect → background → Logo → Medium local 2×（headline ＋ protectionText）→ Bold subheadline`**，未新增 filter／blend／crop／cover／clip／額外 compositing。此順序是**「保留 A－10 唯一既有 `clearRect` 位於 background 之前」與「既有 7/7 已完成 D Logo renderer 一致的 `background → Logo → Medium2x → BoldSub`」兩項既有 evidence 的最小組合**；**A－10 是第一個帶 `clearRect` 的 Logo D 版位，repository 中並不存在完全相同的直接 precedent**，不得記為「原本就已存在相同 precedent」。
+
+D－10 使用獨立 `bn/templates/D/10-pop-up.js`（exports 恰 2 —— `waitForPopUpFonts`、`renderPopUp`；**imports = 0**；`POP_UP_WIDTH`／`POP_UP_HEIGHT`／`POP_UP_BACKGROUND`／`POP_UP_LAYOUT` 均改為 module-local、不 export；signature 為 `renderPopUp(canvas, images, { headline = "", subheadline = "", protectionText = "" } = {})`，以 `const { backgroundImage, logoImage } = images && typeof images === "object" ? images : {};` 防禦式解構取得兩張圖），已封箱的 `bn/templates/A/10-pop-up.js` 未被修改或取代。**A－10 的 13 個 baseline functions 落地逐函式（sha256）比對為 5/13 byte-identical ＋ 7/13 message-only behavior-equivalent ＋ 1/13 substantive**：byte-identical 者為 `hasInk`、`drawCenteredText`、`tokenizeSubheadline`、`adjacentOrdinaryRun`、`drawCenteredMixedSubheadline`；message-only behavior-equivalent 者為 **`assertSpecificationFitsCanvas`**（4 行）、**`measureRun`**（1 行）、**`boundaryGlyphInkBottom`**（1 行）、**`validateCenteredInkFitsBox`**（1 行）、**`drawPopUpMediumText`**（2 行）、**`assertFontsReady`**（1 行）、**`waitForPopUpFonts`**（1 行），合計 **11 行** runtime error／message 差異，**每一行皆僅為版位標示 `A－10` → `D－10`**，正規化後逐字等價，**演算法、控制流與回傳值零差異**；substantive 者僅 **`renderPopUp`** 一個，且只因 images object 解構、Logo readiness guard、Logo draw 與 draw-order 接線及版位標示。D template 殘留 `A－10` literal = **0**。新增的 template-local **`drawPopUpLogo`** 為 D-specific 新函式，**不納入此 13 個 baseline function 統計**。**不得記為 5+8+0 或任何其他數字。**
+
+**`assertSpecificationFitsCanvas` 完整保留**、未改名、未換 generic bounds helper、仍由 `renderPopUp` 呼叫、仍遍歷 `Object.entries(POP_UP_LAYOUT)`，`Number.isFinite`／`width > 0`／`height > 0` 與四邊界檢查、canvas 硬斷言與 background placement 驗證均未弱化，因此**自然一併涵蓋新增的 `logo` box**；**A－10 baseline 本身未被修改，亦未抽出 shared guard**。viewer 僅新增最小 additive **15 行** D－10 branch（＋ unsupported message 最小追加），**未設 `fieldConfig`**（沿用既有 01～12 shared default 測試文字；D－01 的 `fieldConfig` 為歷史例外，未套用至 D－10）；共用 `logoSource`／`logoImage` 宣告與載入區、`render()` 的 images-object dispatch ternary、overlay 1:1 validation、shared 測試字串、A／B（含 A－10）、A－17 與 D－01～09 branches 全部未修改。launcher query 為 **`?type=D&bn=10_POP%20UP`**（空白以 `%20` 編碼），**104 行**與 A－10 baseline 相同、恰 **7 行**識別差異（L12、38、39、41、49、94、100），既有 `127.0.0.1:4173`／repo root 推導／viewer path／server reuse／readiness marker／`curl`／`open`／`trap`／`pause_before_exit`／`stop_fss_server` 等機制全部保留，Git mode **`100755`**。
+
+第 14.16 節之 Export LOCKED 與 deferred **維持不變、未關閉**：依 `bn/js/export.js` 唯讀實證，`EXPORT_ITEMS` 中 **`{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`**、`EXPORT_DPI = 72`，既有 PNG 72 dpi pHYs patch 與容量鏈屬 **A／B 正式路徑**之現行行為。D－10 是否正式套用 **250,000 bytes** 上限，以及 D－10 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、樣式 D 完整 17 版位輸出行為 —— 全部 **deferred until D platform integration**；本次 Code Commit 與 Jamie Manual PASS **不代表已驗證 D－10 的 250,000 bytes**，本輪**未執行** Export，`bn/js/export.js` zero-diff。
+
+**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－10 renderer ＋ launcher ＋ assets 納管 ＋ 人工 1:1 overlay 對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`bn/js/render-a.js` 未 enable D、未 import 任何 D template，正式 renderer registry 未 enable D，樣式 D 在正式平台維持 fail-closed；`bn/js` 六個核心檔案均未修改；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－10**；D－04、D－05、D－11～17 仍須逐一確認與開發，**不得由 D－10 或其他已完成 D 版位推論**其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 46 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.8 節。
