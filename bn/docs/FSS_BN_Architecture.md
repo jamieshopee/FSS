@@ -1458,3 +1458,32 @@ Launch 與 Viewer 仍只是正式 Template 的開發／視覺校稿工具，**�
 正式支援的 Type 仍為 **A 與 B**：`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`bn/js/render-a.js` 未 enable D、未 import 任何 D template，正式 renderer registry 尚未 enable D，樣式 D 在正式平台維持 fail-closed；正式平台六個核心 JS（`render-a.js`、`import.js`、`workspace.js`、`export.js`、`app.js`、`editor.js`）於本次 Code Commit 全部零修改。D 的正式 Excel worksheet Import、Restore、控制台 Preview 與 Export 尚未 enable；D－10 正式 Preview ↔ Export 一致性實測與版位 10 既有鎖定的 **PNG／72 dpi／`maxBytes: 250000`**（`{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`、`EXPORT_DPI = 72`；既有 PNG 72 dpi pHYs patch 與容量鏈**目前只在 A／B 正式路徑實際運行**）實際輸出驗證，全部 **deferred until D platform integration**。本次 Code Commit 與 Jamie Manual PASS **不代表已驗證 D－10 的 250,000 bytes**；本次未執行 D Export 實測，不得記為已驗證。
 
 目前已完成的樣式 D 版位為 **D－01、D－02、D－03、D－06、D－07、D－08、D－09 與 D－10**，八者皆為個別 renderer 與人工對位流程，**不代表整個 D 樣式完成**；D－04、D－05、D－11～17 仍須逐一確認與開發，**不得由 D－10 或其他已完成 D 版位推論**其 geometry、Logo 位置或文字差異，亦不得提前規格化。樣式 C 不在本節範圍。
+
+## 47. D－12 正式 Template 實際落地狀態
+
+> 本節只同步 `12_LPBN`（D－12）單一版位落地與 Jamie Phase 6 人工 1:1 overlay PASS。Code Commit 為 **`4397a40fb69b12a11b3c6e61aa9bef1581f73409`**（`feat(bn): add D12 LPBN template`，parent `bd20a44b217da505fc8412021b6ca054d582bb4e`），精確 5 paths（1 M＋4 A）。這不是 D platform integration 或正式 Preview／Export PASS；第 38 節 A／B 正式支援邊界仍有效。完整規格見 D 樣式 Requirement 第 15 節（完成狀態 15.21），實作紀錄見 D 樣式 Proposal 第 14 節（14.26）。
+
+### 47.1 已落地檔案
+
+- `bn/templates/D/12-lpbn.js`：D－12 renderer，零 import、exports 恰 `waitForLpbnFonts`／`renderLpbn`。
+- `bn/launch/D/12_LPBN.command`：專用校稿入口，mode `100755`，query `?type=D&bn=12_LPBN`。
+- `bn/launch/viewer.html`：只增加 D－12 additive branch，未設 `fieldConfig`，共用機制未重構。
+- `bn/assets/D/底圖/12_LPBN.jpg` 與 `bn/assets/D/對位/12_LPBN.png`：均為 1200 × 550；前者為 runtime 底圖，後者只供 1:1 overlay 校稿。
+
+既有 tracked `bn/assets/D/Logo.png`（784 × 112）只被引用，未在本 commit 修改或再次納管。
+
+三素材 dimensions／bytes／SHA-256：底圖 JPG 1200 × 550／131,471／`589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634`；對位 PNG 1200 × 550／16,091／`912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0`；共用 Logo PNG 784 × 112／48,618／`99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`。
+
+### 47.2 Renderer 行為
+
+Canvas／background 為 **1200 × 550 @ (0,0)**；四框為 logo `{58,161,365,52}`、headline `{58,226,405,49}`、subheadline `{58,285,475,62}`、protectionText `{58,360,475,28}`，三文字框與 A／B－12 逐值相同。Logo contain／no-upscale `scale=13/28`，destination **364 × 52 @ (58,161)**，餘量 0／1／0／0、完整 7:1 source、水平靠左且無 rounding／stretch／crop。Photoshop `(478,944,365,52)` 與 `Δ(-420,-783)` 只保留為 D－12 evidence，未形成 generic offset。
+
+文字 typography、left-centered ink、`$`／`%` formatting 與 fit validation 沿用 A／B－12；Medium template-local 2× 為 **2400 × 1100**，只畫 headline＋protectionText。唯一正式 draw order 為 **canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline**，只適用 D－12。A－12 baseline functions 比對為 6/14 byte-identical＋7/14 message-only behavior-equivalent＋1/14 substantive（`renderLpbn`），新增 `drawLpbnLogo` 另計；`assertSpecificationFitsCanvas` 未弱化並涵蓋四框，A－12 zero-diff。
+
+### 47.3 Launch 校稿路徑
+
+Launcher 104 行、與 A－12 僅 7 行識別差異；Viewer 沿用既有共用 Logo loader、images dispatch 與 overlay 1:1 validation，3 處 stale comments zero-diff。對位 PNG 不合成進正式 Canvas。Jamie 已親自開啟 launcher 完成 Phase 6 人工 1:1 overlay 並明確 **PASS**；此入口仍只是開發校稿工具，不是正式控制台 Preview／Export。
+
+### 47.4 平台邊界
+
+正式支援 Type 仍只有 **A／B**：`SUPPORTED_TYPES`、`ASSET_BASE_BY_TYPE`、`A_TABLE`／renderer registry 均未 enable D，六個核心 JS zero-diff，D 維持 fail-closed。LPBN 掛標正式 D 行為、D－12 Export、Preview↔Export 與 D platform integration 全部 deferred。已完成個別 renderer／人工對位的集合更新為 **D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10、D－12**，不代表整個 D 完成；D－04、D－05、D－11、D－13～17 仍未完成，樣式 C 不在本節範圍。

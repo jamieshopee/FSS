@@ -1995,6 +1995,26 @@ D－10 route 為 `viewer.html?type=D&bn=10_POP%20UP`（空白以 `%20` 編碼）
 - 「D 有自己的 worksheet `D`，工單配置與 A／B 相同」屬已確認產品需求，**不代表目前平台已可 Import D**。
 - 目前已完成的樣式 D 版位為 D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10，皆為**個別** renderer 與人工對位流程，不代表整個 D 樣式完成。D－04、D－05、D－11～17 仍須逐一確認與開發。本節裁決**只代表 D－10**，不得據此推論其餘 D 版位的 template 形狀、Logo 位置或文字差異，也不得預先補完未確認的 D 版位差異。樣式 C 不在本節範圍。
 
+#### 5.2.9 `12_LPBN`
+
+##### 5.2.9.1 正式規格來源與落地值
+
+D－12 完整正式規格以 `bn/docs/FSS_BN_D樣式_Requirement_Specification_v1.0.md` 第 15 節為準（完成狀態見 15.21），實作紀錄見 `bn/docs/FSS_BN_D樣式_Proposal_v1.0.md` 第 14 節（落地紀錄見 14.26）；不建立逐版位文件。Canvas／background 為 **1200 × 550 @ (0,0)**；四框為 Logo `{58,161,365,52}`、headline `{58,226,405,49}`、subheadline `{58,285,475,62}`、protectionText `{58,360,475,28}`，三文字框與 A／B－12 逐值相同。Photoshop `(478,944,365,52)` 與 `Δ(-420,-783)` 只屬 D－12 歷史 evidence，不是 generic offset。
+
+Logo source `bn/assets/D/Logo.png` 為既有 tracked 784 × 112（7:1），contain／no-upscale `scale=13/28`，destination **364 × 52 @ (58,161)**，餘量左0／右1／上0／下0，完整 source rect、水平靠左、無 rounding／stretch／crop。Typography 為 headline 39pt Medium `#ffffff`、subheadline 49pt Bold `#fff285`、`$`／`%` 42pt Bold `#fff285`、protectionText 22.5pt Medium `#a6f4e6`；三文字沿用 A／B－12 left-centered ink、特殊符號 formatting 與 fit validation。Medium template-local 2× 為 2400 × 1100，只涵蓋 headline＋protectionText；Logo／Bold 不進 2×。正式 draw order 為 **canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline**，僅 D－12，不得 generic/shared 推廣。
+
+##### 5.2.9.2 正式落地與驗證狀態
+
+Code Commit **`4397a40fb69b12a11b3c6e61aa9bef1581f73409`**（`feat(bn): add D12 LPBN template`，parent `bd20a44b217da505fc8412021b6ca054d582bb4e`）精確包含 5 paths（1 M＋4 A）：`bn/templates/D/12-lpbn.js`、`bn/launch/D/12_LPBN.command`（mode `100755`）、`bn/launch/viewer.html`、`bn/assets/D/底圖/12_LPBN.jpg`、`bn/assets/D/對位/12_LPBN.png`；共用 Logo 不在 commit 內。Renderer 零 import、exports 恰 `waitForLpbnFonts`／`renderLpbn`；A－12 baseline functions 實測 6/14 byte-identical＋7/14 message-only＋1/14 substantive，Logo helper `drawLpbnLogo` 另計，validation 未弱化。Viewer 僅 additive D－12 branch、無 `fieldConfig`；launcher query `?type=D&bn=12_LPBN`。Jamie 已親自完成 Phase 6 人工 1:1 overlay 對位並明確 **PASS**。
+
+三素材 dimensions／bytes／SHA-256 分別為：底圖 JPG 1200 × 550／131,471／`589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634`；對位 PNG 1200 × 550／16,091／`912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0`；共用 Logo PNG 784 × 112／48,618／`99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`。
+
+##### 5.2.9.3 尚未完成的邊界
+
+- Jamie 的 PASS 是人工 1:1 overlay 對位 PASS，**不是正式平台 Preview／Export PASS**。
+- 正式 Type 仍只支援 A／B；D 維持 fail-closed，六個核心 JS zero-diff。LPBN 掛標正式 D 行為、D－12 Export 與 D platform integration 仍 deferred。
+- 已完成個別 renderer／人工對位的 D 版位更新為 **D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10、D－12**；不代表整個 D 完成。D－04、D－05、D－11、D－13～17 仍未完成，不得由 D－12 推論其規格；樣式 C 不在本節範圍。
+
 ## 6. Launch 驗證原則
 
 正式 Launch 的目標目錄結構為：

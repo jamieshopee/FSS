@@ -2104,3 +2104,233 @@ D－10 使用獨立 `bn/templates/D/10-pop-up.js`（exports 恰 2 —— `waitFo
 第 14.16 節之 Export LOCKED 與 deferred **維持不變、未關閉**：依 `bn/js/export.js` 唯讀實證，`EXPORT_ITEMS` 中 **`{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`**、`EXPORT_DPI = 72`，既有 PNG 72 dpi pHYs patch 與容量鏈屬 **A／B 正式路徑**之現行行為。D－10 是否正式套用 **250,000 bytes** 上限，以及 D－10 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、樣式 D 完整 17 版位輸出行為 —— 全部 **deferred until D platform integration**；本次 Code Commit 與 Jamie Manual PASS **不代表已驗證 D－10 的 250,000 bytes**，本輪**未執行** Export，`bn/js/export.js` zero-diff。
 
 **Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」；後者尚未做。本次完成的是「D－10 renderer ＋ launcher ＋ assets 納管 ＋ 人工 1:1 overlay 對位驗證」，不是「D 樣式正式平台整合完成」。** 目前正式支援的樣式仍為 A 與 B，`SUPPORTED_TYPES` 仍為 `["A", "B"]`，`ASSET_BASE_BY_TYPE` 仍只有 A 與 B，`A_TABLE` 未加入 D entry 或 type 維度，`bn/js/render-a.js` 未 enable D、未 import 任何 D template，正式 renderer registry 未 enable D，樣式 D 在正式平台維持 fail-closed；`bn/js` 六個核心檔案均未修改；D 的正式 Excel Import／Restore／控制台 Preview／Export 尚未 enable。本節裁決**只代表 D－10**；D－04、D－05、D－11～17 仍須逐一確認與開發，**不得由 D－10 或其他已完成 D 版位推論**其 geometry、Logo 位置或文字差異，樣式 C 不在本節範圍。落地狀態另見 `FSS_BN_Architecture.md` 第 46 節與 `FSS_BN_Template_Requirement_Specification_v1.0.md` 第 5.2.8 節。
+
+## 15. D－12（12_LPBN）Requirement
+
+> **【USER LOCKED】** 本節只定義 D－12／12_LPBN 的 Phase 1 Requirement。本輪不得進入 Phase 2／Phase 3／Coding／Stage／Commit／Push／Tag／Release，不得修改或 enable 正式平台，不得生成圖片、screenshot、overlay、export output 或 golden image。
+>
+> **【REPOSITORY EVIDENCE】** 現行 A 與 B 沒有兩份 12 renderer；bn/js/render-a.js 的同一個 A_TABLE["12"] 呼叫 bn/templates/A/12-lpbn.js 的 renderLpbn／waitForLpbnFonts，只依 state.currentType 切換 A 或 B 底圖 base。
+>
+> **【JAMIE/GPT LOCKED DECISION】** 第 15.13 節的 D－12 正式 draw order 已由 Jamie／GPT 裁決並關閉原 OPEN：**canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline**。此裁決只適用 D－12，不得 generic／shared 推廣。
+
+### 15.1 Scope／Non-goals
+
+**【USER LOCKED】** Scope 僅為 D－12：沿用 A／B－12 的三段文字內容模型、正式文字 box、typography、alignment、特殊字元處理、guards 與 template-local Medium 2×，並增加 D－12 固定 Logo 與正式底圖／對位圖需求。
+
+**【USER LOCKED】** 不得處理 D－04／05／11／13～17、樣式 C 或其他問題；不得修改 Proposal、Template Requirement、Architecture、17 版位差異、全域 Requirement 或其他 docs；不得建立 standalone D12 文件；不得修改、刪除、移動、改名、重編碼、另存或納管 asset；不得修改 bn/js/* 或 enable Type D；不得把 D－12 offset、Logo、2× 或掛標抽成 shared／generic 機制。
+
+### 15.2 正式素材
+
+**【REPOSITORY EVIDENCE】** 2026-08-26 於 HEAD bd20a44b217da505fc8412021b6ca054d582bb4e 唯讀實證：
+
+| 角色 | 正式 repo 路徑 | intrinsic／格式 | bytes | SHA-256 | Git 狀態 |
+|---|---|---:|---:|---|---|
+| D－12 底圖 | bn/assets/D/底圖/12_LPBN.jpg | **1200 × 550**，JPEG，無 alpha | **131,471** | 589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634 | untracked（??） |
+| D－12 對位圖 | bn/assets/D/對位/12_LPBN.png | **1200 × 550**，8-bit RGBA，有 alpha | **16,091** | 912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0 | untracked（??） |
+| D 共用 Logo | bn/assets/D/Logo.png | **784 × 112**，8-bit RGBA，有 alpha | **48,618** | 99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24 | tracked；mode 100644；blob ad2fa05642fa282772046c0bce623f7148030219 |
+
+**【USER LOCKED】** 未來只得引用上述三路徑。Logo 必須共用既有 tracked 檔，不得複製、改名、重存或建立第二份。對位圖只供未來 1:1 校稿，不得進正式 renderer 或輸出。
+
+### 15.3 A／B－12 baseline、signature、imports／exports
+
+**【REPOSITORY EVIDENCE】** bn/templates/A/12-lpbn.js SHA-256 為 56529180612b85e8698f0b1092a47888c08b65b274d1a78571f4383854565f4e；imports = 0；exports = 6（LPBN_WIDTH、LPBN_HEIGHT、LPBN_BACKGROUND、LPBN_LAYOUT、waitForLpbnFonts、renderLpbn）。signature 為 renderLpbn(canvas, backgroundImage, { headline = "", subheadline = "", protectionText = "" } = {})。A_TABLE["12"] 對 A／B 共用同一 renderer；A／B 正式底圖均為 1200 × 550 JPEG。
+
+**【USER LOCKED】** D－12 未來須以此為逐函式 baseline，只做固定 Logo／images-object 接線與 D 識別訊息必要差異；不得修改、取代或 import A template，不得藉機重構。
+
+**【OPEN／Phase 2／3】** D template 最終 export surface、images-object 防禦式解構、Logo helper 名稱，以及 A 的四個 exported constants 是否在 D 改為 module-local，留待調查與 Proposal。
+
+### 15.4 Canvas／background
+
+**【REPOSITORY EVIDENCE】** A／B－12 canvas 與 background intrinsic guard 均為 **1200 × 550**，placement 為 **(0,0,1200,550)**。renderer 設 canvas、取得 context 後依序 clearRect、設 globalAlpha=1／globalCompositeOperation="source-over"、draw background。D－12 底圖與對位圖亦為 1200 × 550。
+
+**【DERIVED／CALCULATED】** 沿用 baseline 時，D－12 background destination 唯一為 **(0,0,1200,550)**；無 crop、cover、額外 offset。
+
+### 15.5 Logo Photoshop／CSS 原始 box
+
+**【USER LOCKED】**
+
+    .矩形_1878 { position:absolute; left:478px; top:944px; width:365px; height:52px; z-index:14; }
+
+這是 D－12 Photoshop／CSS evidence，不是直接 canvas 座標。
+
+### 15.6 對位圖像素／alpha 與 Photoshop→canvas
+
+**【REPOSITORY EVIDENCE】** 未開 viewer、未生成或另存圖片；直接讀既有 PNG pixels。全圖只有 RGBA (0,0,0,26) **578,425 pixels** 與 (0,0,0,95) **81,575 pixels**。alpha=95 mask 恰有四個 4-connected 實心矩形；right／bottom 為 exclusive：
+
+| 標記 | bbox (left,top)–(right,bottom) | width × height | 交叉驗證 |
+|---|---|---:|---|
+| Logo 候選 | **(58,161)–(423,213)** | **365 × 52** | 精確等於 Photoshop 尺寸且唯一 |
+| 主標 | **(58,226)–(463,275)** | **405 × 49** | 精確等於 LPBN_LAYOUT.headline |
+| 副標 | **(58,285)–(533,347)** | **475 × 62** | 精確等於 LPBN_LAYOUT.subheadline |
+| 保護文字 | **(58,360)–(533,388)** | **475 × 28** | 精確等於 LPBN_LAYOUT.protectionText |
+
+**【REPOSITORY EVIDENCE】** D 對位圖與 tracked A 對位圖 dimensions、SHA-256 均相同（912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0）。這只證明現有 bytes 相同，不代表 D 已進平台或掛標。
+
+**【DERIVED／CALCULATED】** Photoshop (478,944,365,52) 到唯一 Logo component (58,161,365,52) 的 D－12-local 平移為 Δleft = **−420**、Δtop = **−783**，尺寸不變。
+
+**【USER LOCKED】** (−420,−783) 只可作 D－12 自身 evidence，不得 generic／shared 化或套用其他版位／文字框。對位圖、A／B baseline 與 Jamie 資料無實質差異，geometry 無 conflict OPEN。
+
+### 15.7 四個正式 box
+
+**【USER LOCKED ＋ REPOSITORY EVIDENCE】**
+
+| box | {left,top,width,height} | right／bottom |
+|---|---|---|
+| Logo | **{58,161,365,52}** | **423／213** |
+| headline | **{58,226,405,49}** | **463／275** |
+| subheadline | **{58,285,475,62}** | **533／347** |
+| protectionText | **{58,360,475,28}** | **533／388** |
+
+四 box 均在 canvas 內且互不重疊。三文字 box 逐值沿用 A／B－12，零修改；不得以其他 D 經驗改動。
+
+### 15.8 Typography／文字 alignment
+
+**【USER LOCKED ＋ REPOSITORY EVIDENCE】**
+
+| 文字 | font | color |
+|---|---|---|
+| headline | **39pt "ShopeeNotoSans Medium"** | **#ffffff** |
+| subheadline ordinary | **49pt "ShopeeNotoSans Bold"** | **#fff285** |
+| subheadline $／% | **42pt "ShopeeNotoSans Bold"** | **#fff285**（無 symbolColor） |
+| protectionText | **22.5pt "ShopeeNotoSans Medium"** | **#a6f4e6** |
+
+**【REPOSITORY EVIDENCE】** 靠左實作是 **left-centered ink**：水平 ink 左緣貼 box.left，垂直 ink bounds 在 box 內置中。validateLeftCenteredInkFitsBox 使用 inkLeft=box.left、inkTop=box.top+(box.height−inkHeight)/2；drawLeftCenteredText 使用 x=box.left−run.inkLeft、y=box.top+box.height/2−(run.inkTop+run.inkBottom)/2；mixed subheadline 使用 offsetX=box.left−inkLeft、相同垂直公式。保留 textAlign="left"、textBaseline="alphabetic"、四個 actualBoundingBox*，三段空字串各自回傳零 ink fit validation。
+
+**【USER LOCKED】** D－12 必須逐式沿用；不得加 padding／inset、改水平置中或 left-top、抽 shared helper。Logo 與三文字 ink／destination 必須各自完整落盒。
+
+### 15.9 Logo contain／no-upscale 與 alignment
+
+**【USER LOCKED】** Logo 保持完整 source rect 與 aspect；禁止 stretch／cover／crop／clip。靠左保留 box.left；fractional 值原值保留，禁止 Math.round／floor／ceil／trunc／toFixed／parseInt／bitwise truncation。
+
+**【REPOSITORY EVIDENCE】** 最近直接 precedent：D－07 使用相同 **365 × 52** box，採 destinationX=box.left、destinationY=box.top+(box.height−destinationHeight)/2；D－09 延續水平靠左＋垂直置中。precedent 只證明型態，不提供 D－12 數值。
+
+**【DERIVED／CALCULATED】**
+
+| 項目 | 值 | 計算 |
+|---|---|---|
+| source／box | **784 × 112**／**365 × 52 @ (58,161)** | repo＋D－12 evidence |
+| scale | **13/28**（height-bound） | min(1,365/784,52/112) |
+| no-upscale | **成立** | 13/28 < 1 |
+| destination | **364 × 52 @ (58,161)** | left＋vertical-center |
+| 餘量 | 左0／右1／上0／下0 px | — |
+| aspect／source rect | **7:1**／完整 **(0,0,784,112)** | 無 crop／clip |
+
+**【DERIVED／CALCULATED】** destinationHeight 恰等於 box.height，故 top／center／bottom 數值都為 destinationY=161；採 direct precedent 的「水平靠左＋垂直置中」不引入 offset，垂直定位無 OPEN。結果恰為整數，但禁止取整仍是硬邊界。
+
+### 15.10 Medium template-local 2×
+
+**【USER LOCKED】** 直接採 template-local 2×，禁止 shared helper。
+
+**【REPOSITORY EVIDENCE】** MEDIUM_RENDER_SCALE=2；offscreen **2400 × 1100** 且有硬斷言；clearRect、alpha／composite 後 scale(2,2)；只繪 headline＋protectionText；縮回用獨立 high-quality smoothing；Bold subheadline 在正式 canvas 另繪。
+
+**【USER LOCKED】** D－12 只讓 headline＋protectionText 進 2×；Bold subheadline 與 Logo 不進 offscreen；不得新增兩段 Medium 同空即整體 return。
+
+### 15.11 $／% formatting
+
+**【REPOSITORY EVIDENCE ＋ USER LOCKED】** tokenizeSubheadline 把 $／% 切成 42pt Bold symbol run；ordinary 為 49pt Bold。adjacentOrdinaryRun 對 $ 優先後方、% 優先前方，保留 preferred→fallback reverse fallback。boundaryGlyphInkBottom 用 Array.from、略過無 ink glyph、actualBoundingBoxDescent；symbol 維持 run.y=adjacentInkBottom−run.inkBottom；mixed ink 水平靠左、垂直置中。不得改算法、font／color、fallback 或 positioning。
+
+### 15.12 Guards／layout validation／fit
+
+**【REPOSITORY EVIDENCE】** A／B guards：
+
+| guard | 現行事實 |
+|---|---|
+| canvas | HTMLCanvasElement；設定 1200 × 550 後硬斷言 |
+| background | HTMLImageElement、complete／naturalWidth readiness、intrinsic 1200 × 550 |
+| layout | assertSpecificationFitsCanvas 驗 canvas／background，遍歷 Object.entries(LPBN_LAYOUT) 檢查 finite、正尺寸、四邊界 |
+| fonts | FontFaceSet load／check、四個 FONT_CHECKS；wait 與 render 均 assert ready |
+| Medium | 2D context；offscreen 精確 2400 × 1100 |
+| metrics | advance 與四個 actualBoundingBox* finite；ink width／height finite 且非負 |
+
+**【REPOSITORY EVIDENCE】** fit helper 回傳 fitsWidth／fitsHeight，但 false 不自行 throw。01～12 Editor 限 headline **8**、subheadline **7**、protection **17**；ASCII 0.5、非 ASCII 1，超限 rollback。字數合法不能取代 pixel fit。
+
+**【USER LOCKED】** guards 不得弱化；Logo 須有 instance／readiness／正 intrinsic guard；四 box 均納入 bounds validation；Phase 4 驗收字串三段 fitsWidth／fitsHeight 皆 true，Logo 完整落盒。
+
+### 15.13 Draw order
+
+**【REPOSITORY EVIDENCE】** A／B－12 為 **canvas reset → clearRect → background → Medium 2×（headline＋protectionText）→ Bold subheadline**。D－07／09／10 均把 Logo 放 background 後、Medium 前；D－10 另有 clearRect → background → Logo → Medium → Bold 的 direct precedent。
+
+**【JAMIE/GPT LOCKED DECISION】** D－12 正式 draw order 為 **canvas reset → clearRect → background → Logo → Medium local 2×（headline＋protectionText）→ Bold subheadline**；原 draw-order OPEN 已正式關閉。Logo 是 D－12 正式 canvas 內容，置於 background 之後、文字之前；Medium local 2× 與 Bold subheadline 維持 A／B－12 原有文字繪製層級。此裁決只適用 D－12，不得 generic／shared 推廣，不構成其他 D 版位的 draw-order 規則；Logo 仍須真正 draw 入 base canvas、非 DOM overlay且不進 Medium；保留 alpha／composite；無 filter／blend／cover／crop／clip／額外 compositing。
+
+### 15.14 LPBN 掛標 boundary
+
+**【REPOSITORY EVIDENCE】** 現行 A／B 平台由目前 worksheet **E15** 讀 lpbnBadgeMonth，Workspace 預設空字串。lpbn-badges.js 是 A－12-local module，固定月份 9／10／11／12、每組 slots 1～3，不做 runtime 檔名／directory discovery。resolver 狀態 NONE／UNKNOWN_GROUP／OK／PARTIAL，slots 獨立且缺號不重編。composer 複製 1200 × 550 base，再以 (0,0) 1:1 疊 overlay，不改 base。Preview call chain 為 app.js → renderBnToCanvas(base) → resolveLpbnBadges → composeLpbnVariantCanvas，base＋最多3張；Export 先輸出 base 再追加實際 slots；兩者共用 resolver。
+
+**【USER LOCKED／DEFERRED UNTIL D PLATFORM INTEGRATION】** D－12 校稿與 Type D 平台整合不同階段。本輪及 template 開發不得修改／enable 掛標，不得改 lpbn-badges.js、Import、Workspace、App、Export、CSS，不得宣告 D 已繼承 Preview／Export 掛標。D 是否沿用 E15、base＋最多3 overlays、warning／partial semantics 全部 deferred。
+
+### 15.15 Viewer／launcher 最小 boundary
+
+**【REPOSITORY EVIDENCE】** A route 為 ?type=A&bn=12_LPBN，直接 import A template，使用 1200 × 550、A 底圖／對位圖與 shared 三欄。A launcher **104 行**、mode **100755**，含 server reuse／readiness／127.0.0.1:4173／root 推導／curl／open／trap／pause／stop。viewer 已有共用 Logo loading 與 images-object dispatch；校稿 viewer 不執行 badge stack。
+
+**【USER LOCKED／未來要求；本輪不得實作】** 預期獨立 bn/templates/D/12-lpbn.js；預期 bn/launch/D/12_LPBN.command 由 A launcher 最小同構識別替換，query ?type=D&bn=12_LPBN、mode 100755；viewer 只加最小 D－12 branch、三素材 source 與 unsupported message，不重寫共用機制。D－12 沿用 01～12 shared 三欄，不設 D-specific fieldConfig，維持 8／7／17、IME-safe、ASCII 0.5。校稿只驗 base＋Logo，不 enable／模擬 badge stack，也不是正式平台。
+
+**【OPEN／Phase 2】** launcher／viewer 最小同構逐行差異與既有 viewer stale comment 只可唯讀記錄；不得順手清理。
+
+### 15.16 正式平台 fail-closed
+
+**【REPOSITORY EVIDENCE】** SUPPORTED_TYPES 只有 A／B，Import／Restore reject 其他 type；ASSET_BASE_BY_TYPE 只有 A／B，不支援即 throw、不 fallback；A_TABLE 只有17 ids、無 type 維度／D entry，render-a.js 未 import D；正式 Preview／Export 經 renderBnToCanvas，D 尚未進 registry／asset base；D Import／Restore／Workspace／Editor／正式 Preview／Export 未 enable。
+
+**【USER LOCKED】** Phase 1 與未來個別 template／launcher／校稿 viewer 都不得改此 fail-closed 或六個核心 JS。
+
+### 15.17 Export existing facts／deferred
+
+**【REPOSITORY EVIDENCE；本輪未執行 Export】** EXPORT_ITEMS 的 12 為 JPG 且無 maxBytes；base filename 12_LPBN.jpg；JPEG_QUALITY=1.0；EXPORT_DPI=72。無容量限制時 quality 1.0 後做 JFIF 72×72 byte-level patch，不 resize／再次 lossy re-encode。variants 為 12_LPBN_1.jpg～_3.jpg（依 slot、缺號不壓縮），同為 quality 1.0＋72 dpi。base／variants 皆無 byte limit；01／02 quality-search 與 12 無關。
+
+**【USER LOCKED／DEFERRED UNTIL D PLATFORM INTEGRATION】** 以上僅 A／B 事實。D－12 format／DPI／quality／容量、Preview↔Export、variants、D worksheet／Restore、完整 ZIP 全 deferred；不得宣告 D 已繼承／驗證 JPG、72 dpi、quality 1.0 或無上限。本輪及 template 開發不得執行 Export／修改 export.js。
+
+### 15.18 Regression Boundary
+
+**【USER LOCKED】** Phase 1 唯一允許 tracked diff 是本文件末尾第15節。其他 tracked path zero-diff，staged=0；assets bytes／hash／路徑／Git 狀態不變；不得產生圖片或暫存產物。
+
+**【USER LOCKED／未來 Coding zero-diff】** A templates／launchers／assets、B assets、已完成 D－01／02／03／06／07／08／09／10、共用 Logo、LPBN掛標、CSS、index、vendor、fonts、banwords、六核心 JS 全部不得因 D－12 個別 template 修改。D－04／05／11／13～16 assets 維持 untracked 未處理。
+
+### 15.19 Phase 4 前 Acceptance Criteria（均為未來驗收，尚未 PASS）
+
+1. **【USER LOCKED】** Scope 僅 D－12；Regression Boundary zero-diff。
+2. **【REPOSITORY EVIDENCE】** 三素材 dimensions／bytes／SHA-256 與第15.2節一致。
+3. **【DERIVED／CALCULATED】** canvas 1200×550；background (0,0,1200,550)。
+4. **【USER LOCKED】** Photoshop box (478,944,365,52)；canvas Logo box {58,161,365,52}；local 平移 (−420,−783) 不共用。
+5. **【USER LOCKED】** 三文字 boxes 精確為 {58,226,405,49}、{58,285,475,62}、{58,360,475,28}。
+6. **【USER LOCKED】** typography 精確為 39pt Medium white、49pt Bold yellow、42pt Bold symbol yellow、22.5pt Medium #a6f4e6。
+7. **【DERIVED／CALCULATED】** Logo scale 13/28；destination **364×52 @ (58,161)**；餘量左0／右1／上0／下0；完整 7:1 source。
+8. **【USER LOCKED】** Logo 水平靠左＋垂直置中；無 rounding／stretch／cover／crop／clip；真正 draw 入 canvas。
+9. **【USER LOCKED】** 三文字保留 left-centered ink、baseline、metrics；實際 ink 落盒且 fitsWidth／fitsHeight 全 true。
+10. **【USER LOCKED】** $／% tokenizer、symbol font、preferred→fallback、glyph bottom alignment 零差異。
+11. **【USER LOCKED】** Medium local 2× = 2400×1100；只 headline＋protection；Bold／Logo 不進；無 shared helper。
+12. **【REPOSITORY EVIDENCE＋未來要求】** guards 不弱化；四 box 受 bounds validation；Logo 有 readiness guard。
+13. **【JAMIE/GPT LOCKED DECISION】** draw order 精確為 canvas reset → clearRect → background → Logo → Medium local 2×（headline＋protectionText）→ Bold subheadline；只適用 D－12，不得 generic／shared 推廣；無額外 compositing。
+14. **【USER LOCKED／未來要求】** renderer／launcher／viewer 僅最小接線；校稿 overlay 1:1；不 enable badges／正式平台。
+15. **【USER LOCKED】** Jamie 親自以未來 D launcher 完成 1:1 overlay 人工驗證並明確 PASS，關 overlay 後 Logo／三文字仍在 canvas；此前不得 Code Commit。
+16. **【USER LOCKED】** fail-closed 維持；六核心 JS zero-diff。
+17. **【USER LOCKED／DEFERRED】** D 掛標、正式 Export／platform integration 未執行、未宣告驗證。
+18. **【USER LOCKED】** Assets 未改；無新圖片、export、golden、暫存產物。
+
+### 15.20 Phase Boundary／LOCKED Decision／Remaining OPEN
+
+**【USER LOCKED】** 本節僅 Phase 1；未 Coding、未 Proposal、未改其他 docs、未 Stage／Commit／Push／Tag／Release、未啟動 viewer、未 Export、未生成圖片。
+
+**【JAMIE/GPT LOCKED DECISION】** D－12 draw-order OPEN 已正式關閉；唯一正式順序為 **canvas reset → clearRect → background → Logo → Medium local 2×（headline＋protectionText）→ Bold subheadline**。此裁決只適用 D－12，不得 generic／shared 推廣。
+
+**【OPEN／Phase 2／3；維持未關閉】** 第 15.3 節的 D template export surface、images-object 解構、Logo helper 名稱與 exported constants 是否 module-local，仍留待 Phase 2／3。
+
+**【OPEN／Phase 2；維持未關閉】** 第 15.15 節的 launcher／viewer 最小同構逐行差異與既有 stale comment，仍留待 Phase 2 唯讀調查。
+
+**【USER LOCKED／DEFERRED；非本輪 OPEN】** D 是否沿用 A／B 掛標，以及 D－12 正式 Export／完整平台行為，全部 deferred until D platform integration。
+
+完成本節後立即停止，等待 Jamie／GPT Review；不得自行進 Phase 2。
+
+### 15.21 Implementation Outcome（Documentation Update）
+
+**【REPOSITORY EVIDENCE】** D－12 已依本節鎖定規格完成單一版位落地；Code Commit 為 **`4397a40fb69b12a11b3c6e61aa9bef1581f73409`**（`feat(bn): add D12 LPBN template`，parent `bd20a44b217da505fc8412021b6ca054d582bb4e`），精確包含 5 paths（1 M ＋ 4 A）：新增 `bn/templates/D/12-lpbn.js`、`bn/launch/D/12_LPBN.command`（mode `100755`）、`bn/assets/D/底圖/12_LPBN.jpg`、`bn/assets/D/對位/12_LPBN.png`，以及最小修改共用 `bn/launch/viewer.html`。共用 `bn/assets/D/Logo.png` 僅引用，未在本 commit 再次納管。
+
+**【REPOSITORY EVIDENCE】** 三素材落地實證：底圖 JPG 1200 × 550、131,471 bytes、SHA-256 `589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634`；對位 PNG 1200 × 550、16,091 bytes、SHA-256 `912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0`；共用 Logo PNG 784 × 112、48,618 bytes、SHA-256 `99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`。
+
+**【REPOSITORY EVIDENCE】** 正式 Canvas／background 均為 **1200 × 550 @ (0,0)**；四框實作值為 Logo `{58,161,365,52}`、headline `{58,226,405,49}`、subheadline `{58,285,475,62}`、protectionText `{58,360,475,28}`，三文字框與 A／B－12 逐值相同。Photoshop box `(478,944,365,52)` 與 `Δ(-420,-783)` 僅保留為 D－12 自身歷史 evidence，未形成 runtime 或 generic offset。
+
+**【REPOSITORY EVIDENCE】** Logo source 784 × 112（7:1）採 contain／no-upscale：`scale = 13/28`，destination **364 × 52 @ (58,161)**，餘量左 0／右 1／上 0／下 0，完整 source rect、水平靠左、無 rounding／stretch／crop。文字 typography、left-centered ink、`$`／`%` formatting 與 fit validation 均按本節落地；Medium template-local 2× 為 **2400 × 1100**，只涵蓋 headline＋protectionText。D－12 唯一正式 draw order 為 **canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline**，只適用 D－12，未推廣為 generic／shared 規則。
+
+**【REPOSITORY EVIDENCE】** renderer 零 import、exports 恰為 `waitForLpbnFonts`／`renderLpbn`，採 images-object signature 與防禦式解構；Logo helper 實際名稱為 template-local `drawLpbnLogo`，constants 為 module-local。A－12 baseline functions 實測為 **6/14 byte-identical ＋ 7/14 message-only behavior-equivalent ＋ 1/14 substantive（`renderLpbn`）**，`drawLpbnLogo` 另計；`assertSpecificationFitsCanvas` 未弱化並自然涵蓋四框，A－12 baseline zero-diff。
+
+**【REPOSITORY EVIDENCE】** Viewer 僅新增 D－12 校稿 branch，未設 `fieldConfig`，共用 loader／dispatch／overlay validation 未重構，既有 3 處 stale comments 保持 zero-diff；launcher query 為 `?type=D&bn=12_LPBN`，104 行且與 A－12 僅 7 行識別差異。Jamie 已親自開啟 launcher 完成 Phase 6 人工 1:1 overlay 對位驗證並明確 **PASS**。
+
+**【USER LOCKED／DEFERRED】** 上述 PASS 只代表 D－12 renderer／launcher／assets 與人工對位完成，**不是正式平台 Preview／Export PASS**。LPBN 掛標正式 D 行為、D－12 Export 與 D platform integration 仍 deferred；正式支援 Type 仍只有 A／B，Type D 維持 fail-closed，六個核心 JS zero-diff。其餘未完成 D 版位與樣式 C 不受本節影響。

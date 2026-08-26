@@ -395,6 +395,8 @@ maxBytes:250000}`、`EXPORT_DPI = 72`；既有 PNG 72 dpi pHYs patch
 launcher ＋ assets 納管 ＋ 人工對位驗證」，不是 D 樣式正式平台整合完成。C 不在本註記範圍；本註記不對 C
 或未確認的 D 版位差異作任何新裁決。
 
+（落地註記：樣式 D 的 `12_LPBN`（D－12）亦已完成正式 Template 與 Jamie 人工 1:1 overlay 對位 PASS，Code Commit 為 `4397a40fb69b12a11b3c6e61aa9bef1581f73409`（`feat(bn): add D12 LPBN template`，parent `bd20a44b217da505fc8412021b6ca054d582bb4e`），精確 5 paths（1 M＋4 A），launcher mode `100755`。三素材實證為底圖 JPG 1200 × 550／131,471 bytes／SHA-256 `589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634`、對位 PNG 1200 × 550／16,091 bytes／`912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0`、共用 Logo PNG 784 × 112／48,618 bytes／`99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`。Canvas／background 為 1200 × 550；四框為 Logo `{58,161,365,52}`、headline `{58,226,405,49}`、subheadline `{58,285,475,62}`、protectionText `{58,360,475,28}`，三文字框與 A／B－12 逐值相同。Logo source 784 × 112，contain／no-upscale `scale=13/28`，destination 364 × 52 @ (58,161)，餘量 0／1／0／0、水平靠左、無 rounding；Photoshop `(478,944,365,52)` 與 `Δ(-420,-783)` 只屬 D－12 evidence。文字沿用 A／B－12 typography、left-centered ink 與 `$`／`%` formatting；Medium local 2× 為 2400 × 1100且只涵蓋 headline＋protectionText。正式 draw order 為 canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline，僅 D－12。**目前完成集合更新為 D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10、D－12**，不代表整個 D 完成；D－04、D－05、D－11、D－13～17 仍未完成。正式 Type 仍只支援 A／B，D 維持 fail-closed；LPBN 掛標正式 D 行為、D－12 Export 與平台整合仍 deferred。Jamie PASS 不是正式平台 Preview／Export PASS；樣式 C 不在本註記範圍。）
+
 個 BN 版位 ============================================================
 
 ### 01_DDcard BN - 尺寸：531 × 792 - 格式：JPG - 分類：主視覺 Resize

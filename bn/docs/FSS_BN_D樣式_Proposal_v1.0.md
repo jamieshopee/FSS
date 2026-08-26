@@ -3169,3 +3169,352 @@ Code Commit 為 **`1e2cdb939936de18d2665bafc27229bc7a032e3b`**（`feat(bn): add 
 - 啟動檔與 viewer **僅是人工對位工具**，不是第二套正式 renderer、不是正式 Generator Preview、不是正式資料輸入流程；**Jamie 的 PASS 是「人工 1:1 overlay 對位 PASS」，不是「正式平台 Preview／Export PASS」，後者尚未做。**
 - 第 13.22 節 Export LOCKED 與 deferred **維持不變、未關閉**：`{ id: "10", name: "10_POP UP", format: "png", maxBytes: 250000 }`、`EXPORT_DPI = 72`，既有 PNG 72 dpi pHYs patch 與容量鏈屬 **A／B 正式路徑**之現行行為；**D－10 是否正式套用 250,000 bytes 仍 deferred until D platform integration**，本次 Code Commit 與 Jamie Manual PASS 不代表已驗證該上限。D－10 正式 Preview ↔ Export 一致性實測、D Excel worksheet Import 與 Restore、正式控制台 Preview／Export、樣式 D 完整 17 版位輸出行為，全部 **deferred until D platform integration**；本輪**未執行** Export，`bn/js/export.js` zero-diff。
 - 目前已完成的僅為 D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10 **個別** renderer ＋ launcher ＋ assets 納管與人工對位流程，**不代表整個 D 樣式完成**；D－04、D－05、D－11～17 仍須逐一確認與開發，**不得由 D－10 或其他已完成 D 版位推論**，樣式 C 不在範圍。
+
+---
+
+## 14. D－12（`12_LPBN`）Proposal
+
+> **Phase 狀態**：D－12 Phase 1 Requirement（Requirement 第 15 節，含 Jamie／GPT 已 LOCKED draw order）與 Phase 2 Repository Investigation 均已 Jamie／GPT Review PASS。本節只收斂 **Phase 3 Proposal**；以下所有 Coding、Verification、Manual PASS 與 Commit 敘述均為未來計畫，**尚未執行**。
+
+### 14.1 Purpose／Scope／Phase Boundary
+
+本 Proposal 只規劃 D－12 template、校稿 launcher、viewer 最小 additive branch，以及既有 D－12 底圖／對位圖於 Phase 4 的原 bytes 納管。唯一依據為已 LOCKED Requirement 第 15 節與已 Review PASS 的 Phase 2 repository evidence；本節不重新做 Requirement、不重新裁決 geometry／alignment／draw order，也不提前關閉正式平台整合事項。
+
+本輪只修改本 Proposal 文件並追加第 14 節；**不 Coding、不修改 Requirement、不建立 standalone Proposal、不 Stage、不 Commit、不 Push、不 Tag、不 Release、不開 viewer、不執行 Export、不生成圖片、不 enable Type D**。須先經 Jamie／GPT Review PASS，方可進入 Phase 4 Coding。
+
+### 14.2 Phase 3 正式技術決策
+
+以下決策於本節正式收斂，Phase 4 不得重新擴張：
+
+1. D－12 template **imports = 0**，對外只 export `waitForLpbnFonts` 與 `renderLpbn`。
+2. A－12 原本 exported 的 `LPBN_WIDTH`、`LPBN_HEIGHT`、`LPBN_BACKGROUND`、`LPBN_LAYOUT` 在 D－12 改為 **module-local const**，不 export；依據是已完成 8/8 D renderer 均只 export wait／render 且 constants module-local。不得建立 D template registry。
+3. renderer signature 為 `renderLpbn(canvas, images, { headline = "", subheadline = "", protectionText = "" } = {})`，並在 renderer 呼叫端使用 `const { backgroundImage, logoImage } = images && typeof images === "object" ? images : {};` 防禦式解構。
+4. Logo helper 正式命名為 template-local `drawLpbnLogo(context, logoImage, box)`；不得抽成 shared Logo helper 或 shared image abstraction。
+5. Viewer 只新增最小 D－12 branch，不新增 `fieldConfig`。D－01 的 `fieldConfig` 是歷史例外，不得套用。
+6. viewer 現有三處「只有 D－01 使用 Logo」stale comments **維持 zero-diff**；其執行邏輯已依 `logoSource` 運作，本版位不得順手清理 comment。
+7. 不建立 generic abstraction／framework／plugin／shared 2× helper／shared alignment helper／D template registry，亦不修改任何既有 renderer。
+
+### 14.3 Phase 4 Exact Coding Scope（LOCKED：恰 5 paths）
+
+Phase 4 預定變更面恰為：
+
+1. `A bn/templates/D/12-lpbn.js`
+2. `A bn/launch/D/12_LPBN.command`
+3. `M bn/launch/viewer.html`
+4. `A bn/assets/D/底圖/12_LPBN.jpg`
+5. `A bn/assets/D/對位/12_LPBN.png`
+
+既有 tracked `bn/assets/D/Logo.png` 只引用，**不修改、不重新納管、不重存、不 stage**。除上述 5 paths 外，其餘檔案一律 zero-diff。
+
+### 14.4 Baseline Strategy／Canvas／Background
+
+- 唯一文字與 renderer baseline：`HEAD:bn/templates/A/12-lpbn.js`（Phase 3 Precheck sha256 `56529180612b85e8698f0b1092a47888c08b65b274d1a78571f4383854565f4e`）。A／B－12 共用此 renderer。
+- D－07 只作 Logo **水平靠左＋垂直置中**以及同尺寸 Logo box 的直接 implementation evidence；D－09 只補強相同 alignment 型態。不得帶入兩者的任何座標、offset、文字 helper 差異或其他 geometry。
+- Canvas 固定為 **1200 × 550**。
+- D－12 正式底圖 intrinsic **1200 × 550**，draw destination 固定為 **`(0, 0, 1200, 550)`**，不得 stretch 成其他 geometry。
+- A－12 baseline 已先設定 `canvas.width = 1200`、`canvas.height = 550`，再執行 main-canvas `clearRect(0, 0, 1200, 550)`。D－12 必須**原樣保留這個 canvas reset＋clearRect 現況**，不是另創 D generic 清除規則，也不得改其他 renderer。
+- 保留 A－12 canvas instance、background instance／readiness／intrinsic、canvas-size、2D context、fonts 與 layout guards；只在 renderer 呼叫端最小新增 Logo readiness guard。
+
+### 14.5 LOCKED Geometry
+
+`LPBN_LAYOUT` 在 D－12 增加 `logo`，並正式鎖為第一個 key；其餘三個 key 順序與值沿用 A－12：
+
+| key | left | top | width | height |
+|---|---:|---:|---:|---:|
+| `logo` | 58 | 161 | 365 | 52 |
+| `headline` | 58 | 226 | 405 | 49 |
+| `subheadline` | 58 | 285 | 475 | 62 |
+| `protectionText` | 58 | 360 | 475 | 28 |
+
+三文字 geometry 與 A／B－12 **逐值相同**，不得因其他 D precedent 改值。四框 right／bottom 分別為 Logo **423／213**、headline **463／275**、subheadline **533／347**、protectionText **533／388**，均在 1200 × 550 canvas 內。
+
+A－12 的 `assertSpecificationFitsCanvas` 透過 `Object.entries(LPBN_LAYOUT)` 對每一 key 驗證 finite、正尺寸與四邊界；validation 不依 key 順序決定繪製或文字運算，因此將 `logo` 放第一個 key 會自然納入相同 bounds validation，**不破壞既有迭代語意**。不得另建 shared layout validation。
+
+Photoshop／CSS Logo 原始框 `(478, 944, 365, 52)` 到 D－12 canvas Logo box 的 `Δleft = -420`、`Δtop = -783`，只記為 **D－12 自身 evidence**；不得建立 generic／shared offset，不得套用至其他 D 版位。
+
+### 14.6 Typography／Alignment／Fit Validation
+
+Typography 完整沿用 A／B－12：
+
+- headline：`39pt "ShopeeNotoSans Medium"`、`#ffffff`
+- subheadline：`49pt "ShopeeNotoSans Bold"`、`#fff285`
+- `$`／`%`：`42pt "ShopeeNotoSans Bold"`、`#fff285`
+- protectionText：`22.5pt "ShopeeNotoSans Medium"`、`#a6f4e6`
+
+不得新增 `symbolColor`，不得修改既有字數規則、auto-fit 或 overflow UI。
+
+三段文字完整沿用 A－12 **left-centered ink**：水平 ink 左緣對齊 `box.left`，垂直以 actual ink bounds 置中。保留 `validateLeftCenteredInkFitsBox`、`drawLeftCenteredText`、`drawLeftCenteredMixedSubheadline`、`textAlign = "left"`、`textBaseline = "alphabetic"`、`actualBoundingBoxLeft／Right／Ascent／Descent` measurement、fit validation 及空字串零 ink validation。不得改成 centered ink 或 left-top，亦不得抽 shared alignment helper。
+
+### 14.7 `$`／`%` Formatting Preservation
+
+完整保留 A－12 的：
+
+- `tokenizeSubheadline`
+- `adjacentOrdinaryRun`
+- ordinary-run `preferred → fallback` 兩段式選擇
+- `$` 優先取後方 ordinary run
+- `%` 優先取前方 ordinary run
+- 反向 boundary glyph fallback
+- `boundaryGlyphInkBottom` 的 symbol ink-bottom alignment
+
+Phase 4 不得重寫或簡化此演算法。
+
+### 14.8 Medium Template-local 2×
+
+- `MEDIUM_RENDER_SCALE = 2`
+- offscreen canvas 固定 **2400 × 1100**，既有尺寸硬斷言保留。
+- 只讓 headline 與 protectionText 進入 Medium 2× surface。
+- Bold subheadline（含 `$`／`%`）與 Logo 均不進 2×。
+- 保留 offscreen `clearRect`、`globalAlpha = 1`、`globalCompositeOperation = "source-over"`、`scale(2, 2)` 及回貼 main canvas 的獨立 high-quality smoothing `save／restore`。
+- 不新增函式層整體 early-return，不建立 shared 2× helper。
+
+### 14.9 Logo Sizing／Placement／Guard
+
+正式 Logo source 為 **784 × 112**，aspect **7 : 1**。`drawLpbnLogo` 只採 template-local contain／no-upscale：
+
+```text
+scale = min(1, 365 / 784, 52 / 112) = 13 / 28
+destinationWidth = 784 × 13 / 28 = 364
+destinationHeight = 112 × 13 / 28 = 52
+destinationX = box.left = 58
+destinationY = box.top + (box.height − destinationHeight) / 2 = 161
+```
+
+正式 destination 為 **`364 × 52 @ (58, 161)`**；box 餘量為 left **0**／right **1**／top **0**／bottom **0**。水平必須靠左並保留正式 `box.left`，垂直計算結果為 `y = 161`。不得水平置中。
+
+Logo 使用完整 source rect `0, 0, sourceWidth, sourceHeight`，smoothing 為 helper-local `save() → imageSmoothingEnabled = true → imageSmoothingQuality = "high" → drawImage() → restore()`。禁止 stretch／cover／crop／clip，禁止 `Math.round`／`Math.floor`／`Math.ceil`／`Math.trunc`／`toFixed`／`parseInt`／bitwise truncation或任何等價取整；所有 fractional 計算均保留原值。
+
+Logo readiness guard 放在 `renderLpbn` 呼叫端，檢查 `logoImage instanceof HTMLImageElement`、`complete`、`naturalWidth`、`naturalHeight`；helper 內不重複 guard。不得建立 shared image guard。
+
+### 14.10 Draw Order（Jamie／GPT LOCKED）
+
+D－12 唯一正式順序為：
+
+```text
+canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline
+```
+
+Logo 是 D－12 正式 canvas content，置於 background 後、文字前；Medium local 2× 與 Bold subheadline 維持 A／B－12 原有文字層級。此順序**只適用 D－12**，不得 generic/shared 推廣。Repository 並無需被宣稱存在完全相同 precedent；本節是 Jamie／GPT 對 D－12 的正式裁決，不是待裁決項目。
+
+### 14.11 A－12 Baseline Helper Preservation（Phase 3 預期）
+
+`HEAD:bn/templates/A/12-lpbn.js` 實證共有 **14 個 top-level function declarations**；`tokenizeSubheadline` 內另有 local `flushOrdinaryText` arrow，後者不與 top-level baseline 混算。新增的 `drawLpbnLogo` 也不納入這 14 個 baseline functions。
+
+逐函式核對後，Phase 3 正式預期分類為 **6/14 byte-identical ＋ 7/14 message-only behavior-equivalent ＋ 1/14 substantive**：
+
+**預期 byte-identical（6）**
+
+1. `hasInk`
+2. `drawLeftCenteredText`
+3. `tokenizeSubheadline`（包含其 local `flushOrdinaryText`）
+4. `adjacentOrdinaryRun`
+5. `drawLeftCenteredMixedSubheadline`
+6. `hasFontFaceSetCapabilities`
+
+**預期 message-only behavior-equivalent（7）**
+
+1. `assertSpecificationFitsCanvas`
+2. `measureRun`
+3. `boundaryGlyphInkBottom`
+4. `validateLeftCenteredInkFitsBox`
+5. `drawLpbnMediumText`
+6. `assertFontsReady`
+7. `waitForLpbnFonts`
+
+七者預期只將 runtime message 的版位標示 `A－12` 改為 `D－12`，演算法、控制流、參數與回傳值不變；`assertSpecificationFitsCanvas` 仍以原迭代自然驗證新增的 `logo` key。
+
+**預期 substantive（1）**
+
+1. `renderLpbn`：因第二參數改為 images object、defensive 解構、Logo readiness guard、Logo draw 接線與 LOCKED draw order而有實質差異；除此之外保留 A－12 background、font、layout、canvas reset／clearRect、文字 draw 與 validations。
+
+A－12 的 `A－12` literal 共 17 次，分布為 `assertSpecificationFitsCanvas` 4、`measureRun` 1、`boundaryGlyphInkBottom` 1、`validateLeftCenteredInkFitsBox` 1、`drawLpbnMediumText` 2、`assertFontsReady` 1、`waitForLpbnFonts` 1、`renderLpbn` 6，與上述分類相符。
+
+以上是 **Phase 3 預期**，不是 Coding 後事實。Phase 5 必須以封箱 A－12 baseline 逐函式實測；結果若不符，不得為湊 6＋7＋1 而修改演算法，須精確歸因並停止回報。
+
+### 14.12 Viewer Minimal Additive Plan
+
+在既有 D－10 branch 後、unsupported `else` 前新增唯一 D－12 branch，欄位固定為：
+
+- 條件：`type === "D" && bn === "12_LPBN"`
+- dynamic import：`../templates/D/12-lpbn.js`
+- `viewerTitle = "樣式 D－12_LPBN"`
+- `viewerLabel = "D－12"`
+- `width = 1200`
+- `height = 550`
+- `backgroundSource = "../assets/D/底圖/12_LPBN.jpg"`
+- `overlaySource = "../assets/D/對位/12_LPBN.png"`
+- `logoSource = "../assets/D/Logo.png"`
+- `renderTemplate = template.renderLpbn`
+- `waitForFonts = template.waitForLpbnFonts`
+- 不設定、不新增 `fieldConfig`
+
+只最小追加 unsupported message 的 D－12 名稱。共享 Logo loader、`logoSource ? { backgroundImage, logoImage } : backgroundImage` dispatch、overlay 1:1 validation、shared default test strings、A／B／A－17 與 D－01／02／03／06／07／08／09／10 branches 全部不改。三處 stale Logo comments 明確 zero-diff。
+
+Viewer 只供未來 D－12 template 校稿，不代表正式平台 Preview 或 Export 已接線。
+
+### 14.13 Launcher Plan
+
+唯一 baseline 為 `bn/launch/A/12_LPBN.command`，並以既有 D launchers 交叉確認 A→D 同構模式。Phase 4 新增 `bn/launch/D/12_LPBN.command`：
+
+- query 固定為 `?type=D&bn=12_LPBN`
+- 預期 **104 行**、Git mode **100755**
+- 預期只在既有 A→D launcher 同構的 **7 個識別位置**變更；Coding 後須逐行實測，不得硬改湊 7 行。
+- 保留 `set -u`、repo-root 推導、`127.0.0.1:4173`、viewer marker、server reuse、port collision、Python／curl／open 檢查、50 次 readiness loop、`trap`、pause 與 stop-server 機制。
+- 不建立 launcher abstraction，不開啟 viewer於 Phase 4／5。
+
+### 14.14 Assets（Phase 4 原 bytes 納管）
+
+| Path | Intrinsic／format | Bytes | SHA-256 | Phase 4 action |
+|---|---|---:|---|---|
+| `bn/assets/D/底圖/12_LPBN.jpg` | 1200 × 550 JPEG | 131,471 | `589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634` | 納管現有檔案，bytes 不變 |
+| `bn/assets/D/對位/12_LPBN.png` | 1200 × 550 RGBA PNG | 16,091 | `912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0` | 納管現有檔案，bytes 不變 |
+| `bn/assets/D/Logo.png` | 784 × 112 RGBA PNG | 48,618 | `99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24` | 只引用既有 tracked asset |
+
+禁止重存、轉檔、重新編碼、移動或改名；對位圖只供 DOM overlay 校稿，不得合成進正式 canvas。
+
+### 14.15 LPBN 掛標 Boundary（Deferred 不關閉）
+
+Repository 現行 A／B evidence：月份由對應 type worksheet 的 `E15` 取得；base 永遠保留；最多 3 個固定 slot overlays；任一 slot 缺漏不重新編號；Preview／Export 既有 resolver 共用相同 variants resolution chain。
+
+**D－12 正式是否沿用掛標仍 deferred until D platform integration。** Phase 4 template／launcher 校稿不得修改 `bn/js/lpbn-badges.js`、Import／Export 核心 JS，不得 enable D，也不得宣稱 D－12 已繼承正式掛標 Preview／Export 行為。
+
+### 14.16 Export Boundary（Deferred 不關閉）
+
+Repository 現行 A／B evidence：`12_LPBN` format 為 JPEG、`EXPORT_DPI = 72`、`JPEG_QUALITY = 1.0`、沒有 `maxBytes`；LPBN variants 使用相同 JPEG／72 dpi／quality 1.0 規格。
+
+**D－12 正式 Export 仍 deferred until D platform integration。** 本輪與 Phase 4／5 不執行 Export、不修改 `bn/js/export.js`，不得把 A／B 行為寫成 D 已驗證或已繼承。
+
+### 14.17 Fail-Closed Plan
+
+- `SUPPORTED_TYPES` 維持 `Object.freeze(["A", "B"])`。
+- `ASSET_BASE_BY_TYPE` 維持只有 A／B。
+- `A_TABLE` 不加入 D entry 或 type 維度。
+- `bn/js/render-a.js` 不 import D template。
+- D Import／Restore／正式 Generator Preview／Export 維持 disabled。
+- Phase 4 禁止修改六個正式平台核心 JS：`bn/js/render-a.js`、`bn/js/import.js`、`bn/js/workspace.js`、`bn/js/export.js`、`bn/js/app.js`、`bn/js/editor.js`。
+
+新增 viewer branch 與 launcher 只服務人工校稿，不是正式平台 enablement。
+
+### 14.18 Phase 4 Coding Sequence（未來最小步驟）
+
+1. 重新執行 strict Precheck，確認 base、locks、tracked／staged scope、Requirement 與素材 hashes。
+2. 以封箱的 A－12 baseline 程式化建立 `bn/templates/D/12-lpbn.js`。
+3. 只加入 LOCKED Logo geometry、module-local constants、images signature、defensive 解構、renderer-side Logo guard、template-local `drawLpbnLogo`，並保留 canvas reset／main-canvas `clearRect` 與 LOCKED draw order。
+4. 以 A－12 launcher 建立 D－12 launcher，只做同構識別差異。
+5. 對 `viewer.html` 加入最小 D－12 branch及 unsupported message追加；不動 stale comments。
+6. 納管兩個既有 D－12 assets，bytes 不變；Logo 只引用。
+7. 進入 Phase 5 靜態自驗，完成後立即停止，等待 Jamie 執行 Phase 6。
+
+不得在此 Proposal 直接 Coding。
+
+### 14.19 Phase 5 Static Verification Plan
+
+Phase 5 至少驗證：
+
+1. Node syntax；launcher `bash -n`／`zsh -n` 適用檢查。
+2. template imports = 0、exports 恰為 `waitForLpbnFonts`／`renderLpbn`。
+3. canvas `1200 × 550`；background `1200 × 550 @ (0,0)`。
+4. canvas reset 後 main-canvas `clearRect` 存在且位於 background 前。
+5. 四個 LOCKED geometry 與 `logo` 第一 key；layout validation 自然涵蓋四框。
+6. typography、left-centered ink、actualBoundingBox fit validation與空字串零 ink。
+7. `$`／`%` tokenizer、preferred→fallback、方向及 boundary ink-bottom alignment。
+8. Medium local 2× 為 `2400 × 1100`，只含 headline＋protectionText；Logo／Bold subheadline不在其中。
+9. Logo `13/28 → 364 × 52 @ (58,161)`、餘量 `0/1/0/0`、完整 source rect、no-upscale、無任何 rounding／crop／cover／clip。
+10. LOCKED draw order全文與實作一致。
+11. baseline 14 functions 逐函式實測分類；6＋7＋1 只是預期，不得硬湊。
+12. viewer branch無 `fieldConfig`、共享鏈零改、三處 stale comments zero-diff。
+13. launcher query、104 行預期、7 行同構差異預期及 mode `100755`。
+14. 三素材 bytes／hash；A－12 baseline與 viewer 非預期 bytes drift。
+15. 5-path scope、Regression Boundary、fail-closed、`git diff --check`、staged狀態。
+
+Phase 5 禁止 AI visual verification、圖片生成、viewer、Export、正式平台測試或 enable D。
+
+### 14.20 Phase 6 Manual Verification Plan（僅 Jamie 執行）
+
+Jamie 親自雙擊未來 `bn/launch/D/12_LPBN.command`，以 1:1 overlay 人工驗證：
+
+- Logo＋三文字均落在正式框內。
+- Logo 水平靠左、垂直結果正確，右側保留 1px 餘量。
+- 三文字為 left-centered ink。
+- 關閉 overlay 後，Logo 與三文字確實畫在 canvas，而非只存在於 overlay。
+
+Jamie 明確 PASS 前不得進入 Code Commit。此 PASS 只代表 D－12 校稿 launcher 的人工 1:1 overlay 驗證，**不是正式平台 Preview／Export PASS**。
+
+### 14.21 Regression Boundary（Phase 4 必須全部 zero-diff）
+
+- `bn/templates/A/*.js`，尤其封箱 A－12 baseline。
+- `bn/launch/A/*.command`。
+- 既有 D－01／02／03／06／07／08／09／10 templates、launchers 與 assets。
+- `bn/assets/A/*`、`bn/assets/B/*`。
+- `bn/assets/D/Logo.png`。
+- `bn/assets/LPBN掛標/*` 與 `bn/js/lpbn-badges.js`。
+- `bn/js/*`，包含六個正式平台核心 JS、vendor 與 banwords logic。
+- `bn/index.html`、`bn/css/*`、fonts、`bn/assets/banwords.xlsx`。
+- Requirement、Template Requirement、Architecture、17版位差異、全域 Requirement與其他 docs。
+- 其他 D 版位 assets；D－04／05／11／13～17 均不處理。
+
+### 14.22 Scope Boundary／Explicit Non-Goals
+
+- 不處理 D－04／05／11／13～17，不處理樣式 C，不預建其他 D 版位。
+- 不建立 generic/shared helper、framework、plugin、registry、shared image／Logo／2×／alignment abstraction。
+- 不修改 Workspace／JSON／Editor，不新增 Logo 欄位。
+- 不改字數規則、auto-fit、overflow UI。
+- 不重新設計 LPBN 掛標或 Export，不 enable D。
+- 不重新裁決 Requirement 第 15 節 geometry、draw order或 D－12自身 Photoshop→canvas offset。
+- 不修改 A－12，不清理 stale comments或其他歷史問題。
+- 不生成 screenshot／overlay／export output／golden image，不開 viewer，不執行 Export。
+
+### 14.23 Acceptance Criteria（供 Phase 4／5 驗證；目前未執行）
+
+1. Coding scope 恰為 14.3 的 5 paths；Logo tracked＋clean且未修改／未 stage，其餘 zero-diff。
+2. template imports = 0，exports 恰為 `waitForLpbnFonts`／`renderLpbn`；constants module-local，無 registry。
+3. signature 與 defensive images 解構符合 14.2；background與 Logo guards齊備，Logo helper內不重複 readiness guard。
+4. canvas為 1200 × 550；background為 1200 × 550並繪於 `(0,0,1200,550)`。
+5. canvas width／height reset後執行 main-canvas `clearRect(0,0,1200,550)`。
+6. 四 geometry精確為 `logo {58,161,365,52}`、`headline {58,226,405,49}`、`subheadline {58,285,475,62}`、`protectionText {58,360,475,28}`；`logo` 是第一 key。
+7. 三文字 geometry與 A／B－12逐值相同；`assertSpecificationFitsCanvas`未弱化並涵蓋四框。
+8. Photoshop→canvas `Δleft=-420`、`Δtop=-783`只記作 D－12 evidence，未形成 generic offset。
+9. typography四項完全符合 14.6；未新增 `symbolColor`、未改字數規則。
+10. 三文字為 left-centered ink；alignment helpers、`textAlign="left"`、`textBaseline="alphabetic"`、actualBoundingBox fit與空字串零 ink保留。
+11. `$`／`%` formatting符合 14.7，演算法未重寫。
+12. Medium local 2×為 2400 × 1100，只處理 headline＋protectionText；Logo與 Bold subheadline不進2×，無 shared helper或整體 early-return。
+13. Logo source為784 × 112、7:1；`scale=13/28`，destination `364 × 52 @ (58,161)`，餘量 `0/1/0/0`。
+14. Logo水平靠左、垂直結果 `y=161`；完整 source rect、no-upscale，無 stretch／cover／crop／clip及任何 rounding／truncation。
+15. Logo smoothing為 template-local save／high-quality／drawImage／restore，helper名稱恰為 `drawLpbnLogo`。
+16. draw order恰為 `canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline`，且未推廣為其他版位規則。
+17. baseline helper Coding後逐函式實測；Phase 3 預期 6 byte-identical＋7 message-only＋1 substantive，`drawLpbnLogo`另計，結果不硬湊。
+18. viewer欄位符合14.12、無`fieldConfig`；共享 loaders／dispatch／overlay validation／default strings與既有branches零改，三處stale comments zero-diff。
+19. launcher query恰為`?type=D&bn=12_LPBN`，mode100755；104行與7個識別差異於 Coding後如實實測，既有機制未重構。
+20. 兩個D－12 assets依14.14原bytes納管，三素材dimensions／bytes／hash完全一致。
+21. 14.21 Regression Boundary全部zero-diff；Type D維持fail-closed，六核心JS零修改。
+22. LPBN掛標正式D行為維持deferred，未修改掛標機制、未宣稱D已繼承。
+23. D－12 Export維持deferred，未執行Export、未修改`export.js`、未宣稱正式平台PASS。
+24. Jamie Phase6 Manual PASS是Code Commit前置gate；在Jamie明確PASS前無Code Commit。
+
+### 14.24 Rollback／Stop Conditions
+
+- Phase 4 若發現 Requirement 第 15 節與 repository 有 substantive conflict，立即停止並精確回報，不自行改值。
+- 若任何必要修正超出 14.3 的 5 paths 或觸及 14.21 Regression Boundary，立即停止。
+- 若 helper 實測分類不符 6＋7＋1 預期，先逐函式歸因並停止回報，不修改演算法湊數。
+- 若 assets dimensions／bytes／hash、A－12 baseline hash或 Git scope漂移，立即停止，不 restore／stash／clean。
+- D－12實作均為 additive；未經Jamie Manual PASS不得進入Commit。
+
+### 14.25 Phase Boundary
+
+本節只完成 **Phase 3 Proposal**。未建立 D－12 template／launcher，未修改 viewer／JS／CSS／HTML／assets／Requirement，未開 viewer、未執行 Export、未生成圖片、未 enable Type D，亦未 Stage／Commit。
+
+須等待 **Jamie／GPT Review PASS** 後才能進入 Phase 4 Coding；Phase 4／5完成後仍須等待 Jamie 親自執行 Phase 6並明確PASS，才可進入Code Commit。LPBN掛標正式D行為與D－12正式Export持續deferred until D platform integration。
+
+### 14.26 Implementation Record（Documentation Update）
+
+D－12 已依本 Proposal 完成落地。Code Commit 為 **`4397a40fb69b12a11b3c6e61aa9bef1581f73409`**（`feat(bn): add D12 LPBN template`，parent `bd20a44b217da505fc8412021b6ca054d582bb4e`），精確為 5 paths（1 M ＋ 4 A）：新增 D－12 template、launcher（mode `100755`）、底圖與對位圖，最小修改共用 viewer；既有 tracked `bn/assets/D/Logo.png` 僅引用、未修改、未再次納管。
+
+三素材實證為：底圖 JPG 1200 × 550／131,471 bytes／SHA-256 `589ba6ce783340e3075ecc934558cbea2b2ade033ecd352c45386314d68d6634`；對位 PNG 1200 × 550／16,091 bytes／SHA-256 `912c5f9d3d06cfe30be4809c1d508b32220b0064a3f7e6925d63140aedb7f8a0`；共用 Logo PNG 784 × 112／48,618 bytes／SHA-256 `99813cf81a7963ff2e81d60e478332d6f24db4ea8462c059cb466770f016de24`。
+
+實作保留 1200 × 550 canvas／background、四框 `logo {58,161,365,52}`、`headline {58,226,405,49}`、`subheadline {58,285,475,62}`、`protectionText {58,360,475,28}`，三文字框與 A／B－12 逐值相同。Logo 以 `scale=13/28` contain／no-upscale 成 **364 × 52 @ (58,161)**，餘量 0／1／0／0、完整 7:1 source、水平靠左且無 rounding。headline 39pt Medium `#ffffff`、subheadline 49pt Bold `#fff285`、`$`／`%` 42pt Bold `#fff285`、protectionText 22.5pt Medium `#a6f4e6`，left-centered ink、特殊符號 formatting、fit validation 均按 Proposal 落地。
+
+Medium template-local 2× 為 2400 × 1100，只處理 headline＋protectionText；Logo 與 Bold subheadline 不進 2×。正式順序精確為 **canvas reset → clearRect → background → Logo → Medium local 2× → Bold subheadline**，僅 D－12 使用，未抽 generic/shared 規則。renderer 零 import、exports 恰 `waitForLpbnFonts`／`renderLpbn`，採 defensive images object；constants module-local，Logo helper 實際為 `drawLpbnLogo`。
+
+A－12 baseline functions 落地比對為 **6/14 byte-identical ＋ 7/14 message-only behavior-equivalent ＋ 1/14 substantive（`renderLpbn`）**，新增 `drawLpbnLogo` 另計；`assertSpecificationFitsCanvas` 未弱化並涵蓋四框，A－12 zero-diff。Viewer 只有 D－12 additive branch、未設 `fieldConfig`，3 處 stale comments zero-diff；launcher 為 104 行、與 A－12 僅 7 行識別差異，route `?type=D&bn=12_LPBN`。
+
+Jamie 已親自開啟 launcher 完成 Phase 6 人工 1:1 overlay 對位並明確 **PASS**，其後建立上述 Code Commit。此 PASS 不是正式平台 Preview／Export PASS；LPBN 掛標正式 D 行為與 D－12 Export 仍 deferred until D platform integration。正式 Type 仍只支援 A／B，D 維持 fail-closed，六核心 JS zero-diff；未宣告整個 D 樣式完成。
