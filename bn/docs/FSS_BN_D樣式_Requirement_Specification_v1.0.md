@@ -2334,3 +2334,179 @@ D－10 使用獨立 `bn/templates/D/10-pop-up.js`（exports 恰 2 —— `waitFo
 **【REPOSITORY EVIDENCE】** Viewer 僅新增 D－12 校稿 branch，未設 `fieldConfig`，共用 loader／dispatch／overlay validation 未重構，既有 3 處 stale comments 保持 zero-diff；launcher query 為 `?type=D&bn=12_LPBN`，104 行且與 A－12 僅 7 行識別差異。Jamie 已親自開啟 launcher 完成 Phase 6 人工 1:1 overlay 對位驗證並明確 **PASS**。
 
 **【USER LOCKED／DEFERRED】** 上述 PASS 只代表 D－12 renderer／launcher／assets 與人工對位完成，**不是正式平台 Preview／Export PASS**。LPBN 掛標正式 D 行為、D－12 Export 與 D platform integration 仍 deferred；正式支援 Type 仍只有 A／B，Type D 維持 fail-closed，六個核心 JS zero-diff。其餘未完成 D 版位與樣式 C 不受本節影響。
+
+## 16. D－04／05／11／13／14 reuse A renderer evidence＋D Platform Integration Routing Requirement
+
+> **狀態：Phase 0 Decision Lock＋既有 Phase 1 Requirement 最小修正；完成本節後停止，等待 Jamie／GPT Review。** 本節保留 D－04／05／11／13／14 各自的 Phase 1 baseline evidence，並依後續 Repository Architecture Investigation 鎖定正式 D platform routing；尚未建立 D platform integration Requirement／Proposal，亦未 Coding、enable Type D、執行正式 Preview／Export 或取得平台驗證 PASS。
+
+### 16.1 Scope／Non-goals
+
+**【USER LOCKED】** 本 Batch 恰包含以下五個版位，且每一版位只可綁定自己的 A／B 同版位 baseline：
+
+1. D－04 `04_Loyalty BN` → A／B－04 `bn/templates/A/04-loyalty-bn.js`
+2. D－05 `05_MSBN` → A／B－05 `bn/templates/A/05-msbn.js`
+3. D－11 `11_Line OA` → A／B－11 `bn/templates/A/11-line-oa.js`
+4. D－13 `13_Skinny BN_APP` → A／B－13 `bn/templates/A/13-skinny-bn-app.js`
+5. D－14 `14_Skinny BN_PC` → A／B－14 `bn/templates/A/14-skinny-bn-pc.js`
+
+**【USER LOCKED】** 五者的文字欄位、geometry、字型樣式、字型大小、顏色、alignment、字數限制、`$`／`%` 特殊 formatting、fit validation、字型 readiness、draw order、Medium local 2× 與 renderer guards，均須**完整沿用各自 A／B 同版位**的既有行為。唯一允許的 D-specific 視覺差異是從 `bn/assets/D/底圖/` 使用該版位對應底圖。
+
+**【USER LOCKED】** 不得新增 Logo、額外文字框、位移、generic offset、shared helper、generic renderer、完整重複 `D_TABLE`／shared generic registry或任何 A／B 同版位不存在的視覺元素／行為；不得把五版位誤寫成同一套數值，不得把任一版位 precedent 套至另一版位。
+
+**【JAMIE/GPT LOCKED DECISION】** 本節的五版位 baseline evidence 仍只涵蓋 D－04／05／11／13／14；第16.11節的正式 platform routing decision則涵蓋 D－01～17，且不得藉此重開已完成 D-specific renderer或其他版位的 geometry／typography／alignment／文字行為。
+
+**【USER LOCKED／NON-GOALS】** 本 Phase 不重寫 D－15／16／17完整規格，不修改 Proposal、Template Requirement、Architecture、17版位差異、全域 Requirement、template、launcher、viewer、JS／CSS／HTML 或 assets；不處理樣式 C，不 Stage／Commit／Push／Tag／Release，不開 viewer、不執行 Export、不生成或改存任何圖片。
+
+### 16.2 A／B baseline 共用策略
+
+**【REPOSITORY EVIDENCE】** `bn/templates/B/` 不存在。`bn/js/render-a.js` 的 `A_TABLE` 只以版位 id 查表；04／05／11／13／14 分別直接引用上述五個 `bn/templates/A/` renderer，A 與 B 只由 `ASSET_BASE_BY_TYPE` 選擇 `bn/assets/A/底圖/` 或 `bn/assets/B/底圖/`。因此每個版位的 A／B 現行正式 baseline 是同一個 A template，不存在另一本 B renderer 規格。
+
+**【REPOSITORY EVIDENCE】** 01～12 共用欄位為 headline／subheadline／protectionText，字數限制分別 8／7／17；13／14 欄位為 line1／line2，字數限制分別 5／6。這些既有 Editor／Workspace 資料模型事實只作 baseline evidence；Type D 正式 Import／Editor／Workspace 仍未 enable。
+
+**【JAMIE/GPT LOCKED DECISION】** D－04／05／11／13／14 在正式 Type D routing 下直接 reuse 各自 A renderer，只由 D asset routing 使用 `bn/assets/D/底圖/` 的同版位底圖；**不得建立這五個版位的獨立 D template／launcher**，不得藉此建立 shared／generic abstraction，亦不得修改已封箱的 A baseline。
+
+### 16.3 D－04 `04_Loyalty BN` baseline
+
+**【REPOSITORY EVIDENCE】** 唯一 baseline `bn/templates/A/04-loyalty-bn.js`（SHA-256 `fbcd23b41798e2536cd4d046f4f83c19a28d625c378a7f3cf7830bac494cba41`）的 Canvas 與 background intrinsic／draw destination 均為 **702 × 208 @ (0,0)**。Renderer 以 canvas width／height assignment reset，無 main-canvas `clearRect`，設 `globalAlpha = 1`、`globalCompositeOperation = "source-over"` 後畫 background。
+
+**【REPOSITORY EVIDENCE】** 三文字框與 typography：headline `{left:32, top:52, width:245, height:30}`、Medium 24pt `#ffffff`；subheadline `{left:32, top:88, width:350, height:45}`、Bold 35pt `#fff285`，`$`／`%` 為 Bold 30pt；protectionText `{left:32, top:139, width:350, height:16}`、Medium 12pt `#a6f4e6`。Alignment 是 **left-top actual-ink**，不是 centered／left-centered；`textAlign="left"`、`textBaseline="alphabetic"`，x/y 以 actualBoundingBox ink left/top 貼齊 box left/top。
+
+**【REPOSITORY EVIDENCE】** `$`／`%` tokenizer、`$` 後方 ordinary run 優先／`%` 前方優先、reverse fallback 與 boundary glyph ink-bottom 對齊均存在。空字串回傳零 ink；fit validation 回傳 `fitsWidth`／`fitsHeight`。Medium template-local 2× 為 **1404 × 416**，涵蓋 headline＋protectionText；Bold mixed subheadline 在正式 Canvas 後畫。正式順序為 **canvas reset → background → Medium local 2×（headline＋protectionText）→ Bold subheadline**。既有 guards 為 canvas／background instance、background intrinsic 與 fonts readiness；baseline 沒有 `assertSpecificationFitsCanvas` 或 main-canvas `clearRect`，D－04 不得自行新增來改變其 renderer 行為。
+
+**【USER LOCKED】** D－04 完整沿用上述 A／B－04文字與 renderer 行為，唯一 D-specific 視覺差異為 `bn/assets/D/底圖/04_Loyalty BN.png`；不得新增 Logo 或 geometry。
+
+### 16.4 D－05 `05_MSBN` baseline
+
+**【REPOSITORY EVIDENCE】** 唯一 baseline `bn/templates/A/05-msbn.js`（SHA-256 `7eec66e41a66382f3921ba90b9dff15f92fb15e4b57fa900fe4ef053fbf6c68f`）的 Canvas 為 **1200 × 400**；background intrinsic **1200 × 360**，draw destination **`(0,20,1200,360)`**。Renderer 以 canvas width／height assignment reset，無 main-canvas `clearRect`，使用 `globalAlpha = 1`／`source-over`。
+
+**【REPOSITORY EVIDENCE】** 三文字框與 typography：headline `{118,113,370,43}`、Medium 35pt `#ffffff`；subheadline `{96,173,414,75}`、Bold 37.5pt **`#007661`**，`$`／`%` Bold 32pt同色；protectionText `{96,266,414,23}`、Medium 19pt `#a6f4e6`。Alignment 是 **centered actual-ink**（水平＋垂直 ink bounding-box 置中），保留 `textAlign="left"`／`textBaseline="alphabetic"`。
+
+**【REPOSITORY EVIDENCE】** `$`／`%` tokenizer、preferred→fallback 與 boundary glyph ink-bottom 行為存在；空字串零 ink與 fitsWidth／fitsHeight 保留。Medium template-local 2× 為 **2400 × 800**，涵蓋 headline＋protectionText；Bold mixed subheadline 後畫。正式順序為 **canvas reset → background placement → Medium local 2×（headline＋protectionText）→ Bold subheadline**。既有 canvas／background instance、intrinsic 與 font guards保留；baseline 沒有 `assertSpecificationFitsCanvas` 或 main-canvas `clearRect`，不得自行增補。
+
+**【USER LOCKED】** D－05 完整沿用上述 A／B－05 行為，唯一 D-specific 視覺差異為 `bn/assets/D/底圖/05_MSBN.png`；不得把 1200 × 360 background stretch 成 1200 × 400，不得新增 Logo 或 geometry。
+
+### 16.5 D－11 `11_Line OA` baseline
+
+**【REPOSITORY EVIDENCE】** 唯一 baseline `bn/templates/A/11-line-oa.js`（SHA-256 `70c773c210d74250775414837e8c28a0547b920191f533f7b143ac289b0b3c11`）的 Canvas 為 **1040 × 1040**；background intrinsic **1016 × 1007**，draw destination **`(12,12,1016,1007)`**。Renderer 做 canvas reset後明確 `clearRect(0,0,1040,1040)`，再以 alpha 1／source-over 畫 background。
+
+**【REPOSITORY EVIDENCE】** 三文字框與 typography：headline `{230,154,580,68}`、Medium 55pt `#ffffff`；subheadline `{180,240,680,86}`、Bold 68pt `#fff285`，`$`／`%` Bold 60pt；protectionText `{180,345,680,37}`、**Regular 30pt** `#a6f4e6`。三者為 **centered actual-ink**，保留 left/alphabetic context與 actualBoundingBox measurement。
+
+**【REPOSITORY EVIDENCE】** `$`／`%` tokenizer、preferred→fallback與 boundary glyph ink-bottom 存在；finite metrics、空字串零 ink與 labelled fit validation保留。Medium template-local 2× 為 **2080 × 2080**，**只涵蓋 headline**；protectionText 以 Regular 30pt 在正式 Canvas 畫，再畫 Bold mixed subheadline。正式順序為 **canvas reset → clearRect → background placement → Medium local 2× headline → protectionText → Bold subheadline**。`assertSpecificationFitsCanvas`、background decode／intrinsic、canvas size、font readiness與 metrics guards均須保留。
+
+**【USER LOCKED】** D－11 完整沿用上述 A／B－11 行為，唯一 D-specific 視覺差異為 `bn/assets/D/底圖/11_Line OA.png`；不得將 protectionText 誤納入 Medium 2×，不得新增 Logo 或 geometry。
+
+### 16.6 D－13 `13_Skinny BN_APP` baseline
+
+**【REPOSITORY EVIDENCE】** 唯一 baseline `bn/templates/A/13-skinny-bn-app.js`（SHA-256 `b47667b7a54d8d58386976209f20f33d6c1b6ec51e71eba1089b23f5b7eedb67`）使用 line1／line2，Canvas **358 × 360**；background intrinsic **336 × 318**，draw destination **`(11,20,336,318)`**。line1 `{74,42,210,38}`、Medium 30pt `#ffffff`；line2 `{49,89,260,38}`、Bold 30pt `#fff285`，`$`／`%` Bold 25pt同色；兩行皆為 **centered actual-ink**。
+
+**【REPOSITORY EVIDENCE】** line2 保留 `$`／`%` tokenizer、preferred→fallback、boundary glyph ink-bottom；兩行保留 actualBoundingBox finite guards、空字串 zero-ink與 labelled fit validation。Medium template-local 2× 為 **716 × 720**，只涵蓋 line1；line2 在正式 Canvas 後畫。順序為 **canvas reset → clearRect → background placement → Medium local 2× line1 → Bold mixed line2**。`assertSpecificationFitsCanvas`、background decode／intrinsic、canvas-size、font capability/readiness與 metrics guards均保留。Renderer 內 Photoshop→runtime註解只屬 A－13歷史來源，不得轉成 D Batch generic offset。
+
+**【USER LOCKED】** D－13 完整沿用上述 A／B－13 行為，唯一 D-specific 視覺差異為 `bn/assets/D/底圖/13_Skinny BN_APP.png`；不得新增 protectionText、Logo 或其他 geometry。
+
+### 16.7 D－14 `14_Skinny BN_PC` baseline
+
+**【REPOSITORY EVIDENCE】** 唯一 baseline `bn/templates/A/14-skinny-bn-pc.js`（SHA-256 `05a3c2a2a5c15fae106b319a639a5fe8bc707048e143748254c8066ea0914fd8`）使用 line1／line2，Canvas **400 × 110**；background intrinsic **384 × 96**，draw destination **`(8,7,384,96)`**。line1 `{18,23,150,25}`、Medium 20pt `#ffffff`；line2 `{18,56,195,29}`、Bold 22.5pt `#fff285`，`$`／`%` Bold 19pt同色；兩行皆為 **left-centered actual-ink**（水平靠左＋垂直 ink bounding-box 置中），不是 centered／left-top。
+
+**【REPOSITORY EVIDENCE】** line2 保留 `$`／`%` tokenizer、preferred→fallback、boundary glyph ink-bottom；actualBoundingBox finite guards、空字串 zero-ink與 labelled fit validation保留。Medium template-local 2× 為 **800 × 220**，只涵蓋 line1；line2 後畫。順序為 **canvas reset → clearRect → background placement → Medium local 2× line1 → Bold mixed line2**。`assertSpecificationFitsCanvas`、background decode／intrinsic、canvas-size、font capability/readiness與 metrics guards均保留。Renderer 的 Photoshop→runtime註解只屬 A－14歷史來源，不得作 D generic offset。
+
+**【USER LOCKED】** D－14 完整沿用上述 A／B－14 行為，唯一 D-specific 視覺差異為 `bn/assets/D/底圖/14_Skinny BN_PC.png`；不得新增 protectionText、Logo 或其他 geometry。
+
+### 16.8 D 素材 evidence（唯讀；本 Phase 不納管）
+
+**【REPOSITORY EVIDENCE】** 五張正式 D 底圖目前皆存在、皆為 untracked 8-bit RGBA PNG；其 intrinsic dimensions逐一符合各自 baseline background guard：
+
+| 版位 | 正式 D 底圖 | intrinsic | bytes | SHA-256 | Git |
+|---|---|---:|---:|---|---|
+| D－04 | `bn/assets/D/底圖/04_Loyalty BN.png` | 702 × 208 | 95,172 | `6abe8300b2d7a4d1e1527df6d27c3dd489ed98fc330ef409d637073829de4262` | untracked |
+| D－05 | `bn/assets/D/底圖/05_MSBN.png` | 1200 × 360 | 244,560 | `b0936beb957afc76f620d400c58e106cd0798127295b072df4b0259dbde32b11` | untracked |
+| D－11 | `bn/assets/D/底圖/11_Line OA.png` | 1016 × 1007 | 520,378 | `0a42091e6066b3626cd3aba795c52c6e28cd2ac70d88b423d818c2a2bfa2dd76` | untracked |
+| D－13 | `bn/assets/D/底圖/13_Skinny BN_APP.png` | 336 × 318 | 92,682 | `a76acfa43ca73b63f829b6c08947071ba03302f9bd4bf4293e460233590ac016` | untracked |
+| D－14 | `bn/assets/D/底圖/14_Skinny BN_PC.png` | 384 × 96 | 28,854 | `0c0b56d6d0d708105edd37a9b97db1ebcb111ac5b1e10ae2f100f2a38948dc18` | untracked |
+
+**【REPOSITORY EVIDENCE】** 對位圖亦存在且維持 untracked，只作後續 Phase 2 校稿 evidence；本 Phase 不由其重新推導文字 geometry：
+
+| 版位 | 對位圖 | intrinsic | bytes | SHA-256 |
+|---|---|---:|---:|---|
+| D－04 | `bn/assets/D/對位/04_Loyalty BN.png` | 702 × 208 | 5,519 | `8c3214121c7fa154eb4d41ae93e76b79b3e455503a093ce031b8ff3c83ea14d1` |
+| D－05 | `bn/assets/D/對位/05_MSBN.png` | 1200 × 400 | 12,328 | `90bfd190bb817d2ee11c42d4a6aaeae36d56ab725b4ffab6d6e6aec075206170` |
+| D－11 | `bn/assets/D/對位/11_Line OA.png` | 1040 × 1040 | 30,257 | `39d043c341131ca1c7606f7941dd5cf11d70a50148325cc65f12dbfe50a17257` |
+| D－13 | `bn/assets/D/對位/13_Skinny BN_APP.png` | 358 × 360 | 8,458 | `f7e82d22d6825e68ff0521f2b8c0a21425a901917ee19790fd8e24f89bcdf1de` |
+| D－14 | `bn/assets/D/對位/14_Skinny BN_PC.png` | 400 × 110 | 2,767 | `bc61a996be84e658591173861ea669d0a289074f32dffc673a46633694827f0f` |
+
+**【USER LOCKED】** 本 Phase 禁止 add、修改、移動、改名、轉檔、重編碼或另存上述素材；不得生成 screenshot／overlay／export output／golden image。
+
+### 16.9 Group B reuse fail-fast boundary
+
+**【REPOSITORY EVIDENCE】** 已完成的 Phase 2 Repository Investigation逐版位確認 D－04／05／11／13／14 可安全滿足「只換對應 D 底圖，其餘完整沿用自己的 A／B baseline」；五者均保留在 Group B reuse集合，未發現 canvas／intrinsic、renderer contract或文字行為 conflict。這是 routing evidence，不是正式平台 Coding／Preview／Export PASS。
+
+**【JAMIE/GPT LOCKED DECISION】** 未來平台實作或驗證若發現任一 Group B版位無法安全 reuse A renderer，必須只停止該版位並回 Jamie／GPT裁決；不得自行複製 D renderer、不得硬套／猜測／修正，也不得把單一版位 conflict推廣至其他 Group B版位。
+
+### 16.10 Export Decision Lock／正式平台尚未驗證與 fail-closed
+
+**【REPOSITORY EVIDENCE】** A／B 現行 `EXPORT_ITEMS` 將 04／05／11／13／14 均列為 PNG、無 `maxBytes`，`EXPORT_DPI = 72`；無容量限制的 PNG 路徑使用既有 72 dpi pHYs byte-level patch。以上只屬 A／B 正式平台現況。
+
+**【JAMIE/GPT LOCKED DECISION／尚未實作或驗證】** Type D正式規格完整沿用現行 **BN-id based export matrix**，不建立 D-specific export matrix：01 JPG／245,000 bytes、02 JPG／145,000 bytes、03 JPG、04 PNG、05 PNG、06～09 JPG、10 PNG／250,000 bytes、11 PNG、12 JPG＋badge variants、13～14 PNG、15～16 JPG、17 PNG；DPI 72、JPG quality與既有容量處理均照同 BN id規則。此處只鎖規格；D Preview↔Export一致性、完整 ZIP與容量結果仍須待平台 Coding後驗證，本 Phase不執行 Export、不修改 `bn/js/export.js`，不得宣告 D Export PASS。
+
+**【REPOSITORY EVIDENCE】** `SUPPORTED_TYPES` 仍為 `["A", "B"]`；`ASSET_BASE_BY_TYPE` 仍只有 A／B；`A_TABLE` 無 D entry或 type維度，`render-a.js` 不 import D template；D Import／Restore／正式控制台 Preview／Export仍 disabled。
+
+**【USER LOCKED】** 本 Phase 不得修改 `SUPPORTED_TYPES`、`ASSET_BASE_BY_TYPE`、`A_TABLE`、`render-a.js` 或任何核心 JS；Type D正式平台必須維持 fail-closed。既有個別 D template／launcher校稿路徑不得被描述為正式平台支援。
+
+### 16.11 D Platform Integration Decision Lock
+
+**【JAMIE/GPT LOCKED DECISION】** 17版位正式分組精確如下，無漏項、無重複：
+
+- Group A／D-specific renderer：**01／02／03／06／07／08／09／10／12**。Type D命中這九個 BN id時，使用已完成的同版位 D-specific renderer。
+- Group B／reuse A renderer：**04／05／11／13／14／15／16／17**。Type D命中這八個 BN id時，明確 reuse同版位 A renderer；不得建立完整重複 `D_TABLE`，不得複製八份無內容差異的 D renderer。
+
+**【JAMIE/GPT LOCKED DECISION】** Renderer routing唯一正式模型為 **per-BN D override＋A fallback／reuse**：只在已知 Type D且 BN id命中 Group A時選 D override；Group B只對精確已知 id選同版位 A renderer。未知 type、未知 BN id、缺 asset或缺 renderer一律明確 fail-closed，禁止模糊 fallback或以其他版位代替。
+
+**【JAMIE/GPT LOCKED DECISION】** D－15／16／17完全沿用 A／B同版位 renderer／model，不建立獨立 D template：D－15保留既有 ASCII 0.5／非ASCII 1的 runtime unit計數；D－16保留 leftTitle／leftCopy／rightTitle／rightCopy四欄文字模型；D－17保留 threshold model、dynamic geometry及既有 Modal／Editor行為。
+
+**【JAMIE/GPT LOCKED DECISION】** D－17直接共用 canonical `17_主標題.png`與`17_VIP.png` assets；A／B現有兩組檔案已逐 byte identical。不得為形式完整新增 D／17 asset copies；正式 asset resolver必須明確選取 canonical assets，缺失即 fail-closed。
+
+**【JAMIE/GPT LOCKED DECISION／尚未實作或驗證】** Type D－12正式平台整合沿用現有 LPBN badge resolver／variant chain；repository evidence為 resolver不依 type、D worksheet `E15 = 12`且 overlays與1200 × 550 canvas相容。此決策尚未 Coding，亦未取得 D正式 Preview／Export驗證 PASS。
+
+**【JAMIE/GPT LOCKED DECISION／尚未實作或驗證】** Type D Export沿用第16.10節的 BN-id based matrix；Workspace JSON維持既有 format與 **`version: 1`**，不升版，只在未來 type allow-list加入合法值 `"D"`。這些均為平台整合規格決策，不是已實作／已驗證聲明。
+
+**【REPOSITORY EVIDENCE／目前 fail-closed】** 目前 `SUPPORTED_TYPES = ["A", "B"]`、`ASSET_BASE_BY_TYPE`只有A／B、`A_TABLE`沒有D type routing，`render-a.js`不import D renderer；因此本輪文件修正不會 enable Type D。
+
+### 16.12 Regression Boundary／Decision Lock Acceptance Criteria
+
+1. **【USER LOCKED】** D－04／05／11／13／14 baseline evidence各自獨立保留；17版位 routing decision只採第16.11節精確 Group A／B集合，樣式C zero-scope。
+2. **【USER LOCKED】** 每個版位只綁定自己的 A／B baseline；不得跨版位套用 geometry、typography、alignment、offset 或 renderer行為。
+3. **【USER LOCKED】** 五者 D-specific 視覺差異只可為 `bn/assets/D/底圖/` 對應底圖；Logo、額外框與額外文字為 0。
+4. **【REPOSITORY EVIDENCE】** 五張 D 底圖 dimensions均符合各自 baseline background intrinsic guard；bytes／hash與第16.8節一致。
+5. **【REPOSITORY EVIDENCE】** D－04 left-top、D－05／11／13 centered、D－14 left-centered；不得混寫成單一 alignment。
+6. **【REPOSITORY EVIDENCE】** D－04／05 Medium 2×各含 headline＋protectionText；D－11只含 headline；D－13／14只含 line1；各自 draw order與guards保持。
+7. **【JAMIE/GPT LOCKED DECISION】** Group B若出現單一 reuse conflict，回 Jamie／GPT裁決；不得自行建立 D-specific renderer，亦不連帶其他版位。
+8. **【JAMIE/GPT LOCKED DECISION／尚未實作或驗證】** per-BN D override＋A reuse、D－17 canonical assets、D－12 badge、BN-id Export matrix與JSON v1規格已鎖；D正式 Import／Restore／Preview／Export仍未 enable、未驗證，正式Type目前仍只有A／B。
+9. **【USER LOCKED】** 本 Phase唯一允許 tracked diff是本文件第16節；其他 docs、code、templates、launchers、viewer、JS／CSS／HTML與assets zero-diff，staged=0。
+10. **【USER LOCKED】** 無圖片／overlay／export／golden／暫存產物，未開 viewer、未執行 Export。
+
+### 16.13 Phase Boundary
+
+**【USER LOCKED】** 本節只完成 D Platform Integration Phase 0 Decision Lock與既有 Requirement最小修正。下一步不再是為 D－04／05／11／13／14建立獨立 templates／launchers，而是另經 Jamie／GPT授權後建立 D樣式正式平台整合 Requirement／Proposal，統一處理 Type D routing、Import／Restore、Preview、D－17 Editor gate、LPBN badge、Export與Workspace JSON。本輪不建立該文件、不 Coding、不修改 viewer、不做 Manual／平台 Preview／Export PASS、不建立 Code Commit；不 Stage／Commit／Push／Tag／Release。
+
+完成本節後立即停止，等待 Jamie／GPT Review；不得自行建立 D platform integration Requirement／Proposal或進入 Coding。
+
+## 17. D 樣式正式平台整合完成紀錄（Documentation Update）
+
+> **【CURRENT COMPLETION RECORD】** 本節只同步 D 樣式正式平台整合的最新完成狀態，不重寫第 1～16 節各階段 Requirement、個別 template launcher 的人工 1:1 overlay PASS 或任何已 LOCKED geometry／typography／alignment。前文「Type D 尚未 enable／仍 fail-closed」「D－12 badge／Export deferred」等敘述保留為當時 Phase 的歷史語境；**目前狀態已由下列 Code Commit 與 Jamie 正式控制台 Manual PASS 取代。**
+
+### 17.1 Code Commit 與正式 routing
+
+**【REPOSITORY EVIDENCE】** D 樣式正式平台整合 Code Commit 為 **`e31f7be0b73fcca6db59bae693137f8fe8a8a329`**（`feat(bn): integrate D style into generator`，parent `173fcb06b4cc2d4a8e749ecaa50b58cd5335bec5`），精確包含 **10 paths＝3 M＋7 A**：修改 `bn/js/import.js`、`bn/js/render-a.js`、`bn/js/app.js`，並納管 `bn/assets/D/底圖/` 下 04／05／11／13／14／15／16 七張 runtime 底圖。`export.js`、`workspace.js`、`lpbn-badges.js`、`editor.js`、`index.html`、CSS、A templates、九個既有 D templates、launchers、viewer、D Logo、canonical 17 assets與 badge assets均未在該 commit 修改。
+
+**【REPOSITORY EVIDENCE】** 正式 renderer routing採 **稀疏 `D_OVERRIDE_TABLE`＋精確 Group B allow-list**，不是完整 `D_TABLE`。Group A＝**01／02／03／06／07／08／09／10／12**，使用既有 D-specific renderer、對應 D 底圖與 tracked 共用 `bn/assets/D/Logo.png`；Group B＝**04／05／11／13／14／15／16／17**，reuse同 ID A renderer，其中 04～16使用對應 D 底圖，17沿用 A threshold renderer／model並直接使用 canonical `bn/assets/A/底圖/17_主標題.png`與`17_VIP.png`。Group A override遺失、未知 type／BN id、缺必要 asset或 renderer均 fail-closed，不做模糊 fallback；未建立任何 Group B D renderer／template／launcher或 D－17 asset copies。
+
+### 17.2 Import／Restore／Editor／LPBN／Export
+
+**【REPOSITORY EVIDENCE】** Import／Restore正式 allow-list為 A／B／D；D Excel只讀 worksheet `D`，沿用既有 mapping、17 threshold parser、`E15` LPBN月份與 atomic replace。Workspace JSON維持 `FSS BN Workspace` **version 1**，只令合法 `type`可為`"D"`，未升版、未建立 D-only schema。一般 Editor仍依 BN id沿用既有欄位模型；D－17既有 threshold Editor／Modal gate已納入D；D－15保留 ASCII＝0.5／非ASCII＝1 unit算法，D－16保留四欄文字模型。
+
+**【REPOSITORY EVIDENCE】** D－12正式平台沿用既有 LPBN badge resolver／variant chain，月份來自 D worksheet `E15`；base永遠保留，最多三個固定 slot variants，缺 slot不重新編號，Preview與Export共用同一resolver。D Export沿用既有 BN-id matrix與72 dpi：01 JPG≤245,000 bytes、02 JPG≤145,000 bytes、03 JPG、04／05 PNG、06～09 JPG、10 PNG≤250,000 bytes、11 PNG、12 JPG base＋badge variants、13／14 PNG、15／16 JPG、17 PNG；一般 JPG quality＝1.0，01／02與10各自沿用既有容量策略，ZIP內Workspace JSON保存`type:"D"`。`bn/js/export.js`保持 zero-diff，因既有 export loop透過 central renderer自然支援D。
+
+### 17.3 驗證與素材邊界
+
+**【JAMIE MANUAL VERIFICATION PASS】** Jamie 已在正式控制台完成 D 樣式平台整合 Manual Verification並明確 **PASS**。此 PASS 是正式平台的 Import／Restore／Editor／Preview／D－12 badge／D－17／Export整合結果，與前述各 D template launcher 的「單版位人工 1:1 overlay PASS」是不同驗證層級；不得誤寫成 Push／Tag／Release PASS。
+
+**【REPOSITORY EVIDENCE】** 七張正式 runtime D 底圖已由 `e31f7be`納管；七張 `bn/assets/D/對位/` 04／05／11／13／14／15／16圖仍只作人工校稿／evidence，維持 untracked，不是 runtime reference、不是 Code Commit內容。樣式C、shared／generic refactor與歷史 stale comments均不在本次整合範圍。

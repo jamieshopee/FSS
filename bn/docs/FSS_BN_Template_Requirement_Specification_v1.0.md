@@ -2131,3 +2131,11 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 13. 實際資產目錄目前是半形 `A` 或全形 `Ａ`，以及正式 Requirement 路徑與實際檔案是否一致；Phase 1 只記錄問題，不 Rename 或修改資產。
 
 目前上述調查只聚焦第一張 A－01，不得擴張至其他 16 個 BN、樣式 B／C／D、Excel Import、Export、Restore、`17_門檻表` 或未來架構。未來新增已確認版位時，若共通項目已在 A－01 調查並實作驗證 PASS，不得重新調查整個 Generator，只調查該版位真正新增或不同的部分。
+
+## 11. D 樣式正式平台整合完成同步
+
+> **最新完成狀態。** 本節只補記正式平台接線，不改寫第 5.2 節各 D-specific template 的 geometry／typography／alignment或其 launcher人工 1:1 overlay PASS。前文「D尚未接入正式平台」屬各版位完成當時的歷史語境，現已由 Code Commit **`e31f7be0b73fcca6db59bae693137f8fe8a8a329`**（`feat(bn): integrate D style into generator`）與 Jamie 正式控制台 Manual PASS取代。
+
+正式 routing採稀疏 `D_OVERRIDE_TABLE`＋精確 Group B allow-list：Group A **01／02／03／06／07／08／09／10／12**沿用各自既有 D-specific template、D底圖與共用 D Logo；Group B **04／05／11／13／14／15／16／17**直接 reuse同 ID A renderer，04～16只切換至對應 D底圖，17沿用 A threshold renderer／model與 canonical A 17 assets。未建立完整 `D_TABLE`，也未建立 Group B D template／launcher或 D－17 asset copies；未知 route與缺必要內容仍 fail-closed。
+
+正式控制台已支援 D Import／Restore、既有 BN-id Editor模型、D－17 threshold Modal、D－12固定 slot badge chain及既有 BN-id Export matrix；Workspace JSON仍為version 1並保存`type:"D"`。此次 Code Commit只修改 `import.js`、`render-a.js`、`app.js`並納管七張 Group B runtime D底圖；所有 A templates與九個既有 D templates均 zero-diff。七張 D對位圖仍是 untracked校稿 evidence，不屬 runtime或 Code Commit。Jamie正式控制台 PASS不同於各單版位 launcher overlay PASS，且不代表已 Push／Release。

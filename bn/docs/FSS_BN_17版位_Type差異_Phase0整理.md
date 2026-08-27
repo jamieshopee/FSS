@@ -689,3 +689,11 @@ Phase 0：需求討論 → Phase 1：Requirement Specification → Phase
 目前不要因本整理檔自行 Commit。
 
 待本階段需求整理完成後，再判斷是否需要同步更新正式文件。
+
+## 十八、D 樣式正式平台整合完成同步
+
+本節是 Phase 0差異整理之後的最新完成狀態；前文對 D「尚未 enable／仍 deferred」的描述只代表當時調查階段。D樣式正式平台整合已由 Code Commit **`e31f7be0b73fcca6db59bae693137f8fe8a8a329`**（`feat(bn): integrate D style into generator`）落地，並經 Jamie正式控制台 Manual Verification明確 **PASS**；此 PASS不同於各 D-specific template launcher的人工1:1 overlay PASS，也不是Push／Release PASS。
+
+正式renderer分組維持逐版位差異：Group A **01／02／03／06／07／08／09／10／12**使用既有D-specific renderer、D底圖與共用D Logo；Group B **04／05／11／13／14／15／16／17**reuse同ID A renderer，04～16使用D底圖，17沿用A threshold renderer／model及canonical A 17 assets。實作是稀疏`D_OVERRIDE_TABLE`＋精確Group B allow-list，不是完整`D_TABLE`；沒有Group B D renderer／template／launcher或D－17 asset copies，未知route仍fail-closed。
+
+D Excel只讀worksheet `D`並沿用既有mapping、E15月份、threshold parser與atomic replace；Restore／Workspace JSON仍為version 1且合法保存`type:"D"`。Editor維持各BN id既有模型，包含D－15 unit算法、D－16四欄與D－17 threshold Modal。D－12正式沿用固定slot badge chain；Export沿用既有BN-id format／72 dpi／quality／capacity matrix，`export.js`未因D修改。七張D runtime底圖已納管，七張D對位圖仍為untracked校稿 evidence；樣式C不在本次同步範圍。

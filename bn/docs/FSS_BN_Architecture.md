@@ -1487,3 +1487,23 @@ Launcher 104 行、與 A－12 僅 7 行識別差異；Viewer 沿用既有共用 
 ### 47.4 平台邊界
 
 正式支援 Type 仍只有 **A／B**：`SUPPORTED_TYPES`、`ASSET_BASE_BY_TYPE`、`A_TABLE`／renderer registry 均未 enable D，六個核心 JS zero-diff，D 維持 fail-closed。LPBN 掛標正式 D 行為、D－12 Export、Preview↔Export 與 D platform integration 全部 deferred。已完成個別 renderer／人工對位的集合更新為 **D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10、D－12**，不代表整個 D 完成；D－04、D－05、D－11、D－13～17 仍未完成，樣式 C 不在本節範圍。
+
+## 48. D 樣式正式平台整合實際落地狀態
+
+> 本節記錄 `e31f7be0b73fcca6db59bae693137f8fe8a8a329`（`feat(bn): integrate D style into generator`，parent `173fcb06b4cc2d4a8e749ecaa50b58cd5335bec5`）之正式架構結果，以及 Jamie 已完成的正式控制台 Manual Verification **PASS**。第 39～47 節「尚未平台整合」文字保留為各 template落地當時的歷史狀態，已由本節取代；各節 launcher人工1:1 overlay PASS仍是另一層驗證，不與本次平台 PASS混寫。
+
+### 48.1 Renderer 與 asset routing
+
+`bn/js/render-a.js`保留既有 `A_TABLE`並新增稀疏 `D_OVERRIDE_TABLE`，精確只含 Group A **01／02／03／06／07／08／09／10／12**；這九個 route使用既有 D-specific renderer、`bn/assets/D/底圖/`對應底圖與 tracked `bn/assets/D/Logo.png`，維持既有 `{backgroundImage, logoImage}` contract。Group B allow-list精確為 **04／05／11／13／14／15／16／17**：04～16 reuse同 ID A renderer與原單一 `backgroundImage` contract，但背景改走D底圖；17 reuse A threshold renderer／model並直接讀取 canonical A `17_主標題.png`／`17_VIP.png`。沒有完整 `D_TABLE`、Group B D renderer／template／launcher、D－17 copies或模糊 fallback；未知 type／BN id與缺必要 asset／renderer均明確失敗。
+
+### 48.2 Data、Editor、LPBN 與 Export
+
+`bn/js/import.js`正式接受A／B／D；D Excel精確讀取worksheet `D`並沿用既有 mapping、threshold parser、`E15` LPBN月份與 atomic replace。Restore使用同一allow-list，Workspace JSON維持`FSS BN Workspace` version 1並保存`type:"D"`。一般Editor沿用BN-id欄位模型；`bn/js/app.js`只把既有D－17 threshold Editor／Modal gate擴為A／B／D。D－15 unit計數、D－16四欄模型、D－17 dynamic threshold geometry均未改。
+
+D－12透過 central renderer自然沿用既有 LPBN resolver／variant chain：base保留、最多三個固定slots、缺slot不重新編號，Preview／Export共用resolver。Export繼續由既有BN-id matrix、72 dpi、JPG quality與01／02／10容量策略驅動；Workspace JSON寫入ZIP並保存D type。`export.js`、`workspace.js`、`lpbn-badges.js`與`editor.js`全部 zero-diff。
+
+### 48.3 Commit、素材與 regression boundary
+
+Code Commit精確為 **10 paths＝3 M＋7 A**：修改 `import.js`、`render-a.js`、`app.js`，並納管 D－04／05／11／13／14／15／16七張runtime底圖。`index.html`、CSS、A templates、九個D templates、launchers、viewer、D Logo、canonical17 assets、badge assets、fonts與vendor均 zero-diff。七張 `bn/assets/D/對位/` 04／05／11／13／14／15／16圖維持untracked，只作人工校稿／evidence，不進runtime。
+
+Jamie正式控制台 Manual PASS確認本次 D平台整合可用；此狀態不是Push／Tag／Release紀錄。樣式C與shared／generic重構不在本次範圍。
