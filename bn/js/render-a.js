@@ -1,5 +1,4 @@
-// A-only renderer 對應表與呼叫橋：只服務本輪 A－01～17 平台整合。
-// 不是跨 Type registry，不修改任何正式 renderer exports。
+// A renderer 對應表＋稀疏 D override 呼叫橋；不修改任何正式 renderer exports。
 import { renderDdcardBn, waitForDdcardBnFonts } from "../templates/A/01-ddcard-bn.js";
 import { renderMallHbn, waitForMallHbnFonts } from "../templates/A/02-mall-hbn.js";
 import { renderCoinPageBn, waitForCoinPageBnFonts } from "../templates/A/03-coin-page-bn.js";
@@ -20,13 +19,51 @@ import {
   renderThresholdTable,
   waitForThresholdTableFonts
 } from "../templates/A/17-threshold-table.js";
+import {
+  renderDdcardBn as renderD01DdcardBn,
+  waitForDdcardBnFonts as waitForD01DdcardBnFonts
+} from "../templates/D/01-ddcard-bn.js";
+import {
+  renderMallHbn as renderD02MallHbn,
+  waitForMallHbnFonts as waitForD02MallHbnFonts
+} from "../templates/D/02-mall-hbn.js";
+import {
+  renderCoinPageBn as renderD03CoinPageBn,
+  waitForCoinPageBnFonts as waitForD03CoinPageBnFonts
+} from "../templates/D/03-coin-page-bn.js";
+import { renderIg as renderD06Ig, waitForIgFonts as waitForD06IgFonts } from "../templates/D/06-ig.js";
+import {
+  renderFbPost as renderD07FbPost,
+  waitForFbPostFonts as waitForD07FbPostFonts
+} from "../templates/D/07-fb-post.js";
+import {
+  renderSpxTvbn1 as renderD08SpxTvbn1,
+  waitForSpxTvbn1Fonts as waitForD08SpxTvbn1Fonts
+} from "../templates/D/08-spx-tvbn-1.js";
+import {
+  renderSpxTvbn2 as renderD09SpxTvbn2,
+  waitForSpxTvbn2Fonts as waitForD09SpxTvbn2Fonts
+} from "../templates/D/09-spx-tvbn-2.js";
+import {
+  renderPopUp as renderD10PopUp,
+  waitForPopUpFonts as waitForD10PopUpFonts
+} from "../templates/D/10-pop-up.js";
+import {
+  renderLpbn as renderD12Lpbn,
+  waitForLpbnFonts as waitForD12LpbnFonts
+} from "../templates/D/12-lpbn.js";
 
-// 正式底圖 base 依目前樣式 Type 解析；目前正式支援範圍只有 A、B。
+// 正式底圖 base 依目前樣式 Type 解析。
 // 這不是 Type framework 或 config layer，只是既有單一 base 常數的最小 Type 對照。
 const ASSET_BASE_BY_TYPE = Object.freeze({
   A: "../assets/A/底圖/",
-  B: "../assets/B/底圖/"
+  B: "../assets/B/底圖/",
+  D: "../assets/D/底圖/"
 });
+
+const D_LOGO_ASSET_BASE = "../assets/D/";
+const D_LOGO_FILE = "Logo.png";
+const D17_CANONICAL_ASSET_BASE = "../assets/A/底圖/";
 
 const A_TABLE = Object.freeze({
   "01": { render: renderDdcardBn, waitFonts: waitForDdcardBnFonts, background: "01_DDcard BN.jpg" },
@@ -52,6 +89,49 @@ const A_TABLE = Object.freeze({
     vipImage: "17_VIP.png"
   }
 });
+
+const D_OVERRIDE_TABLE = Object.freeze({
+  "01": { render: renderD01DdcardBn, waitFonts: waitForD01DdcardBnFonts, background: "01_DDcard BN.jpg" },
+  "02": { render: renderD02MallHbn, waitFonts: waitForD02MallHbnFonts, background: "02_MALL HBN.jpg" },
+  "03": { render: renderD03CoinPageBn, waitFonts: waitForD03CoinPageBnFonts, background: "03_Coin page BN.jpg" },
+  "06": { render: renderD06Ig, waitFonts: waitForD06IgFonts, background: "06_IG.jpg" },
+  "07": { render: renderD07FbPost, waitFonts: waitForD07FbPostFonts, background: "07_FB POST.jpg" },
+  "08": { render: renderD08SpxTvbn1, waitFonts: waitForD08SpxTvbn1Fonts, background: "08_SPX TVBN_1.jpg" },
+  "09": { render: renderD09SpxTvbn2, waitFonts: waitForD09SpxTvbn2Fonts, background: "09_SPX TVBN_2.jpg" },
+  "10": { render: renderD10PopUp, waitFonts: waitForD10PopUpFonts, background: "10_POP UP.png" },
+  "12": { render: renderD12Lpbn, waitFonts: waitForD12LpbnFonts, background: "12_LPBN.jpg" }
+});
+
+const D_REUSE_A_IDS = Object.freeze(["04", "05", "11", "13", "14", "15", "16", "17"]);
+
+function hasOwn(object, key) {
+  return Object.prototype.hasOwnProperty.call(object, key);
+}
+
+function resolveRenderRoute(type, bnId) {
+  if (!hasOwn(ASSET_BASE_BY_TYPE, type)) {
+    throw new Error(`不支援的樣式：${type}。正式底圖只支援樣式 A、B 與 D。`);
+  }
+
+  const aEntry = hasOwn(A_TABLE, bnId) ? A_TABLE[bnId] : null;
+  if (!aEntry) {
+    throw new Error(`不支援的 BN 版位：${bnId}`);
+  }
+
+  if (type !== "D") {
+    return { entry: aEntry, usesDOverride: false };
+  }
+
+  if (hasOwn(D_OVERRIDE_TABLE, bnId)) {
+    return { entry: D_OVERRIDE_TABLE[bnId], usesDOverride: true };
+  }
+
+  if (D_REUSE_A_IDS.includes(bnId)) {
+    return { entry: aEntry, usesDOverride: false };
+  }
+
+  throw new Error(`樣式 D 缺少 BN ${bnId} 的正式 renderer route。`);
+}
 
 export function getBnFieldValues(state, bnId) {
   const number = Number.parseInt(bnId, 10);
@@ -88,33 +168,35 @@ function getImage(assetBase, fileName, label) {
 }
 
 export async function renderBnToCanvas(canvas, state, bnId) {
-  const entry = A_TABLE[bnId];
-  if (!entry) {
-    throw new Error(`不支援的 BN 版位：${bnId}`);
-  }
-
-  // 目前樣式不在正式支援範圍時明確失敗，不 fallback 到 A 或 B 的底圖。
-  const assetBase = Object.prototype.hasOwnProperty.call(
-    ASSET_BASE_BY_TYPE,
-    state.currentType
-  )
-    ? ASSET_BASE_BY_TYPE[state.currentType]
-    : "";
-  if (!assetBase) {
-    throw new Error(`不支援的樣式：${state.currentType}。正式底圖只支援樣式 A 與 B。`);
-  }
+  const { entry, usesDOverride } = resolveRenderRoute(state.currentType, bnId);
+  const assetBase = ASSET_BASE_BY_TYPE[state.currentType];
 
   if (bnId === "17") {
     const model = state.threshold;
     if (!model) {
       throw new Error("17_門檻表 尚未匯入工單資料。");
     }
+    const thresholdAssetBase =
+      state.currentType === "D" ? D17_CANONICAL_ASSET_BASE : assetBase;
     const [titleImage, vipImage] = await Promise.all([
-      getImage(assetBase, entry.titleImage, "17_門檻表 正式主標底圖"),
-      getImage(assetBase, entry.vipImage, "17_門檻表 正式 VIP 底圖"),
+      getImage(thresholdAssetBase, entry.titleImage, "17_門檻表 正式主標底圖"),
+      getImage(thresholdAssetBase, entry.vipImage, "17_門檻表 正式 VIP 底圖"),
       entry.waitFonts()
     ]);
     return entry.render(canvas, { titleImage, vipImage }, model);
+  }
+
+  if (usesDOverride) {
+    const [backgroundImage, logoImage] = await Promise.all([
+      getImage(assetBase, entry.background, `${bnId} 正式底圖`),
+      getImage(D_LOGO_ASSET_BASE, D_LOGO_FILE, "D 樣式共用 Logo"),
+      entry.waitFonts()
+    ]);
+    return entry.render(
+      canvas,
+      { backgroundImage, logoImage },
+      getBnFieldValues(state, bnId)
+    );
   }
 
   const [backgroundImage] = await Promise.all([

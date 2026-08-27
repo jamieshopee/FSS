@@ -237,7 +237,9 @@ function render(state, reason) {
   exportButton.disabled = !state.threshold;
 
   const showThresholdEditor =
-    (state.currentType === "A" || state.currentType === "B") &&
+    (state.currentType === "A" ||
+      state.currentType === "B" ||
+      state.currentType === "D") &&
     state.selectedBnId === "17" &&
     Boolean(state.threshold);
   if (thresholdEditButton) thresholdEditButton.hidden = !showThresholdEditor;

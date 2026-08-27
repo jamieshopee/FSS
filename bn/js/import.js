@@ -20,9 +20,9 @@ const ALL_BN_IDS = Object.freeze([
   "10", "11", "12", "13", "14", "15", "16", "17"
 ]);
 
-// 目前正式支援的樣式 Type（Phase 1 Requirement 鎖定：只有 A、B）。
+// 目前正式支援的樣式 Type（平台整合 Requirement 鎖定：A、B、D）。
 // 這不是 Type 系統或 config layer，只是 Import／Restore 的最小 allow-list。
-const SUPPORTED_TYPES = Object.freeze(["A", "B"]);
+const SUPPORTED_TYPES = Object.freeze(["A", "B", "D"]);
 
 // 正式 A 工單固定 source cells（Phase 0 實測、Phase 1 Requirement 鎖定）。
 const REQUIRED_LABELS = Object.freeze({
