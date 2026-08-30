@@ -1,4 +1,5 @@
 import { countTextUnits, getEditorFields } from "./editor.js";
+import { isValidCCountdown } from "./countdown.js";
 
 export const WORKSPACE_FORMAT = "FSS BN Workspace";
 export const WORKSPACE_VERSION = 1;
@@ -19,10 +20,11 @@ const ALL_BN_IDS = Object.freeze([
   "01", "02", "03", "04", "05", "06", "07", "08", "09",
   "10", "11", "12", "13", "14", "15", "16", "17"
 ]);
+const C_SUPPORTED_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
 
-// 目前正式支援的樣式 Type（平台整合 Requirement 鎖定：A、B、D）。
+// 目前正式支援的樣式 Type；C 只開放已完成 vertical slice 的版位資料路徑。
 // 這不是 Type 系統或 config layer，只是 Import／Restore 的最小 allow-list。
-const SUPPORTED_TYPES = Object.freeze(["A", "B", "D"]);
+const SUPPORTED_TYPES = Object.freeze(["A", "B", "C", "D"]);
 
 // 正式 A 工單固定 source cells（Phase 0 實測、Phase 1 Requirement 鎖定）。
 const REQUIRED_LABELS = Object.freeze({
@@ -34,6 +36,15 @@ const REQUIRED_LABELS = Object.freeze({
 function cellText(worksheet, address) {
   const cell = worksheet[address];
   return cell && cell.v !== undefined && cell.v !== null ? String(cell.v) : "";
+}
+
+function emptyBnText() {
+  return {
+    "13": { line1: "", line2: "" },
+    "14": { line1: "", line2: "" },
+    "15": { line1: "", line2: "" },
+    "16": { leftTitle: "", leftCopy: "", rightTitle: "", rightCopy: "" }
+  };
 }
 
 function parseThresholdModel(worksheet, errors, type) {
@@ -119,21 +130,47 @@ export async function parseExcelFile(file, type, selectedBnId) {
     protectionText: cellText(worksheet, "B17")
   };
 
-  const bnText = {
-    "13": { line1: cellText(worksheet, "L20"), line2: cellText(worksheet, "L21") },
-    "14": { line1: cellText(worksheet, "L22"), line2: cellText(worksheet, "L23") },
-    "15": { line1: cellText(worksheet, "L24"), line2: cellText(worksheet, "L25") },
-    "16": {
-      leftTitle: cellText(worksheet, "L26"),
-      leftCopy: cellText(worksheet, "L27"),
-      rightTitle: cellText(worksheet, "O26"),
-      rightCopy: cellText(worksheet, "O27")
-    }
-  };
+  const bnText =
+    type === "C"
+      ? {
+          ...emptyBnText(),
+          "13": {
+            line1: cellText(worksheet, "L20"),
+            line2: cellText(worksheet, "L21")
+          },
+          "14": {
+            line1: cellText(worksheet, "L22"),
+            line2: cellText(worksheet, "L23")
+          }
+        }
+      : {
+          "13": {
+            line1: cellText(worksheet, "L20"),
+            line2: cellText(worksheet, "L21")
+          },
+          "14": {
+            line1: cellText(worksheet, "L22"),
+            line2: cellText(worksheet, "L23")
+          },
+          "15": {
+            line1: cellText(worksheet, "L24"),
+            line2: cellText(worksheet, "L25")
+          },
+          "16": {
+            leftTitle: cellText(worksheet, "L26"),
+            leftCopy: cellText(worksheet, "L27"),
+            rightTitle: cellText(worksheet, "O26"),
+            rightCopy: cellText(worksheet, "O27")
+          }
+        };
 
-  const threshold = parseThresholdModel(worksheet, errors, type);
+  const threshold = type === "C" ? null : parseThresholdModel(worksheet, errors, type);
+  const cCountdownText = type === "C" ? cellText(worksheet, "E16") : null;
+  if (type === "C" && !isValidCCountdown(cCountdownText)) {
+    errors.push("C 工作表 E16 倒數天數只允許完整字串 0天～9天。");
+  }
 
-  // A－12 專用 optional 值：只讀取與保存，不判斷掛標群組或素材是否存在，
+  // 12_LPBN 專用 optional 值：只讀取與保存，不判斷掛標群組或素材是否存在，
   // 也不因掛標狀態使 Import 失敗；asset availability 由 Preview／Export runtime 判定。
   const lpbnBadgeMonth = cellText(worksheet, "E15").trim();
 
@@ -143,10 +180,18 @@ export async function parseExcelFile(file, type, selectedBnId) {
 
   return {
     currentType: type,
-    selectedBnId: ALL_BN_IDS.includes(selectedBnId) ? selectedBnId : "01",
+    selectedBnId:
+      type === "C"
+        ? C_SUPPORTED_BN_IDS.includes(selectedBnId)
+          ? selectedBnId
+          : "01"
+        : ALL_BN_IDS.includes(selectedBnId)
+          ? selectedBnId
+          : "01",
     shared,
     bnText,
     threshold,
+    cCountdownText,
     lpbnBadgeMonth
   };
 }
@@ -270,22 +315,42 @@ export function parseWorkspaceJson(text) {
   if (!ALL_BN_IDS.includes(data.selectedBnId)) {
     errors.push("暫存檔缺少有效的目前選取 BN。");
   }
+  if (data.type === "C" && !C_SUPPORTED_BN_IDS.includes(data.selectedBnId)) {
+    errors.push("樣式 C 暫存目前只支援選取 C－01、C－02、C－03、C－04、C－05、C－06、C－07、C－08、C－09、C－10、C－11、C－12、C－13或C－14。");
+  }
 
   const shared = validateTextFields("01", data.shared, "01～12 共用文字", errors);
-  const bnText = {};
-  BN_TEXT_IDS.forEach((bnId) => {
-    bnText[bnId] = validateTextFields(
-      bnId,
-      data.bnText ? data.bnText[bnId] : undefined,
-      `${bnId} 文字`,
-      errors
-    );
-  });
-  const threshold = validateThresholdModel(data.threshold, errors);
+  const bnText = data.type === "C" ? emptyBnText() : {};
+  if (data.type === "C") {
+    ["13", "14"].forEach((bnId) => {
+      bnText[bnId] = validateTextFields(
+        bnId,
+        data.bnText ? data.bnText[bnId] : undefined,
+        `${bnId} 文字`,
+        errors
+      );
+    });
+  } else {
+    BN_TEXT_IDS.forEach((bnId) => {
+      bnText[bnId] = validateTextFields(
+        bnId,
+        data.bnText ? data.bnText[bnId] : undefined,
+        `${bnId} 文字`,
+        errors
+      );
+    });
+  }
+  const threshold = data.type === "C" ? null : validateThresholdModel(data.threshold, errors);
+  const cCountdownText = data.type === "C" ? data.cCountdownText : null;
+  if (data.type === "C" && !isValidCCountdown(cCountdownText)) {
+    errors.push("樣式 C 暫存倒數天數只允許完整字串 0天～9天。");
+  }
   // Backward-compatible optional 欄位：既有 v1 暫存檔沒有此欄位時視同空白，
   // 不 push error、不影響 Restore 合法性（掛標群組是否存在屬 runtime asset 狀態）。
   const lpbnBadgeMonth =
-    typeof data.lpbnBadgeMonth === "string" ? data.lpbnBadgeMonth : "";
+    typeof data.lpbnBadgeMonth === "string"
+      ? data.lpbnBadgeMonth
+      : "";
 
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
@@ -297,6 +362,7 @@ export function parseWorkspaceJson(text) {
     shared,
     bnText,
     threshold,
+    cCountdownText,
     lpbnBadgeMonth
   };
 }

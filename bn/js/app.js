@@ -27,6 +27,7 @@ const BN_ITEMS = [
   { id: "16", name: "16_副區" },
   { id: "17", name: "17_門檻表" }
 ];
+const C_ENABLED_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
 
 const typeView = document.querySelector("#type-view");
 const consoleView = document.querySelector("#console-view");
@@ -230,6 +231,8 @@ function render(state, reason) {
 
   bnList.querySelectorAll(".bn-item").forEach((button) => {
     const isSelected = button.dataset.bnId === state.selectedBnId;
+    button.disabled =
+      state.currentType === "C" && !C_ENABLED_BN_IDS.includes(button.dataset.bnId);
     button.classList.toggle("is-selected", isSelected);
     button.setAttribute("aria-current", isSelected ? "true" : "false");
   });
@@ -274,10 +277,13 @@ function render(state, reason) {
       (fieldId, value) => {
         if (state.selectedBnId === "17") {
           updateThresholdTextField(fieldId, value);
+        } else if (fieldId === "cCountdownText") {
+          workspace.updateCCountdown(value);
         } else {
           workspace.updateText(state.selectedBnId, fieldId, value);
         }
-      }
+      },
+      state.currentType
     );
   }
 
@@ -720,6 +726,7 @@ document.addEventListener("keydown", (event) => {
 
   const state = workspace.getState();
   if (!state.currentType || !state.selectedBnId) return;
+  if (state.currentType === "C") return;
 
   event.preventDefault();
   const currentIndex = BN_ITEMS.findIndex((item) => item.id === state.selectedBnId);

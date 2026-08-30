@@ -1,10 +1,17 @@
 import { applyBanwords } from "./banwords.js";
+import { C_COUNTDOWN_VALUES, isValidCCountdown } from "./countdown.js";
 
 const MAIN_FIELDS = [
   { id: "headline", label: "主標", limit: 8 },
   { id: "subheadline", label: "副標", limit: 7 },
   { id: "protectionText", label: "保護文字", limit: 17 }
 ];
+
+const C_COUNTDOWN_FIELD = Object.freeze({
+  id: "cCountdownText",
+  label: "倒數天數",
+  kind: "countdown"
+});
 
 const STORE_FIELDS = [
   { id: "line1", label: "第一行", limit: 5 },
@@ -31,10 +38,22 @@ const THRESHOLD_FIELDS = [
   { id: "vipCta", label: "CTA", limit: 3 }
 ];
 
-export function getEditorFields(bnId) {
+export function getEditorFields(bnId, type = null) {
   const number = Number.parseInt(bnId, 10);
 
-  if (number >= 1 && number <= 12) return MAIN_FIELDS;
+  if (type === "C" && (bnId === "13" || bnId === "14")) {
+    return [...STORE_FIELDS, C_COUNTDOWN_FIELD];
+  }
+
+  if (number >= 1 && number <= 12) {
+    if (
+      type === "C" &&
+      (bnId === "01" || bnId === "02" || bnId === "03" || bnId === "04" || bnId === "05" || bnId === "06" || bnId === "07" || bnId === "08" || bnId === "09" || bnId === "10" || bnId === "11" || bnId === "12")
+    ) {
+      return [...MAIN_FIELDS, C_COUNTDOWN_FIELD];
+    }
+    return MAIN_FIELDS;
+  }
   if (number === 13 || number === 14) return STORE_FIELDS;
   if (number === 15) return PAYMENT_FIELDS;
   if (number === 16) return PICKUP_FIELDS;
@@ -54,8 +73,8 @@ function formatUnits(units) {
   return Number.isInteger(units) ? String(units) : units.toFixed(1);
 }
 
-export function renderEditor(container, bnId, values, onValidChange) {
-  const fields = getEditorFields(bnId);
+export function renderEditor(container, bnId, values, onValidChange, type = null) {
+  const fields = getEditorFields(bnId, type);
   container.replaceChildren();
 
   if (!fields.length) {
@@ -73,6 +92,38 @@ export function renderEditor(container, bnId, values, onValidChange) {
     const label = document.createElement("label");
     label.htmlFor = `field-${field.id}`;
     label.textContent = field.label;
+
+    if (field.kind === "countdown") {
+      const select = document.createElement("select");
+      select.id = `field-${field.id}`;
+      select.className = "c-countdown-select";
+      select.dataset.fieldId = field.id;
+
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "請選擇倒數天數";
+      placeholder.disabled = true;
+      select.append(placeholder);
+
+      C_COUNTDOWN_VALUES.forEach((value) => {
+        const option = document.createElement("option");
+        option.value = value;
+        option.textContent = value;
+        select.append(option);
+      });
+
+      const currentValue = values[field.id];
+      select.value = isValidCCountdown(currentValue) ? currentValue : "";
+      select.addEventListener("change", () => {
+        if (isValidCCountdown(select.value)) {
+          onValidChange(field.id, select.value);
+        }
+      });
+
+      wrapper.append(label, select);
+      container.append(wrapper);
+      return;
+    }
 
     const input = document.createElement("input");
     input.id = `field-${field.id}`;

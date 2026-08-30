@@ -1,4 +1,5 @@
 import { WORKSPACE_FORMAT, WORKSPACE_VERSION } from "./import.js";
+import { isValidCCountdown } from "./countdown.js";
 import { renderBnToCanvas } from "./render-a.js";
 import {
   LPBN_BADGE_STATUS,
@@ -36,17 +37,26 @@ export const JPEG_QUALITY_FLOOR = 0.5;
 const JPEG_SEARCH_STEPS = 7;
 
 export function serializeWorkspace(state) {
+  if (state.currentType === "C" && !isValidCCountdown(state.cCountdownText)) {
+    throw new Error("樣式 C 暫存倒數天數只允許完整字串 0天～9天。");
+  }
+
+  const data = {
+    format: WORKSPACE_FORMAT,
+    version: WORKSPACE_VERSION,
+    type: state.currentType,
+    selectedBnId: state.selectedBnId,
+    shared: state.shared,
+    bnText: state.bnText,
+    threshold: state.threshold,
+    lpbnBadgeMonth: state.lpbnBadgeMonth
+  };
+  if (state.currentType === "C") {
+    data.cCountdownText = state.cCountdownText;
+  }
+
   return JSON.stringify(
-    {
-      format: WORKSPACE_FORMAT,
-      version: WORKSPACE_VERSION,
-      type: state.currentType,
-      selectedBnId: state.selectedBnId,
-      shared: state.shared,
-      bnText: state.bnText,
-      threshold: state.threshold,
-      lpbnBadgeMonth: state.lpbnBadgeMonth
-    },
+    data,
     null,
     2
   );

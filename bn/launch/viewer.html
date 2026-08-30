@@ -83,7 +83,8 @@
         margin: 0;
       }
 
-      select#preset-select {
+      select#preset-select,
+      select#countdown-select {
         display: block;
         width: 100%;
         margin-top: 6px;
@@ -170,6 +171,11 @@
           <input id="extra-input" type="text" autocomplete="off" value="" disabled />
         </label>
 
+        <label id="countdown-select-label" for="countdown-select" hidden>
+          倒數天數
+          <select id="countdown-select" disabled></select>
+        </label>
+
         <label class="overlay-control" for="overlay-toggle">
           <input id="overlay-toggle" type="checkbox" disabled />
           顯示對位圖
@@ -218,6 +224,8 @@
       let waitForFonts;
       let fieldConfig = null;
       let thresholdTable = null;
+      let countdownValues = null;
+      let validateCountdown = null;
       // D－01 固定 Logo 專用：預設 null，只有 D－01 branch 會設定。
       // 樣式 A 的所有 branch 都不碰這兩個變數，因此 A 的載入與 render 行為完全不變。
       let logoSource = null;
@@ -463,6 +471,266 @@
           vipSource: "../assets/A/底圖/17_VIP.png",
         };
       } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "01_DDcard BN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/01-ddcard-bn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－01_DDcard BN";
+        viewerLabel = "C－01";
+        width = 531;
+        height = 792;
+        backgroundSource = "../assets/C/底圖/01_DDcard BN.jpg";
+        overlaySource = "../assets/C/對位/01_DDcard BN.png";
+        renderTemplate = template.renderDdcardBn;
+        waitForFonts = template.waitForDdcardBnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "02_MALL HBN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/02-mall-hbn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－02_MALL HBN";
+        viewerLabel = "C－02";
+        width = 1200;
+        height = 360;
+        backgroundSource = "../assets/C/底圖/02_MALL HBN.jpg";
+        overlaySource = "../assets/C/對位/02_MALL HBN.png";
+        renderTemplate = template.renderMallHbn;
+        waitForFonts = template.waitForMallHbnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "03_Coin page BN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/03-coin-page-bn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－03_Coin page BN";
+        viewerLabel = "C－03";
+        width = 1200;
+        height = 391;
+        backgroundSource = "../assets/C/底圖/03_Coin page BN.jpg";
+        overlaySource = "../assets/C/對位/03_Coin page BN.png";
+        renderTemplate = template.renderCoinPageBn;
+        waitForFonts = template.waitForCoinPageBnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "04_Loyalty BN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/04-loyalty-bn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－04_Loyalty BN";
+        viewerLabel = "C－04";
+        width = 702;
+        height = 208;
+        backgroundSource = "../assets/C/底圖/04_Loyalty BN.png";
+        overlaySource = "../assets/C/對位/04_Loyalty BN.png";
+        renderTemplate = template.renderLoyaltyBn;
+        waitForFonts = template.waitForLoyaltyBnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "05_MSBN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/05-msbn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－05_MSBN";
+        viewerLabel = "C－05";
+        width = 1200;
+        height = 400;
+        backgroundSource = "../assets/C/底圖/05_MSBN.png";
+        overlaySource = "../assets/C/對位/05_MSBN.png";
+        renderTemplate = template.renderMsbn;
+        waitForFonts = template.waitForMsbnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "06_IG"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/06-ig.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－06_IG";
+        viewerLabel = "C－06";
+        width = 900;
+        height = 1600;
+        backgroundSource = "../assets/C/底圖/06_IG.jpg";
+        overlaySource = "../assets/C/對位/06_IG.png";
+        renderTemplate = template.renderIg;
+        waitForFonts = template.waitForIgFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "07_FB POST"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/07-fb-post.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－07_FB POST";
+        viewerLabel = "C－07";
+        width = 1200;
+        height = 630;
+        backgroundSource = "../assets/C/底圖/07_FB POST.jpg";
+        overlaySource = "../assets/C/對位/07_FB POST.png";
+        renderTemplate = template.renderFbPost;
+        waitForFonts = template.waitForFbPostFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "08_SPX TVBN_1"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/08-spx-tvbn-1.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－08_SPX TVBN_1";
+        viewerLabel = "C－08";
+        width = 1080;
+        height = 1920;
+        backgroundSource = "../assets/C/底圖/08_SPX TVBN_1.jpg";
+        overlaySource = "../assets/C/對位/08_SPX TVBN_1.png";
+        renderTemplate = template.renderSpxTvbn1;
+        waitForFonts = template.waitForSpxTvbn1Fonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "09_SPX TVBN_2"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/09-spx-tvbn-2.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－09_SPX TVBN_2";
+        viewerLabel = "C－09";
+        width = 1599;
+        height = 1080;
+        backgroundSource = "../assets/C/底圖/09_SPX TVBN_2.jpg";
+        overlaySource = "../assets/C/對位/09_SPX TVBN_2.png";
+        renderTemplate = template.renderSpxTvbn2;
+        waitForFonts = template.waitForSpxTvbn2Fonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "10_POP UP"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/10-pop-up.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－10_POP UP";
+        viewerLabel = "C－10";
+        width = 580;
+        height = 720;
+        backgroundSource = "../assets/C/底圖/10_POP UP.png";
+        overlaySource = "../assets/C/對位/10_POP UP.png";
+        renderTemplate = template.renderPopUp;
+        waitForFonts = template.waitForPopUpFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "11_Line OA"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/11-line-oa.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－11_Line OA";
+        viewerLabel = "C－11";
+        width = 1040;
+        height = 1040;
+        backgroundSource = "../assets/C/底圖/11_Line OA.png";
+        overlaySource = "../assets/C/對位/11_Line OA.png";
+        renderTemplate = template.renderLineOa;
+        waitForFonts = template.waitForLineOaFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "12_LPBN"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/12-lpbn.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－12_LPBN";
+        viewerLabel = "C－12";
+        width = 1200;
+        height = 550;
+        backgroundSource = "../assets/C/底圖/12_LPBN.jpg";
+        overlaySource = "../assets/C/對位/12_LPBN.png";
+        renderTemplate = template.renderLpbn;
+        waitForFonts = template.waitForLpbnFonts;
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "13_Skinny BN_APP"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/13-skinny-bn-app.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－13_Skinny BN_APP";
+        viewerLabel = "C－13";
+        width = 358;
+        height = 360;
+        backgroundSource = "../assets/C/底圖/13_Skinny BN_APP.png";
+        overlaySource = "../assets/C/對位/13_Skinny BN_APP.png";
+        renderTemplate = template.renderSkinnyBnApp;
+        waitForFonts = template.waitForSkinnyBnAppFonts;
+        fieldConfig = [
+          { id: "line1", label: "第一行", value: "週六免運日", limit: 5 },
+          { id: "line2", label: "第二行", value: "全站$499免運", limit: 6 },
+        ];
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
+        parameters.get("type") === "C" &&
+        parameters.get("bn") === "14_Skinny BN_PC"
+      ) {
+        const [template, countdown] = await Promise.all([
+          import("../templates/C/14-skinny-bn-pc.js"),
+          import("../js/countdown.js"),
+        ]);
+        viewerTitle = "樣式 C－14_Skinny BN_PC";
+        viewerLabel = "C－14";
+        width = 400;
+        height = 110;
+        backgroundSource = "../assets/C/底圖/14_Skinny BN_PC.png";
+        overlaySource = "../assets/C/對位/14_Skinny BN_PC.png";
+        renderTemplate = template.renderSkinnyBnPc;
+        waitForFonts = template.waitForSkinnyBnPcFonts;
+        fieldConfig = [
+          { id: "line1", label: "第一行", value: "週六免運日", limit: 5 },
+          { id: "line2", label: "第二行", value: "全站$499免運", limit: 6 },
+        ];
+        countdownValues = countdown.C_COUNTDOWN_VALUES;
+        validateCountdown = countdown.isValidCCountdown;
+      } else if (
         parameters.get("type") === "D" &&
         parameters.get("bn") === "01_DDcard BN"
       ) {
@@ -610,7 +878,7 @@
         waitForFonts = template.waitForLpbnFonts;
       } else {
         throw new Error(
-          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區、17_門檻表 與樣式 D／01_DDcard BN、02_MALL HBN、03_Coin page BN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、12_LPBN。",
+          "目前 BN Viewer 只支援樣式 A／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC、15_AR、16_副區、17_門檻表、樣式 C／01_DDcard BN、02_MALL HBN、03_Coin page BN、04_Loyalty BN、05_MSBN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、11_Line OA、12_LPBN、13_Skinny BN_APP、14_Skinny BN_PC 與樣式 D／01_DDcard BN、02_MALL HBN、03_Coin page BN、06_IG、07_FB POST、08_SPX TVBN_1、09_SPX TVBN_2、10_POP UP、12_LPBN。",
         );
       }
 
@@ -696,13 +964,27 @@
       }
       const overlayToggle = document.querySelector("#overlay-toggle");
       const loadError = document.querySelector("#load-error");
+      const countdownLabel = document.querySelector("#countdown-select-label");
+      const countdownSelect = document.querySelector("#countdown-select");
 
       if (thresholdTable) {
         document.querySelector('label[for="overlay-toggle"]').hidden = true;
         overlayToggle.disabled = true;
         overlay.hidden = true;
       }
+      if (countdownValues) {
+        countdownValues.forEach((value) => {
+          const option = document.createElement("option");
+          option.value = value;
+          option.textContent = value;
+          countdownSelect.append(option);
+        });
+        countdownSelect.value = countdownValues[0];
+        countdownLabel.hidden = false;
+      }
+
       const state = Object.fromEntries(fields.map((field) => [field.id, field.input.value]));
+      if (countdownValues) state.cCountdownText = countdownSelect.value;
       let backgroundImage = null;
 
       function countTextUnits(value) {
@@ -774,6 +1056,16 @@
           }
           skipTrailingInputValue = null;
           commit();
+        });
+      }
+
+      function bindCountdown() {
+        countdownSelect.addEventListener("change", () => {
+          if (!validateCountdown(countdownSelect.value)) {
+            throw new Error(`${viewerLabel} 倒數天數只允許完整字串 0天～9天。`);
+          }
+          state.cCountdownText = countdownSelect.value;
+          render();
         });
       }
 
@@ -1151,6 +1443,10 @@
             bindField(field);
             field.input.disabled = false;
           });
+          if (countdownValues) {
+            bindCountdown();
+            countdownSelect.disabled = false;
+          }
           overlayToggle.disabled = false;
         } catch (error) {
           loadError.textContent = error instanceof Error ? error.message : String(error);

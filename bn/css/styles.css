@@ -538,6 +538,23 @@ h3 {
   border-color: var(--danger);
 }
 
+.field-group select.c-countdown-select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  color: #f3f8f7;
+  background: rgb(6 11 13 / 72%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+}
+
+.field-group select.c-countdown-select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 .field-meta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;

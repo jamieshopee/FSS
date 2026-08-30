@@ -52,12 +52,70 @@ import {
   renderLpbn as renderD12Lpbn,
   waitForLpbnFonts as waitForD12LpbnFonts
 } from "../templates/D/12-lpbn.js";
+import {
+  renderDdcardBn as renderC01DdcardBn,
+  waitForDdcardBnFonts as waitForC01DdcardBnFonts
+} from "../templates/C/01-ddcard-bn.js";
+import {
+  renderMallHbn as renderC02MallHbn,
+  waitForMallHbnFonts as waitForC02MallHbnFonts
+} from "../templates/C/02-mall-hbn.js";
+import {
+  renderCoinPageBn as renderC03CoinPageBn,
+  waitForCoinPageBnFonts as waitForC03CoinPageBnFonts
+} from "../templates/C/03-coin-page-bn.js";
+import {
+  renderLoyaltyBn as renderC04LoyaltyBn,
+  waitForLoyaltyBnFonts as waitForC04LoyaltyBnFonts
+} from "../templates/C/04-loyalty-bn.js";
+import {
+  renderMsbn as renderC05Msbn,
+  waitForMsbnFonts as waitForC05MsbnFonts
+} from "../templates/C/05-msbn.js";
+import {
+  renderIg as renderC06Ig,
+  waitForIgFonts as waitForC06IgFonts
+} from "../templates/C/06-ig.js";
+import {
+  renderFbPost as renderC07FbPost,
+  waitForFbPostFonts as waitForC07FbPostFonts
+} from "../templates/C/07-fb-post.js";
+import {
+  renderSpxTvbn1 as renderC08SpxTvbn1,
+  waitForSpxTvbn1Fonts as waitForC08SpxTvbn1Fonts
+} from "../templates/C/08-spx-tvbn-1.js";
+import {
+  renderSpxTvbn2 as renderC09SpxTvbn2,
+  waitForSpxTvbn2Fonts as waitForC09SpxTvbn2Fonts
+} from "../templates/C/09-spx-tvbn-2.js";
+import {
+  renderPopUp as renderC10PopUp,
+  waitForPopUpFonts as waitForC10PopUpFonts
+} from "../templates/C/10-pop-up.js";
+import {
+  renderLineOa as renderC11LineOa,
+  waitForLineOaFonts as waitForC11LineOaFonts
+} from "../templates/C/11-line-oa.js";
+import {
+  renderLpbn as renderC12Lpbn,
+  waitForLpbnFonts as waitForC12LpbnFonts
+} from "../templates/C/12-lpbn.js";
+import {
+  renderSkinnyBnApp as renderC13SkinnyBnApp,
+  waitForSkinnyBnAppFonts as waitForC13SkinnyBnAppFonts
+} from "../templates/C/13-skinny-bn-app.js";
+import {
+  renderSkinnyBnPc as renderC14SkinnyBnPc,
+  waitForSkinnyBnPcFonts as waitForC14SkinnyBnPcFonts
+} from "../templates/C/14-skinny-bn-pc.js";
+import { isValidCCountdown } from "./countdown.js";
 
 // 正式底圖 base 依目前樣式 Type 解析。
 // 這不是 Type framework 或 config layer，只是既有單一 base 常數的最小 Type 對照。
 const ASSET_BASE_BY_TYPE = Object.freeze({
   A: "../assets/A/底圖/",
   B: "../assets/B/底圖/",
+  C: "../assets/C/底圖/",
   D: "../assets/D/底圖/"
 });
 
@@ -90,6 +148,81 @@ const A_TABLE = Object.freeze({
   }
 });
 
+const C_TABLE = Object.freeze({
+  "01": {
+    render: renderC01DdcardBn,
+    waitFonts: waitForC01DdcardBnFonts,
+    background: "01_DDcard BN.jpg"
+  },
+  "02": {
+    render: renderC02MallHbn,
+    waitFonts: waitForC02MallHbnFonts,
+    background: "02_MALL HBN.jpg"
+  },
+  "03": {
+    render: renderC03CoinPageBn,
+    waitFonts: waitForC03CoinPageBnFonts,
+    background: "03_Coin page BN.jpg"
+  },
+  "04": {
+    render: renderC04LoyaltyBn,
+    waitFonts: waitForC04LoyaltyBnFonts,
+    background: "04_Loyalty BN.png"
+  },
+  "05": {
+    render: renderC05Msbn,
+    waitFonts: waitForC05MsbnFonts,
+    background: "05_MSBN.png"
+  },
+  "06": {
+    render: renderC06Ig,
+    waitFonts: waitForC06IgFonts,
+    background: "06_IG.jpg"
+  },
+  "07": {
+    render: renderC07FbPost,
+    waitFonts: waitForC07FbPostFonts,
+    background: "07_FB POST.jpg"
+  },
+  "08": {
+    render: renderC08SpxTvbn1,
+    waitFonts: waitForC08SpxTvbn1Fonts,
+    background: "08_SPX TVBN_1.jpg"
+  },
+  "09": {
+    render: renderC09SpxTvbn2,
+    waitFonts: waitForC09SpxTvbn2Fonts,
+    background: "09_SPX TVBN_2.jpg"
+  },
+  "10": {
+    render: renderC10PopUp,
+    waitFonts: waitForC10PopUpFonts,
+    background: "10_POP UP.png"
+  },
+  "11": {
+    render: renderC11LineOa,
+    waitFonts: waitForC11LineOaFonts,
+    background: "11_Line OA.png"
+  },
+  "12": {
+    render: renderC12Lpbn,
+    waitFonts: waitForC12LpbnFonts,
+    background: "12_LPBN.jpg"
+  },
+  "13": {
+    render: renderC13SkinnyBnApp,
+    waitFonts: waitForC13SkinnyBnAppFonts,
+    background: "13_Skinny BN_APP.png"
+  },
+  "14": {
+    render: renderC14SkinnyBnPc,
+    waitFonts: waitForC14SkinnyBnPcFonts,
+    background: "14_Skinny BN_PC.png"
+  }
+});
+
+const C_COUNTDOWN_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
+
 const D_OVERRIDE_TABLE = Object.freeze({
   "01": { render: renderD01DdcardBn, waitFonts: waitForD01DdcardBnFonts, background: "01_DDcard BN.jpg" },
   "02": { render: renderD02MallHbn, waitFonts: waitForD02MallHbnFonts, background: "02_MALL HBN.jpg" },
@@ -110,7 +243,14 @@ function hasOwn(object, key) {
 
 function resolveRenderRoute(type, bnId) {
   if (!hasOwn(ASSET_BASE_BY_TYPE, type)) {
-    throw new Error(`不支援的樣式：${type}。正式底圖只支援樣式 A、B 與 D。`);
+    throw new Error(`不支援的樣式：${type}。正式底圖只支援樣式 A、B、C 與 D。`);
+  }
+
+  if (type === "C") {
+    if (!hasOwn(C_TABLE, bnId)) {
+      throw new Error(`樣式 C 尚未支援 BN ${bnId}；目前只支援 C－01、C－02、C－03、C－04、C－05、C－06、C－07、C－08、C－09、C－10、C－11、C－12、C－13與C－14。`);
+    }
+    return { entry: C_TABLE[bnId], usesDOverride: false };
   }
 
   const aEntry = hasOwn(A_TABLE, bnId) ? A_TABLE[bnId] : null;
@@ -135,8 +275,21 @@ function resolveRenderRoute(type, bnId) {
 
 export function getBnFieldValues(state, bnId) {
   const number = Number.parseInt(bnId, 10);
-  if (number >= 1 && number <= 12) return { ...state.shared };
-  if (number >= 13 && number <= 16) return { ...(state.bnText[bnId] || {}) };
+  if (number >= 1 && number <= 12) {
+    if (state.currentType === "C" && C_COUNTDOWN_BN_IDS.includes(bnId)) {
+      return { ...state.shared, cCountdownText: state.cCountdownText };
+    }
+    return { ...state.shared };
+  }
+  if (number >= 13 && number <= 16) {
+    if (state.currentType === "C" && (bnId === "13" || bnId === "14")) {
+      return {
+        ...(state.bnText[bnId] || {}),
+        cCountdownText: state.cCountdownText
+      };
+    }
+    return { ...(state.bnText[bnId] || {}) };
+  }
   return {};
 }
 
@@ -168,6 +321,14 @@ function getImage(assetBase, fileName, label) {
 }
 
 export async function renderBnToCanvas(canvas, state, bnId) {
+  if (
+    state.currentType === "C" &&
+    C_COUNTDOWN_BN_IDS.includes(bnId) &&
+    !isValidCCountdown(state.cCountdownText)
+  ) {
+    throw new Error(`C－${bnId} 倒數天數只允許完整字串 0天～9天。`);
+  }
+
   const { entry, usesDOverride } = resolveRenderRoute(state.currentType, bnId);
   const assetBase = ASSET_BASE_BY_TYPE[state.currentType];
 

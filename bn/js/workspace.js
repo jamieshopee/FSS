@@ -1,3 +1,5 @@
+import { isValidCCountdown } from "./countdown.js";
+
 const SHARED_FIELD_IDS = Object.freeze(["headline", "subheadline", "protectionText"]);
 
 const emptyState = () => ({
@@ -11,6 +13,7 @@ const emptyState = () => ({
     "16": { leftTitle: "", leftCopy: "", rightTitle: "", rightCopy: "" }
   },
   threshold: null,
+  cCountdownText: null,
   // A－12／12_LPBN 專用 optional 掛標月份；不屬於 01～12 shared text。
   lpbnBadgeMonth: ""
 });
@@ -77,6 +80,13 @@ export function createWorkspace() {
       } else {
         return;
       }
+      notify("text");
+    },
+
+    updateCCountdown(value) {
+      if (state.currentType !== "C" || !isValidCCountdown(value)) return;
+      if (state.cCountdownText === value) return;
+      state = { ...state, cCountdownText: value };
       notify("text");
     },
 
