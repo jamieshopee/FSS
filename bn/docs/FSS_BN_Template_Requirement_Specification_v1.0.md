@@ -2139,3 +2139,11 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 正式 routing採稀疏 `D_OVERRIDE_TABLE`＋精確 Group B allow-list：Group A **01／02／03／06／07／08／09／10／12**沿用各自既有 D-specific template、D底圖與共用 D Logo；Group B **04／05／11／13／14／15／16／17**直接 reuse同 ID A renderer，04～16只切換至對應 D底圖，17沿用 A threshold renderer／model與 canonical A 17 assets。未建立完整 `D_TABLE`，也未建立 Group B D template／launcher或 D－17 asset copies；未知 route與缺必要內容仍 fail-closed。
 
 正式控制台已支援 D Import／Restore、既有 BN-id Editor模型、D－17 threshold Modal、D－12固定 slot badge chain及既有 BN-id Export matrix；Workspace JSON仍為version 1並保存`type:"D"`。此次 Code Commit只修改 `import.js`、`render-a.js`、`app.js`並納管七張 Group B runtime D底圖；所有 A templates與九個既有 D templates均 zero-diff。七張 D對位圖仍是 untracked校稿 evidence，不屬 runtime或 Code Commit。Jamie正式控制台 PASS不同於各單版位 launcher overlay PASS，且不代表已 Push／Release。
+
+## 12. C 樣式 Template／Countdown 同步
+
+> **最新完成狀態。** C－01～14 的 C-specific countdown wrappers、formal routes、viewer branches與dedicated launchers已由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`** 落地，且全部取得 Jamie launcher Manual **PASS**。本文較早對 C 尚未支援的描述不再代表 C－01～14 current state。
+
+每個 C－01～14 wrapper 均重用同ID正式 A renderer處理既有文字，再於同一canvas疊加經exact validator確認的完整 `0天`～`9天`字串；Preview與Export均經中央 `renderBnToCanvas()`取得同一production結果。各wrapper的literal pt、`#ff4c45`、visual ink-center、Canvas rotation與uniform scale維持slot-local，禁止從其他版位推導；C－14 final lock為`14pt "ShopeeNotoSans Bold"`、`-2.1°`、`(268.5,71.5)`、`1.0`。
+
+C－15～17正式決策為shared reuse且無countdown，不建立C-specific template／geometry。其C routing尚未接入；C－15／16 copies不是C-specific runtime dependency，C－17兩張copies正式分類為`NOT REQUIRED BY C17 RUNTIME`並維持untracked。此狀態不授權修改或清理assets。

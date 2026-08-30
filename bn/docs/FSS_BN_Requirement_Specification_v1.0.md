@@ -382,3 +382,11 @@ Template 原本使用的樣式與顏色必須維持不變。
 Type D現已沿用既有控制台主流程：Import只讀worksheet `D`，Restore接受Workspace JSON version 1的`type:"D"`，Editor依BN-id沿用既有欄位與validation，D－17 threshold Editor／Modal已納入D，D－12沿用base＋最多三個固定slot variants的badge chain。正式renderer routing為Group A **01／02／03／06／07／08／09／10／12**使用D-specific renderer＋D底圖＋共用D Logo；Group B **04／05／11／13／14／15／16／17**reuse同ID A renderer，04～16使用D底圖，17使用A threshold renderer／model與canonical A assets。未知type／BN id或缺必要asset／renderer仍fail-closed。
 
 D Export沿用既有BN-id matrix、72 dpi、一般JPG quality 1.0及01／02／10既有容量策略；D－12輸出base＋實際存在的固定slot variants，ZIP內Workspace JSON保存`type:"D"`且version仍為1。`export.js`、`workspace.js`、`lpbn-badges.js`、`editor.js`均zero-diff；本次Code Commit只修改三個core JS並納管七張runtime D底圖。七張D對位圖仍為untracked人工校稿素材，不進runtime；樣式C不在本次範圍。
+
+## 21. C 樣式平台整合狀態同步
+
+> **最新正式狀態。** C－01～14 已由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**（`feat(bn): integrate C style 01-14`）完成正式接入，並經 Jamie 逐版 dedicated launcher Manual Verification **PASS**。前文若仍以「C 未支援／額外文字未定」描述 C－01～14，均屬較早歷史狀態，由本節及 C 樣式 Requirement 取代。
+
+C－01～14 沿用各版 A/B 既有文字行為，額外讀取 C Sheet `E16` 的完整倒數字串，合法值精確為 `0天`～`9天`；Workspace、Import、Restore、Editor、Preview renderer、JSON version 1 與 Export 共用同一 state／renderer contract。倒數正式 font source 為 `ShopeeNotoSans(content)-Bold.woff2`、Canvas alias `ShopeeNotoSans Bold`、color `#ff4c45`；各版 final geometry 以 `0c9da10` 且完成 Jamie PASS 的 wrapper 為準。C－14 最終為 `14pt`、rotation `-2.1°`、center `(268.5,71.5)`、scale `1.0`。
+
+C－15／16／17 已 LOCKED 為沿用目前 A/B/D shared 行為且不增加 countdown；截至 `0c9da10`，C routing 尚未啟用，不得宣稱 C－15～17 runtime／完整17版位C Export已完成。C－15／16 的 C copies 與 canonical copies byte-identical，不是 C-specific runtime dependency；C－17 的 `17_VIP.png`、`17_主標題.png` 亦與 A/B byte-identical、C runtime reference為零，正式分類為 `NOT REQUIRED BY C17 RUNTIME`。四檔目前保持untracked evidence，不因本文件更新而移動、刪除或納管。

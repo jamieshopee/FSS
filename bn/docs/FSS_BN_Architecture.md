@@ -1507,3 +1507,17 @@ D－12透過 central renderer自然沿用既有 LPBN resolver／variant chain：
 Code Commit精確為 **10 paths＝3 M＋7 A**：修改 `import.js`、`render-a.js`、`app.js`，並納管 D－04／05／11／13／14／15／16七張runtime底圖。`index.html`、CSS、A templates、九個D templates、launchers、viewer、D Logo、canonical17 assets、badge assets、fonts與vendor均 zero-diff。七張 `bn/assets/D/對位/` 04／05／11／13／14／15／16圖維持untracked，只作人工校稿／evidence，不進runtime。
 
 Jamie正式控制台 Manual PASS確認本次 D平台整合可用；此狀態不是Push／Tag／Release紀錄。樣式C與shared／generic重構不在本次範圍。
+
+## 49. C 樣式平台整合實際落地狀態
+
+### 49.1 C－01～14 vertical slices
+
+Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**（`feat(bn): integrate C style 01-14`）完成C－01～14正式接線，且十四個dedicated launchers均取得Jamie Manual **PASS**。C使用type-specific asset base與explicit routes；每版C wrapper先重用對應A renderer處理既有文字，再於同一canvas疊加slot-local countdown。Countdown single source是workspace的C完整字串，Excel來源固定為`C!E16`、domain精確為`0天`～`9天`，Import／Restore／Editor／Preview／JSON v1／Export沿用同一validation與state lifecycle。
+
+### 49.2 Renderer與geometry boundary
+
+C－01～14 wrappers共用責任分離pattern，但不共用geometry；font literal維持pt、family alias為`ShopeeNotoSans Bold`、color為`#ff4c45`，並以`measureText()`／`actualBoundingBox*`完成visual ink-center transform。各版final values以`0c9da10`中已獲Jamie PASS的wrapper為authority；C－14 final lock為`14pt`、Canvas rotation`-2.1°`、center`(268.5,71.5)`、uniform scale`1.0`。A templates與A/B/D runtime行為不因C countdown被重構。
+
+### 49.3 C－15～17 reuse與asset dependency
+
+C－15／16／17需求已LOCKED為reuse shared A/B/D行為且不增加countdown；截至`0c9da10` routing尚未enable。後續接入不得建立C-specific countdown state、Import mapping、Editor control、wrapper或geometry。C－15／16的C asset copies與A/B/D byte-identical，不是C-specific runtime dependency；C－17兩張C copies與A/B byte-identical、runtime reference為零，分類為`NOT REQUIRED BY C17 RUNTIME`。四檔均保持untracked evidence，本次文件同步不變更其內容或生命週期。

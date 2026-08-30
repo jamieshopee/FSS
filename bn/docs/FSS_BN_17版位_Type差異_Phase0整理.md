@@ -697,3 +697,11 @@ Phase 0：需求討論 → Phase 1：Requirement Specification → Phase
 正式renderer分組維持逐版位差異：Group A **01／02／03／06／07／08／09／10／12**使用既有D-specific renderer、D底圖與共用D Logo；Group B **04／05／11／13／14／15／16／17**reuse同ID A renderer，04～16使用D底圖，17沿用A threshold renderer／model及canonical A 17 assets。實作是稀疏`D_OVERRIDE_TABLE`＋精確Group B allow-list，不是完整`D_TABLE`；沒有Group B D renderer／template／launcher或D－17 asset copies，未知route仍fail-closed。
 
 D Excel只讀worksheet `D`並沿用既有mapping、E15月份、threshold parser與atomic replace；Restore／Workspace JSON仍為version 1且合法保存`type:"D"`。Editor維持各BN id既有模型，包含D－15 unit算法、D－16四欄與D－17 threshold Modal。D－12正式沿用固定slot badge chain；Export沿用既有BN-id format／72 dpi／quality／capacity matrix，`export.js`未因D修改。七張D runtime底圖已納管，七張D對位圖仍為untracked校稿 evidence；樣式C不在本次同步範圍。
+
+## 十九、C 樣式正式需求與目前平台狀態同步
+
+本節覆蓋前文對 C「額外文字／尚未正式支援」的早期概括。C－01～14 的差異已正式鎖定為：沿用同ID A/B既有文字模型與renderer行為，另外讀取`C!E16`完整倒數字串（只允許`0天`～`9天`），並以各版獨立C wrapper疊加`ShopeeNotoSans Bold`、`#ff4c45`倒數。Workspace／Import／Restore／Editor／Preview／JSON version 1／Export已於 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**接入；C－01～14均已Jamie launcher Manual **PASS**。
+
+C－13／14沿用Skinny既有`line1`／`line2`模型，其餘C－01～12沿用對應版位既有文字模型；倒數仍是同一`C!E16`完整值。每版geometry獨立，最終值以已PASS wrapper為準；C－14 final為`14pt`、`#ff4c45`、rotation`-2.1°`、center`(268.5,71.5)`、scale`1.0`。
+
+C－15／16／17正式決策為與A/B/D shared行為相同且不新增countdown；C routing尚未enable。C－15／16 C copies與canonical copies byte-identical且不是C-specific runtime dependency；C－17兩張C copies與A/B byte-identical、runtime reference為零，分類為`NOT REQUIRED BY C17 RUNTIME`。四檔維持untracked evidence，不因本整理檔移動、刪除或納管。
