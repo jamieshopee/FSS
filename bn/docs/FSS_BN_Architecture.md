@@ -1510,6 +1510,8 @@ Jamie正式控制台 Manual PASS確認本次 D平台整合可用；此狀態不�
 
 ## 49. C 樣式平台整合實際落地狀態
 
+> 本節是 C 的 current architecture authority；前文「C 尚未支援」或「正式 Type 只有 A／B／D」的文字是當時歷史狀態，對 C 的 current state 已由本節取代。
+
 ### 49.1 C－01～14 vertical slices
 
 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**（`feat(bn): integrate C style 01-14`）完成C－01～14正式接線，且十四個dedicated launchers均取得Jamie Manual **PASS**。C使用type-specific asset base與explicit routes；每版C wrapper先重用對應A renderer處理既有文字，再於同一canvas疊加slot-local countdown。Countdown single source是workspace的C完整字串，Excel來源固定為`C!E16`、domain精確為`0天`～`9天`，Import／Restore／Editor／Preview／JSON v1／Export沿用同一validation與state lifecycle。
@@ -1520,4 +1522,12 @@ C－01～14 wrappers共用責任分離pattern，但不共用geometry；font lite
 
 ### 49.3 C－15～17 reuse與asset dependency
 
-C－15／16／17需求已LOCKED為reuse shared A/B/D行為且不增加countdown；截至`0c9da10` routing尚未enable。後續接入不得建立C-specific countdown state、Import mapping、Editor control、wrapper或geometry。C－15／16的C asset copies與A/B/D byte-identical，不是C-specific runtime dependency；C－17兩張C copies與A/B byte-identical、runtime reference為零，分類為`NOT REQUIRED BY C17 RUNTIME`。四檔均保持untracked evidence，本次文件同步不變更其內容或生命週期。
+C－15／16／17 的 shared routing 已由 Code Commit **`78d7718e953b303ec03ecad6328fe6adb17da275`**（`feat(bn): complete C style control center integration`，parent `e5a6a69d42ff00544da72295d153ae6679e0bf89`）落地。`render-a.js` 保留 C－01～14 `C_TABLE`，另對精確 allow-list 15／16／17 回傳同 ID `A_TABLE` entry 與 canonical A asset-base override；未知 C ID 仍 fail closed。C－15→`renderAr()`、C－16→`renderSubArea()`、C－17→`renderThresholdTable()`，不建立 C-specific template、wrapper、launcher 或 geometry。
+
+C－15沿用`bnText["15"]`與`C!L24/L25`；C－16沿用`bnText["16"]`與`C!L26/L27/O26/O27`；C－17沿用`threshold`、`parseThresholdModel()`、`I29`、`I32:M33`、`H35:M52`、`I53:I55`與既有threshold Modal。Countdown boundary精確為C－01～14 applicable、C－15～17 not applicable；JSON仍version 1，後三版`cCountdownText`serialization為`null`，沒有新workspace state。C－12仍將`C!E15` LPBN month與`C!E16` countdown分離；C－13／14仍為`L20/L21`與`L22/L23`。
+
+C－15／16使用canonical A `15_AR.jpg`／`16_副區.jpg`，C－17使用canonical A `17_主標題.png`／`17_VIP.png`。四張C copies與canonical files byte-identical，不是runtime dependency且保持untracked evidence。Export仍由17項`EXPORT_ITEMS`、`renderBnToCanvas()`、既有format／quality／72 DPI／capacity／filename contract驅動；`78d7718`只調整C countdown serialization boundary，未改export loop。
+
+### 49.4 Control center與keyboard selection contract
+
+`app.js`將C enabled IDs擴為01～17，C－17納入既有threshold Modal gate；C－01～14仍顯示countdown Editor，C－15～17不顯示。Keyboard regression的root cause是舊handler中`if (state.currentType === "C") return;`；修正僅刪除該early return，使C直接共用A/B/D既有`ArrowUp`／`ArrowDown` non-wrap selection contract。沒有C-specific handler、keyboard array或selection architecture。Jamie Phase 6與keyboard人工驗證均 **PASS**。C－01～17 runtime integration現已完成；C－01～14 final geometry與A/B/D決策未改。

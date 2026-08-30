@@ -700,8 +700,10 @@ D Excel只讀worksheet `D`並沿用既有mapping、E15月份、threshold parser�
 
 ## 十九、C 樣式正式需求與目前平台狀態同步
 
-本節覆蓋前文對 C「額外文字／尚未正式支援」的早期概括。C－01～14 的差異已正式鎖定為：沿用同ID A/B既有文字模型與renderer行為，另外讀取`C!E16`完整倒數字串（只允許`0天`～`9天`），並以各版獨立C wrapper疊加`ShopeeNotoSans Bold`、`#ff4c45`倒數。Workspace／Import／Restore／Editor／Preview／JSON version 1／Export已於 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**接入；C－01～14均已Jamie launcher Manual **PASS**。
+本節覆蓋前文對 C「額外文字／尚未正式支援」的早期概括。C－01～14 的差異已正式鎖定為：沿用同ID A/B既有文字模型與renderer行為，另外讀取`C!E16`完整倒數字串（只允許`0天`～`9天`），並以各版獨立C wrapper疊加`ShopeeNotoSans Bold`、`#ff4c45`倒數。Workspace／Import／Restore／Editor／Preview／JSON version 1／Export已於 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**接入；C－01～14均已Jamie launcher Manual **PASS**。C－12的`C!E15` LPBN month與`C!E16` countdown責任分離；C－13仍是`L20/L21`，C－14仍是`L22/L23`，final geometry不變。
 
 C－13／14沿用Skinny既有`line1`／`line2`模型，其餘C－01～12沿用對應版位既有文字模型；倒數仍是同一`C!E16`完整值。每版geometry獨立，最終值以已PASS wrapper為準；C－14 final為`14pt`、`#ff4c45`、rotation`-2.1°`、center`(268.5,71.5)`、scale`1.0`。
 
-C－15／16／17正式決策為與A/B/D shared行為相同且不新增countdown；C routing尚未enable。C－15／16 C copies與canonical copies byte-identical且不是C-specific runtime dependency；C－17兩張C copies與A/B byte-identical、runtime reference為零，分類為`NOT REQUIRED BY C17 RUNTIME`。四檔維持untracked evidence，不因本整理檔移動、刪除或納管。
+C－15／16／17與A/B/D shared行為相同且無countdown，已由 Code Commit **`78d7718e953b303ec03ecad6328fe6adb17da275`**（`feat(bn): complete C style control center integration`）正式啟用，Jamie Phase 6 Manual Verification **PASS**。C－15 reuse A15 `renderAr()`、`bnText["15"]`、`C!L24/L25`；C－16 reuse A16 `renderSubArea()`、`bnText["16"]`、`C!L26/L27/O26/O27`；C－17 reuse A17 `renderThresholdTable()`、`threshold`、`parseThresholdModel()`與threshold Modal。三者均不建立C-specific template／wrapper／launcher／geometry／state。
+
+C－15／16使用canonical A `15_AR.jpg`／`16_副區.jpg`，C－17使用canonical A `17_主標題.png`／`17_VIP.png`。四張C copies與canonical copies byte-identical且不是runtime dependency，保持untracked evidence。JSON仍version 1，C－15～17 countdown正規化為`null`；Export仍是17項matrix、統一renderer與既有format／quality／72 DPI／capacity contract。C左側list現已可選01～17，C－17使用既有threshold Modal；keyboard刪除舊C-specific early return後共用A/B/D `ArrowUp`／`ArrowDown` non-wrap contract，未新增C handler。

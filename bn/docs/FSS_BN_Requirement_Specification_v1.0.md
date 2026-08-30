@@ -385,8 +385,10 @@ D Export沿用既有BN-id matrix、72 dpi、一般JPG quality 1.0及01／02／10
 
 ## 21. C 樣式平台整合狀態同步
 
-> **最新正式狀態。** C－01～14 已由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**（`feat(bn): integrate C style 01-14`）完成正式接入，並經 Jamie 逐版 dedicated launcher Manual Verification **PASS**。前文若仍以「C 未支援／額外文字未定」描述 C－01～14，均屬較早歷史狀態，由本節及 C 樣式 Requirement 取代。
+> **最新正式狀態。** C－01～17 已完成正式 runtime／控制台整合。C－01～14 由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`**（`feat(bn): integrate C style 01-14`）完成；C－15～17 shared integration 與 keyboard fix 由 **`78d7718e953b303ec03ecad6328fe6adb17da275`**（`feat(bn): complete C style control center integration`）完成，並經 Jamie Phase 6 Manual Verification **PASS**。前文對 C 未支援的描述均屬歷史狀態。
 
 C－01～14 沿用各版 A/B 既有文字行為，額外讀取 C Sheet `E16` 的完整倒數字串，合法值精確為 `0天`～`9天`；Workspace、Import、Restore、Editor、Preview renderer、JSON version 1 與 Export 共用同一 state／renderer contract。倒數正式 font source 為 `ShopeeNotoSans(content)-Bold.woff2`、Canvas alias `ShopeeNotoSans Bold`、color `#ff4c45`；各版 final geometry 以 `0c9da10` 且完成 Jamie PASS 的 wrapper 為準。C－14 最終為 `14pt`、rotation `-2.1°`、center `(268.5,71.5)`、scale `1.0`。
 
-C－15／16／17 已 LOCKED 為沿用目前 A/B/D shared 行為且不增加 countdown；截至 `0c9da10`，C routing 尚未啟用，不得宣稱 C－15～17 runtime／完整17版位C Export已完成。C－15／16 的 C copies 與 canonical copies byte-identical，不是 C-specific runtime dependency；C－17 的 `17_VIP.png`、`17_主標題.png` 亦與 A/B byte-identical、C runtime reference為零，正式分類為 `NOT REQUIRED BY C17 RUNTIME`。四檔目前保持untracked evidence，不因本文件更新而移動、刪除或納管。
+C－15 reuse A15 `renderAr()`、`bnText["15"]` 與 `C!L24/L25`；C－16 reuse A16 `renderSubArea()`、`bnText["16"]` 與 `C!L26/L27/O26/O27`；C－17 reuse A17 `renderThresholdTable()`、`threshold`、`parseThresholdModel()` 與既有 threshold Modal。三版位無 countdown，不建立 C-specific template／wrapper／geometry／state；JSON 仍 version 1，C－15～17 `cCountdownText` 正規化為 `null`。C－15／16／17 使用 canonical A assets，四張 C copies 不是 runtime dependency，保持 untracked evidence。
+
+C 左側 BN list 已啟用 01～17；C－01～14 顯示 countdown Editor，C－15～17 不顯示。Keyboard root cause 為舊 handler 的 C-specific early return，修正僅刪除該 return，讓 C 共用 A/B/D `ArrowUp`／`ArrowDown` non-wrap contract，沒有新增 C handler 或 array。Export 仍由17項 matrix與`renderBnToCanvas()`驅動，format、quality、72 DPI、capacity 與 filename contract 未改。

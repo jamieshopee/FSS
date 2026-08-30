@@ -2142,8 +2142,8 @@ Phase 1 不決定入口一定是 `.html`、`.command`、symlink、query paramete
 
 ## 12. C 樣式 Template／Countdown 同步
 
-> **最新完成狀態。** C－01～14 的 C-specific countdown wrappers、formal routes、viewer branches與dedicated launchers已由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`** 落地，且全部取得 Jamie launcher Manual **PASS**。本文較早對 C 尚未支援的描述不再代表 C－01～14 current state。
+> **最新完成狀態。** C－01～14 的 C-specific countdown wrappers、formal routes、viewer branches與dedicated launchers已由 Code Commit **`0c9da10472ba3128ea90b64d2340ac8b178d4514`** 落地，且全部取得 Jamie launcher Manual **PASS**。C－15～17 shared template-contract reuse 已由 **`78d7718e953b303ec03ecad6328fe6adb17da275`** 接入 runtime 並經 Jamie Phase 6 **PASS**。本文較早對 C 尚未支援的描述只是歷史狀態。
 
 每個 C－01～14 wrapper 均重用同ID正式 A renderer處理既有文字，再於同一canvas疊加經exact validator確認的完整 `0天`～`9天`字串；Preview與Export均經中央 `renderBnToCanvas()`取得同一production結果。各wrapper的literal pt、`#ff4c45`、visual ink-center、Canvas rotation與uniform scale維持slot-local，禁止從其他版位推導；C－14 final lock為`14pt "ShopeeNotoSans Bold"`、`-2.1°`、`(268.5,71.5)`、`1.0`。
 
-C－15～17正式決策為shared reuse且無countdown，不建立C-specific template／geometry。其C routing尚未接入；C－15／16 copies不是C-specific runtime dependency，C－17兩張copies正式分類為`NOT REQUIRED BY C17 RUNTIME`並維持untracked。此狀態不授權修改或清理assets。
+C－15～17正式決策為shared reuse且無countdown，不建立C-specific template／wrapper／geometry／launcher。C－15→A15 `renderAr()` contract，C－16→A16 `renderSubArea()` contract，C－17→A17 `renderThresholdTable()`／threshold contract；三者均由中央`renderBnToCanvas()`route，並使用canonical A assets。C－15／16 copies不是C-specific runtime dependency，C－17兩張copies正式分類為`NOT REQUIRED BY C17 RUNTIME`並維持untracked。此狀態不授權修改或清理assets，也不創造不存在的C－15～17 geometry。

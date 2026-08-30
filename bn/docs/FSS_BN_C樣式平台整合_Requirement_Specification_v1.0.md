@@ -2,17 +2,17 @@
 
 > 狀態：C 樣式完整產品需求已 LOCKED
 >
-> Implementation baseline：C－01～14 已完成正式實作，並經 Jamie 逐版 launcher 人工驗證 PASS
+> Implementation baseline：C－01～17 已完成正式控制台／runtime 整合，並經 Jamie Phase 6 人工驗證 PASS
 >
-> Code Commit：`0c9da10472ba3128ea90b64d2340ac8b178d4514`（`feat(bn): integrate C style 01-14`）
+> Code Commits：C－01～14 `0c9da10472ba3128ea90b64d2340ac8b178d4514`（`feat(bn): integrate C style 01-14`）；C－15～17 shared integration 與 keyboard fix `78d7718e953b303ec03ecad6328fe6adb17da275`（`feat(bn): complete C style control center integration`）
 >
-> C－15～17：shared reuse decision 已 LOCKED；截至 `0c9da10` 尚未啟用 C routing
+> C－15～17：正式 shared reuse 已落地，無 countdown，不建立 C-specific template／wrapper／geometry
 
 ## 1. 文件目的與適用範圍
 
 本文件定義 C 樣式 C－01～17 的正式產品需求與目前 repository 落地狀態。C－01～14 為在既有 A/B 文字行為上增加倒數天數的版位；C－15～17 沿用目前 A/B/D 的正式 shared 行為，不增加 C-specific 倒數欄位。
 
-本文件取代先前只涵蓋 C－01 或單版位 Phase 文件的狹義範圍。各版歷史量測、候選值與人工調整紀錄保留在共享 Proposal，惟最終狀態以本文件及 `0c9da10` 的正式實作為準。
+本文件取代先前只涵蓋 C－01 或單版位 Phase 文件的狹義範圍。各版歷史量測、候選值與人工調整紀錄保留在共享 Proposal，惟最終狀態以本文件、`0c9da10` 的 C－01～14 實作與 `78d7718` 的 C－15～17 控制台整合為準。
 
 ## 2. C－01～14 共通 USER LOCKED 需求
 
@@ -65,7 +65,8 @@ C－12 沿用既有 LPBN 掛標機制；LPBN month source 為 `C!E15`，倒數�
 3. Import 只接受 `0天`～`9天`，不得將數字、空值或其他格式自動正規化為合法值。
 4. Restore 必須在既有 allow-list／validation 邊界內保存 C 倒數欄位；非法值不得繞過 Import validation。
 5. JSON 維持目前 schema/version 契約，保存 Type、版位既有文字與倒數完整字串。此需求不授權另開 schema version 或建立 C-only JSON 格式。
-6. C－15～17 不新增倒數 state、Import mapping、Restore 欄位或 JSON 欄位。
+6. C－15～17 不新增倒數 state、Import mapping、Restore 欄位或 JSON 欄位；JSON v1 serialization 將 `cCountdownText` 正規化為 `null`。
+7. C－15／16 分別保存與 Restore 既有 `bnText["15"]` 與 `bnText["16"]`；C－17 保存與 Restore 既有 `threshold` model，不新增 workspace state 或 schema version。
 
 ## 5. Editor／Preview／Export
 
@@ -74,7 +75,8 @@ C－12 沿用既有 LPBN 掛標機制；LPBN month source 為 `C!E15`，倒數�
 3. Export 取得目前 Type、版位 renderer 與 type-specific asset base，輸出結果必須與 Preview 使用相同 renderer/state 契約。
 4. C－01～14 的正式 wrapper 與 launcher 已納入 `0c9da10`；launcher 只作人工驗證入口，不是獨立資料來源。
 5. C－01～14 的正式底圖與對位圖亦已納入同一 Code Commit；對位圖只供人工驗證，不進入正式輸出。
-6. C－15～17 未啟用 C routing 前，不得宣稱已可從 C workspace 正式 Preview／Export。
+6. C－15～17 已可從 C workspace 正式 Preview／Export；三版位不顯示 countdown Editor，C－17 使用既有 threshold Modal。
+7. C 的左側 BN list 正式啟用 01～17；`ArrowUp`／`ArrowDown` 共用 A/B/D 既有 selection contract，首尾維持 non-wrap。
 
 ## 6. C－01～14 實作與驗證狀態
 
@@ -92,13 +94,15 @@ C－14 最終鎖定值為：font `14pt "ShopeeNotoSans Bold"`、color `#ff4c45`�
 1. C－15／16／17 與目前 A/B/D 正式行為相同。
 2. 不增加 C-specific 倒數天數。
 3. 不建立 C-specific wrapper、倒數 geometry、額外 state、Import mapping、Editor control 或 JSON 欄位。
-4. shared reuse decision 已 LOCKED；具體 C routing 尚未落地，仍是後續 implementation item。
-5. 本文件只記錄需求與 repository evidence，不以文件文字假裝 routing 已完成。
+4. shared reuse 已由 `78d7718` 正式落地：C－15→`renderAr()`、C－16→`renderSubArea()`、C－17→`renderThresholdTable()`。
+5. C－15 沿用 `bnText["15"]` 與 `C!L24/L25`；C－16 沿用 `bnText["16"]` 與 `C!L26/L27/O26/O27`。
+6. C－17 沿用 `threshold`、`parseThresholdModel()` 與既有 threshold Modal；資料來源為 `I29`、`I32:M33`、`H35:M52`、`I53:I55`。
 
 ### 7.2 C－15／16 asset dependency evidence
 
 - `bn/assets/C/底圖/15_AR.jpg` 與 A/B/D 對應檔 byte-identical，SHA-256 為 `d5098b9dfea1e53e3c60a406f5ffd9e3f04291dbbfc51ac8f1217dfb8de9a136`。
 - `bn/assets/C/底圖/16_副區.jpg` 與 A/B/D 對應檔 byte-identical，SHA-256 為 `12902843ca43ffc7f1c89669514afa8477675406f96dab4f9b8819f11ba9506e`。
+- C－15／16 runtime 分別使用 canonical A `15_AR.jpg`／`16_副區.jpg`。
 - 因正式產品行為鎖定為 shared reuse，且 canonical copies byte-identical，這兩個 C copies 不構成 C-specific runtime dependency。
 - 兩檔目前保留為 untracked evidence；本次 Documentation Update 不移動、不刪除、不修改，也不將此判斷擴張為 asset cleanup 授權。
 
@@ -106,24 +110,26 @@ C－14 最終鎖定值為：font `14pt "ShopeeNotoSans Bold"`、color `#ff4c45`�
 
 - `bn/assets/C/底圖/17_VIP.png`：PNG RGBA，`1180×185`，SHA-256 `34df2ee85c09e691a25de31a7f5595833b98c9e01697a7234cb52a845512ba2c`。
 - `bn/assets/C/底圖/17_主標題.png`：PNG RGBA，`1180×83`，SHA-256 `ecf17ed1b9841fd62dd1535bb0573148361ddbc0cd22ed914457b8d38ac32bac`。
-- 兩檔與 A/B 對應檔 byte-identical；目前 C runtime reference 數為零。
+- 兩檔與 A/B 對應檔 byte-identical；C runtime 使用 canonical A copies，對這兩個 C copies 的 runtime reference 數為零。
 - A－17 正式行為由 `bn/templates/A/17-threshold-table.js` 的 `renderThresholdTable()` 提供；D－17 已有 canonical-A reuse precedent。
 - 正式分類：`NOT REQUIRED BY C17 RUNTIME`。
 - 兩檔目前保留為 untracked evidence；本次 Documentation Update 不移動、不刪除、不修改。
 
-## 8. Runtime 狀態與後續邊界
+## 8. Runtime 狀態與已落地邊界
 
-| 範圍 | Requirement 決策 | `0c9da10` runtime 狀態 |
+| 範圍 | Requirement 決策 | Current runtime 狀態 |
 |---|---|---|
-| C－01～14 | C-specific countdown | 已實作、已人工 PASS、已進 Code Commit |
-| C－15～17 | shared reuse、無倒數 | 決策已 LOCKED；C routing 尚未啟用 |
+| C－01～14 | C-specific countdown | `0c9da10` 已實作、已人工 PASS |
+| C－15～17 | shared reuse、無倒數 | `78d7718` 已啟用 routing／Import／Restore／Preview／Editor boundary／JSON／Export，Jamie Phase 6 PASS |
 
-後續若實作 C－15～17 routing，必須遵守以下邊界：
+已落地實作遵守以下邊界：
 
 - 不得建立倒數欄位或 C-specific geometry。
 - 不得以 routing 工作為由重構 A/B/D。
 - 不得把目前保留的 C copies 誤寫為已被 runtime 使用。
-- 不得在沒有程式證據時宣稱 Preview／Editor／Export 已完成支援。
+- C－15／16 使用 canonical A `15_AR.jpg`／`16_副區.jpg`；C－17 使用 canonical A `17_主標題.png`／`17_VIP.png`。
+- Export 仍使用統一 `renderBnToCanvas()` 與17項 `EXPORT_ITEMS`；format、quality、72 DPI、capacity 與 filename contract 未變。
+- Keyboard fix 僅刪除舊 `if (state.currentType === "C") return;`，沒有新增 C-specific handler 或 keyboard array。
 
 ## 9. 非目標
 
@@ -139,7 +145,7 @@ C－14 最終鎖定值為：font `14pt "ShopeeNotoSans Bold"`、color `#ff4c45`�
 ## 10. Acceptance Summary
 
 - C－01～14：正式需求、程式實作與 Jamie launcher Manual PASS 一致，Code Commit 為 `0c9da10`。
-- C－15～17：shared reuse decision 已 LOCKED，不增加倒數；routing 尚待後續實作。
+- C－15～17：shared reuse 已由 `78d7718` 正式落地，不增加倒數，Jamie Phase 6 Manual Verification PASS。
 - C－15／16 C copies：不是 C-specific runtime dependency，保持未修改。
 - C－17 兩張 C copies：`NOT REQUIRED BY C17 RUNTIME`，保持未修改。
 - 本次 Documentation Update 僅同步文件，不建立 Docs Commit。

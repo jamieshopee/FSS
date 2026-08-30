@@ -2,15 +2,15 @@
 
 > 文件治理：C 樣式採單一 Proposal 累加治理，不再建立逐版位 Proposal
 >
-> 目前支援：`C－01～14` 已完成正式接入
+> 目前支援：`C－01～17` 已完成正式控制台／runtime 接入
 >
-> 完成狀態：C－01～14 Phase 4 Coding 均已完成，均經 Jamie dedicated launcher 人工驗證 PASS，並已納入 Code Commit `0c9da10`；C－15～17 shared reuse decision 已 LOCKED，routing 尚未啟用
+> 完成狀態：C－01～14 已由 `0c9da10` 完成並經逐版人工 PASS；C－15～17 shared reuse、控制台啟用與 keyboard fix 已由 `78d7718` 完成，Jamie Phase 6 PASS
 >
 > 整併日期：2026-08-28
 >
-> 基準 HEAD：`0c9da10472ba3128ea90b64d2340ac8b178d4514`（`feat(bn): integrate C style 01-14`）
+> 基準 HEAD：`78d7718e953b303ec03ecad6328fe6adb17da275`（`feat(bn): complete C style control center integration`）
 >
-> Parent Docs Commit：`ad908331142f960fa8ee2176ad6b5297dd405581`（`docs(bn): document D style platform integration`）
+> Prior C Docs Commit：`e5a6a69d42ff00544da72295d153ae6679e0bf89`（`docs(bn): document C style integration`）
 
 ---
 
@@ -33,14 +33,14 @@
 4. 已存在的 shared decision直接引用，不重複大段複製。
 5. 新版位不得重寫、降級或返工已經 PASS 的版位；只有真正 regression 或 source-of-truth conflict 才能重新開啟。
 6. 各版位維持自己的 scope、repository/reference evidence、renderer decision、geometry、exact implementation boundary與 verification result。
-7. 共用架構記錄 C－01～14 實際成立的行為；C－15～17 只記錄已 LOCKED 的 shared reuse decision，不預建 geometry 或 C-specific renderer。
+7. 共用架構記錄 C－01～14 實際成立的行為，也記錄 C－15～17 已落地的 shared reuse outcome；後三版不預建 geometry 或 C-specific renderer。
 8. Requirement 與 Proposal 職責分離。本文件不改寫 Requirement，也不把 implementation decision反向升格為 USER LOCKED Requirement。
 
 ### 1.3 Scope
 
-本文件涵蓋 C－01～14 的逐版位 Proposal evidence、正式 implementation decision、最終 geometry 與 Jamie launcher Manual PASS 紀錄，也涵蓋 C－15～17 已 LOCKED 的 shared reuse decision。歷史 Phase section 仍保存當時的 candidate／planned／pending 語意，但目前狀態一律由第24節及 C 樣式 Requirement 的較新同步內容治理。
+本文件涵蓋 C－01～14 的逐版位 Proposal evidence、正式 implementation decision、最終 geometry 與 Jamie launcher Manual PASS 紀錄，也涵蓋 C－15～17 的 shared reuse decision 與已落地 outcome。歷史 Phase section 仍保存當時的 candidate／planned／pending 語意，但目前狀態一律由第24節及 C 樣式 Requirement 的較新同步內容治理。
 
-本文件不授權重新量測或返工 C－01～14，不替 C－15～17 建立 countdown geometry、C-specific wrapper 或額外 state。C－15～17 routing 尚未啟用，不得將 requirement decision 誤寫為 runtime 已完成。
+本文件不授權重新量測或返工 C－01～14，不替 C－15～17 建立 countdown geometry、C-specific wrapper 或額外 state。C－15～17 已採 shared A renderer contract 落地，current authority 以第24節為準。
 
 ---
 
@@ -53,9 +53,9 @@
 | `C－03｜03_Coin page BN` | Proposal裁決已落地；Phase 4 Coding完成；最終font調整為`60pt` | Jamie雙擊dedicated launcher人工確認；**PASS** | 第12節保留Phase 3歷史；最終lock見第13.19節 |
 | `C－04｜04_Loyalty BN` | Proposal裁決已落地；Phase 4 Coding完成 | dedicated launcher人工驗證 **PASS** | 第13節保存歷史；第24節記錄current status |
 | `C－05～14` | 各版Proposal裁決已落地；Phase 4 Coding完成 | 各版dedicated launcher人工驗證 **PASS** | 第14～23節保存逐版歷史；第24節記錄current status |
-| `C－15～17` | shared reuse decision已LOCKED；不增加countdown；routing尚未啟用 | 尚無C runtime可驗證 | 第24節 |
+| `C－15～17` | shared A renderer reuse已落地；不增加countdown | Jamie Phase 6控制台人工驗證 **PASS** | 第24節 |
 
-C－15～17 尚未啟用 routing 不是 conflict，也不代表 C－01～14 的完成狀態有缺口。
+C－01～17 的整體 runtime integration 已完成；C－01～14 與 C－15～17 使用不同的 renderer strategy，不代表後者建立了 C-specific template。
 
 ---
 
@@ -75,10 +75,10 @@ C－15～17 尚未啟用 routing 不是 conflict，也不代表 C－01～14 的�
 - Workspace以共用 top-level `cCountdownText` 保存 C countdown single source of truth；不放入 `state.shared`，也不建立per-BN副本。
 - C－01～14切換時共用同一countdown值，對應同一`C!E16`來源。
 - C Excel Import共用 `C!B15`、`C!B16`、`C!B17`及`C!E16` mapping，並維持 atomic validation；非法 countdown使整次Import失敗。
-- C Import／Restore的selected BN allow-list目前精確涵蓋01～14；C－15～17 routing尚未開放。
-- Restore對 C workspace要求合法 `cCountdownText`；missing、`null`、空字串或非法值均拒絕。
+- C Import／Restore的selected BN allow-list精確涵蓋01～17；C－15沿用`L24/L25`，C－16沿用`L26/L27/O26/O27`，C－17沿用`parseThresholdModel()`。
+- Restore對 C－01～14 要求合法 `cCountdownText`；C－15～17 不要求 countdown，並保存 C－15／16 `bnText` 與 C－17 `threshold`。
 - Workspace JSON維持 `format: "FSS BN Workspace"`、`version: 1`。
-- type C serialization保存同一完整 `cCountdownText`；A/B/D JSON shape不因 C countdown改變。
+- type C 對 C－01～14 保存同一完整 `cCountdownText`；C－15～17 將其正規化為 `null`；JSON 仍為 version 1。
 - 現有 evidence不要求 JSON升版，本文件也不設計新schema。
 
 ### 3.3 Editor／Preview／Export
@@ -88,15 +88,15 @@ C－15～17 尚未啟用 routing 不是 conflict，也不代表 C－01～14 的�
 - 正式Preview走`renderBnToCanvas()`；C－01～14都由explicit C route進入各自production wrapper。
 - Preview與Export共用同一 `renderBnToCanvas()` production renderer結果，不建立第二套正式drawing pipeline。
 - 對位圖只供manual viewer人工校對，不進入正式 Preview或Export output。
-- C－01～14已使用正式Preview／Export共用renderer path；C－15～17 routing尚未啟用，因此不得宣稱17版位完整C Export ready。
+- C－01～17 已使用正式 Preview／Export 共用 renderer path；`EXPORT_ITEMS` 仍17項，format／quality／72 DPI／capacity／filename contract 未改。
 
 ### 3.4 Renderer／asset／manual verification pattern
 
 - C－01～14都採C-specific wrapper：先呼叫對應正式A renderer繪製既有文字，再在同一canvas疊加C countdown；geometry保持slot-local。
 - C wrapper隔離 countdown validation、font readiness、geometry與drawing；A templates保持不修改。
-- `render-a.js`使用C asset base與explicit C route table；目前01～14可解析，未知C BN不得fallback到A route。
+- `render-a.js`對 C－01～14 使用 C asset base與explicit C route table；C－15～17 只對鎖定 ID reuse A table 並強制 canonical A asset base，其他未知 C BN 仍 fail closed。
 - 每個已完成的 C－01～14 版位都有 dedicated `.command` launcher，並透過既有 viewer呼叫同一production wrapper供Jamie人工對位。
-- Dedicated viewer／launcher是人工驗證入口，不是第二套正式renderer，也不代表完整C Export已完成。
+- Dedicated viewer／launcher是 C－01～14 的人工對位入口，不是第二套正式renderer；C－01～17 控制台／runtime 整合與 Phase 6 PASS 另以 `78d7718` 為準。
 - Wrapper是C－01～14已成立的共同策略，各版位geometry及wrapper細節保持獨立。C－15～17依shared reuse decision不建立countdown wrapper。
 
 ### 3.5 C－01～04 Countdown Rotation Effective Specification
@@ -105,8 +105,7 @@ Jamie在C－04 Phase 4後新增以下 **USER LOCKED** 決定：目前已實作�
 
 - 此決定精確只適用C－01～04，並取代四個版位先前各自的rotation implementation／final／candidate值。
 - 該次rotation決定本身未更動C－01～04的center、font、font size、color或uniform visual scale；C－01 font size後續再由第3.6節較晚的USER LOCKED決定更新。
-- C－05～14仍待Jamie逐版提供需求；不得由本決定推論或預建相同rotation。
-- C－15～17本輪不處理。
+- 在當時 rotation 決定階段，C－05～14 尚待 Jamie 逐版提供需求，C－15～17 不在該輪範圍；此為歷史 phase boundary，current result 以第24節為準。
 - 本文件後續保留的舊rotation measurement、Phase candidate與當時人工PASS紀錄均屬 **Historical / Superseded by Jamie's later -2.1° USER LOCKED decision**；它們只保存歷史真實性，不再代表目前effective rotation。
 
 ### 3.6 C－01 Countdown Font Size Effective Specification
@@ -333,7 +332,7 @@ reference/runtime ratio   ≈ 0.972
 - Restore的C allow-list只接受selected BN 01或02；JSON format/version與shared property不變。
 - Editor countdown exposure從C－01擴為C－01／02，仍reuse同一field definition、select、allowed values及update path。
 - app只enable C－01、C－02 buttons；C－03～17保持disabled。
-- C keyboard selection保持停用，避免generic navigation進入未支援C－03；A/B/D keyboard behavior不變。
+- **Historical C－02 phase state：** 當時 C keyboard selection 保持停用，避免 generic navigation 進入尚未支援的 C－03；此狀態已由 `78d7718` 刪除 C-specific early return 的修正取代。
 
 ### 5.7 Preview／Viewer／Launcher／Export
 
@@ -392,9 +391,9 @@ Jamie人工驗證使用dedicated C－02 launcher，確認1200×360 C底圖、A/B
 
 ## 6. Current Supported C Slots
 
-目前正式接入且已完成 Jamie launcher 人工驗證的 C 版位為 `C－01～14`。這十四個版位均已納入 Code Commit `0c9da10`。
+目前正式接入的 C 版位為 `C－01～17`。C－01～14 的 C-specific wrappers 與逐版 Jamie launcher PASS 納入 Code Commit `0c9da10`。
 
-C－15～17 的產品決策為 shared reuse 且不增加 countdown；routing 尚未接入，因此目前不得寫成 runtime supported。
+C－15～17 的 shared reuse、控制台啟用、C－17 threshold Modal 與 keyboard fix 納入 Code Commit `78d7718`，並經 Jamie Phase 6 Manual Verification **PASS**。
 
 ---
 
@@ -412,7 +411,7 @@ C－15～17 的產品決策為 shared reuse 且不增加 countdown；routing 尚
 - Photoshop規格若以pt鎖定，必須保留pt；不得擅自把目前effective `40pt`、`53pt`等轉為px。
 - C countdown完整字串、`C!E16` single source、唯一validation contract及JSON v1 round-trip。
 - Preview／Export共用`renderBnToCanvas()`的同源性。
-- C－15～17若後續接入，只能落地已LOCKED的shared reuse decision，不得新增countdown或C-specific geometry。
+- C－15～17 已落地的 shared reuse 不得回歸為 countdown、C-specific geometry、template、wrapper 或 asset dependency。
 - 共用Proposal不代表「一次設計全部C版位」，也不授權預建route、registry、geometry或抽象。
 
 ---
@@ -429,12 +428,12 @@ C－15～17 的產品決策為 shared reuse 且不增加 countdown；routing 尚
 ### 8.2 明確不在範圍
 
 - C－01～14任何返工、重新量測或pixel tuning。
-- C－15～17任何countdown geometry、C-specific wrapper、額外state／mapping／Editor control，或未經implementation的runtime支援宣稱。
+- C－15～17任何countdown geometry、C-specific wrapper／template／launcher、額外state／mapping／Editor control，或將shared reuse誤寫成C-specific實作。
 - C全樣式registry／config／framework預建或架構重設。
 - C－01～14重新人工驗證。
 - A/B/D重構、D返工或歷史問題。
 - 修改runtime code、template、launcher、asset、font、vendor或正式工單。
-- 跳過C－15～17 routing現況而宣稱17版位完整C Export成功。
+- 將四張未使用C copies誤寫為runtime dependency或後續必須Commit的assets。
 - 圖片生成、comparison image、diff image、screenshot或asset轉檔。
 
 ---
@@ -451,7 +450,7 @@ C－15～17 的產品決策為 shared reuse 且不增加 countdown；routing 尚
 6. Architecture delta不得反向改寫已PASS C－01／02；若確有regression或source-of-truth conflict，必須明確列為conflict並由Jamie裁決。
 7. 歷史 section 中的candidate／planned／pending／unsupported僅代表當時 phase 狀態；current status以第24節為準。
 8. Requirement繼續負責產品需求；本Proposal負責已核准的實作裁決與落地紀錄。不得用Proposal取代或反向改寫Requirement。
-9. C－15～17只記錄已LOCKED的shared reuse與dependency evidence；routing實作仍需Jamie後續授權。
+9. C－15～17記錄已LOCKED且已落地的shared reuse、dependency evidence與verification outcome；不建立逐版位Proposal。
 
 ---
 
@@ -481,8 +480,7 @@ C Requirement已同步涵蓋C－01～17，與目前C－01～14 implementation及
 
 ### OPEN
 
-- C－15～17：shared reuse decision已LOCKED；C routing尚未啟用。
-- 完整17版位C Export：仍受C－15～17 routing未啟用限制；本文件不宣稱已完成。
+None。C－15～17 shared reuse routing、C－01～17 runtime／控制台整合與 Jamie Phase 6 驗證均已完成。
 
 C－01～14的current implemented geometry及Jamie manual result均已PASS，不列為OPEN。
 
@@ -4216,7 +4214,7 @@ Font literal 14pt "ShopeeNotoSans Bold"、color #ff4c45與Canvas rotation -2.1°
 
 ---
 
-## 24. Current Governing Status after C－01～14 Code Commit
+## 24. Current Governing Status after C－01～17 Runtime Integration
 
 > 本節是本文件的 current-status authority。第12～23節及其他歷史段落內的 candidate、planned、pending、尚未Coding、unsupported、待人工驗證等文字，保留作 phase chronology，但凡與本節不同，均已由後續實作與 Jamie 人工裁決取代。
 
@@ -4232,9 +4230,13 @@ Font literal 14pt "ShopeeNotoSans Bold"、color #ff4c45與Canvas rotation -2.1°
 ### 24.2 C－15～17 Shared Reuse Lock
 
 - C－15／16／17 與目前 A/B/D 正式行為相同，不增加 C-specific countdown。
-- 不建立 C-specific countdown wrapper、geometry、state、Import mapping、Editor control 或 JSON field。
-- shared reuse decision 已 **LOCKED**；截至 `0c9da10`，C－15～17 routing 尚未啟用。
-- Requirement decision 不等於 runtime completion；在 routing 落地前，不得宣稱 C－15～17 已可由 C workspace Preview／Export。
+- `78d7718e953b303ec03ecad6328fe6adb17da275`（`feat(bn): complete C style control center integration`，parent `e5a6a69d42ff00544da72295d153ae6679e0bf89`）已完成 shared routing 與控制台整合；該 commit 精確修改 `render-a.js`、`app.js`、`import.js`、`export.js`。
+- C－15 reuse `A_TABLE["15"]`／`renderAr()`、`bnText["15"]`與`C!L24/L25`；C－16 reuse `A_TABLE["16"]`／`renderSubArea()`、`bnText["16"]`與`C!L26/L27/O26/O27`。
+- C－17 reuse `A_TABLE["17"]`／`renderThresholdTable()`、`threshold`、`parseThresholdModel()`與既有 threshold Modal；工單來源仍為`I29`、`I32:M33`、`H35:M52`、`I53:I55`。
+- C－15～17 不建立 C-specific countdown wrapper、geometry、state、Import mapping、Editor control、template 或 launcher；JSON v1 將 countdown 正規化為 `null`。
+- C－15／16 使用 canonical A `15_AR.jpg`／`16_副區.jpg`；C－17 使用 canonical A `17_主標題.png`／`17_VIP.png`。
+- C 左側 BN list 已啟用01～17，C－17可進入既有threshold Modal；Jamie Phase 6 Manual Verification **PASS**。
+- Keyboard root cause 為舊 handler 的 `if (state.currentType === "C") return;`；修正僅刪除該 early return，直接共用 A/B/D `ArrowUp`／`ArrowDown` non-wrap selection contract，沒有 C-specific handler 或 array，Jamie 已人工 PASS。
 
 ### 24.3 Asset Dependency Decisions
 
@@ -4242,11 +4244,12 @@ Font literal 14pt "ShopeeNotoSans Bold"、color #ff4c45與Canvas rotation -2.1°
 - `bn/assets/C/底圖/16_副區.jpg` 與 A/B/D 對應檔 byte-identical，SHA-256 `12902843ca43ffc7f1c89669514afa8477675406f96dab4f9b8819f11ba9506e`；不是 C-specific runtime dependency。
 - `bn/assets/C/底圖/17_VIP.png` 為 PNG RGBA `1180×185`，SHA-256 `34df2ee85c09e691a25de31a7f5595833b98c9e01697a7234cb52a845512ba2c`。
 - `bn/assets/C/底圖/17_主標題.png` 為 PNG RGBA `1180×83`，SHA-256 `ecf17ed1b9841fd62dd1535bb0573148361ddbc0cd22ed914457b8d38ac32bac`。
-- C－17 兩檔與 A/B 對應檔 byte-identical、目前 C runtime reference 為零；正式分類為 `NOT REQUIRED BY C17 RUNTIME`。
+- C－17 兩檔與 A/B 對應檔 byte-identical；C runtime 使用 canonical A files，對這兩個 C copies 的 runtime reference 為零，正式分類為 `NOT REQUIRED BY C17 RUNTIME`。
 - 四個 C15～17 files 均保留為 untracked evidence；本次文件工作不移動、不刪除、不修改，也不授權後續 asset cleanup。
 
-### 24.4 Open Boundary
+### 24.4 Completion Boundary
 
-- OPEN：C－15～17 shared reuse routing 的最小正式接入。
-- OPEN 不包含 C－01～14 geometry 或 manual result；這十四版均已 PASS。
+- C－01～14 由 `0c9da10` 完成；C－15～17 shared integration 與 keyboard fix 由 `78d7718` 完成；現在 C－01～17 runtime integration 已完成。
+- Countdown applicability 僅 C－01～14；C－15～17 Import／Restore／Editor／renderer／JSON 不得當作有 countdown。
+- Export 仍使用17項 `EXPORT_ITEMS`、統一 `renderBnToCanvas()`，format／quality／72 DPI／capacity／filename contract 未改。
 - CONFLICT：None。
