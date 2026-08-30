@@ -20,11 +20,16 @@ const ALL_BN_IDS = Object.freeze([
   "01", "02", "03", "04", "05", "06", "07", "08", "09",
   "10", "11", "12", "13", "14", "15", "16", "17"
 ]);
-const C_SUPPORTED_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
+const C_SUPPORTED_BN_IDS = Object.freeze([...ALL_BN_IDS]);
 
-// 目前正式支援的樣式 Type；C 只開放已完成 vertical slice 的版位資料路徑。
+// 目前正式支援的樣式 Type；C 已開放完整 01～17 版位資料路徑。
 // 這不是 Type 系統或 config layer，只是 Import／Restore 的最小 allow-list。
 const SUPPORTED_TYPES = Object.freeze(["A", "B", "C", "D"]);
+
+export function isCCountdownBnId(bnId) {
+  const number = Number.parseInt(bnId, 10);
+  return number >= 1 && number <= 14 && String(number).padStart(2, "0") === bnId;
+}
 
 // 正式 A 工單固定 source cells（Phase 0 實測、Phase 1 Requirement 鎖定）。
 const REQUIRED_LABELS = Object.freeze({
@@ -117,6 +122,15 @@ export async function parseExcelFile(file, type, selectedBnId) {
     throw new ImportValidationError([`工單 Excel 沒有 ${type} 工作表。`]);
   }
 
+  const resolvedSelectedBnId =
+    type === "C"
+      ? C_SUPPORTED_BN_IDS.includes(selectedBnId)
+        ? selectedBnId
+        : "01"
+      : ALL_BN_IDS.includes(selectedBnId)
+        ? selectedBnId
+        : "01";
+
   const errors = [];
   Object.entries(REQUIRED_LABELS).forEach(([address, expected]) => {
     if (cellText(worksheet, address) !== expected) {
@@ -141,6 +155,16 @@ export async function parseExcelFile(file, type, selectedBnId) {
           "14": {
             line1: cellText(worksheet, "L22"),
             line2: cellText(worksheet, "L23")
+          },
+          "15": {
+            line1: cellText(worksheet, "L24"),
+            line2: cellText(worksheet, "L25")
+          },
+          "16": {
+            leftTitle: cellText(worksheet, "L26"),
+            leftCopy: cellText(worksheet, "L27"),
+            rightTitle: cellText(worksheet, "O26"),
+            rightCopy: cellText(worksheet, "O27")
           }
         }
       : {
@@ -164,9 +188,14 @@ export async function parseExcelFile(file, type, selectedBnId) {
           }
         };
 
-  const threshold = type === "C" ? null : parseThresholdModel(worksheet, errors, type);
-  const cCountdownText = type === "C" ? cellText(worksheet, "E16") : null;
-  if (type === "C" && !isValidCCountdown(cCountdownText)) {
+  const threshold = parseThresholdModel(worksheet, errors, type);
+  const rawCCountdownText = type === "C" ? cellText(worksheet, "E16") : null;
+  const cCountdownText = isValidCCountdown(rawCCountdownText) ? rawCCountdownText : null;
+  if (
+    type === "C" &&
+    isCCountdownBnId(resolvedSelectedBnId) &&
+    !isValidCCountdown(rawCCountdownText)
+  ) {
     errors.push("C 工作表 E16 倒數天數只允許完整字串 0天～9天。");
   }
 
@@ -180,14 +209,7 @@ export async function parseExcelFile(file, type, selectedBnId) {
 
   return {
     currentType: type,
-    selectedBnId:
-      type === "C"
-        ? C_SUPPORTED_BN_IDS.includes(selectedBnId)
-          ? selectedBnId
-          : "01"
-        : ALL_BN_IDS.includes(selectedBnId)
-          ? selectedBnId
-          : "01",
+    selectedBnId: resolvedSelectedBnId,
     shared,
     bnText,
     threshold,
@@ -320,30 +342,32 @@ export function parseWorkspaceJson(text) {
   }
 
   const shared = validateTextFields("01", data.shared, "01～12 共用文字", errors);
-  const bnText = data.type === "C" ? emptyBnText() : {};
-  if (data.type === "C") {
-    ["13", "14"].forEach((bnId) => {
-      bnText[bnId] = validateTextFields(
-        bnId,
-        data.bnText ? data.bnText[bnId] : undefined,
-        `${bnId} 文字`,
-        errors
-      );
-    });
-  } else {
-    BN_TEXT_IDS.forEach((bnId) => {
-      bnText[bnId] = validateTextFields(
-        bnId,
-        data.bnText ? data.bnText[bnId] : undefined,
-        `${bnId} 文字`,
-        errors
-      );
-    });
+  const bnText = {};
+  BN_TEXT_IDS.forEach((bnId) => {
+    bnText[bnId] = validateTextFields(
+      bnId,
+      data.bnText ? data.bnText[bnId] : undefined,
+      `${bnId} 文字`,
+      errors
+    );
+  });
+
+  let threshold = null;
+  if (
+    data.type !== "C" ||
+    data.selectedBnId === "17" ||
+    (data.threshold !== null && data.threshold !== undefined)
+  ) {
+    threshold = validateThresholdModel(data.threshold, errors);
   }
-  const threshold = data.type === "C" ? null : validateThresholdModel(data.threshold, errors);
-  const cCountdownText = data.type === "C" ? data.cCountdownText : null;
-  if (data.type === "C" && !isValidCCountdown(cCountdownText)) {
-    errors.push("樣式 C 暫存倒數天數只允許完整字串 0天～9天。");
+
+  let cCountdownText = null;
+  if (data.type === "C" && isCCountdownBnId(data.selectedBnId)) {
+    if (isValidCCountdown(data.cCountdownText)) {
+      cCountdownText = data.cCountdownText;
+    } else {
+      errors.push("樣式 C 暫存倒數天數只允許完整字串 0天～9天。");
+    }
   }
   // Backward-compatible optional 欄位：既有 v1 暫存檔沒有此欄位時視同空白，
   // 不 push error、不影響 Restore 合法性（掛標群組是否存在屬 runtime asset 狀態）。

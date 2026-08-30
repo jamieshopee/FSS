@@ -27,7 +27,7 @@ const BN_ITEMS = [
   { id: "16", name: "16_副區" },
   { id: "17", name: "17_門檻表" }
 ];
-const C_ENABLED_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
+const C_ENABLED_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17"]);
 
 const typeView = document.querySelector("#type-view");
 const consoleView = document.querySelector("#console-view");
@@ -242,6 +242,7 @@ function render(state, reason) {
   const showThresholdEditor =
     (state.currentType === "A" ||
       state.currentType === "B" ||
+      state.currentType === "C" ||
       state.currentType === "D") &&
     state.selectedBnId === "17" &&
     Boolean(state.threshold);
@@ -726,7 +727,6 @@ document.addEventListener("keydown", (event) => {
 
   const state = workspace.getState();
   if (!state.currentType || !state.selectedBnId) return;
-  if (state.currentType === "C") return;
 
   event.preventDefault();
   const currentIndex = BN_ITEMS.findIndex((item) => item.id === state.selectedBnId);

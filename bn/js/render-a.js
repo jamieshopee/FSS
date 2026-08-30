@@ -122,6 +122,7 @@ const ASSET_BASE_BY_TYPE = Object.freeze({
 const D_LOGO_ASSET_BASE = "../assets/D/";
 const D_LOGO_FILE = "Logo.png";
 const D17_CANONICAL_ASSET_BASE = "../assets/A/底圖/";
+const C_SHARED_CANONICAL_ASSET_BASE = "../assets/A/底圖/";
 
 const A_TABLE = Object.freeze({
   "01": { render: renderDdcardBn, waitFonts: waitForDdcardBnFonts, background: "01_DDcard BN.jpg" },
@@ -222,6 +223,7 @@ const C_TABLE = Object.freeze({
 });
 
 const C_COUNTDOWN_BN_IDS = Object.freeze(["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14"]);
+const C_REUSE_A_IDS = Object.freeze(["15", "16", "17"]);
 
 const D_OVERRIDE_TABLE = Object.freeze({
   "01": { render: renderD01DdcardBn, waitFonts: waitForD01DdcardBnFonts, background: "01_DDcard BN.jpg" },
@@ -247,10 +249,17 @@ function resolveRenderRoute(type, bnId) {
   }
 
   if (type === "C") {
-    if (!hasOwn(C_TABLE, bnId)) {
-      throw new Error(`樣式 C 尚未支援 BN ${bnId}；目前只支援 C－01、C－02、C－03、C－04、C－05、C－06、C－07、C－08、C－09、C－10、C－11、C－12、C－13與C－14。`);
+    if (hasOwn(C_TABLE, bnId)) {
+      return { entry: C_TABLE[bnId], usesDOverride: false };
     }
-    return { entry: C_TABLE[bnId], usesDOverride: false };
+    if (C_REUSE_A_IDS.includes(bnId) && hasOwn(A_TABLE, bnId)) {
+      return {
+        entry: A_TABLE[bnId],
+        usesDOverride: false,
+        assetBaseOverride: C_SHARED_CANONICAL_ASSET_BASE
+      };
+    }
+    throw new Error(`樣式 C 尚未支援 BN ${bnId}；目前只支援 C－01～C－17。`);
   }
 
   const aEntry = hasOwn(A_TABLE, bnId) ? A_TABLE[bnId] : null;
@@ -329,8 +338,11 @@ export async function renderBnToCanvas(canvas, state, bnId) {
     throw new Error(`C－${bnId} 倒數天數只允許完整字串 0天～9天。`);
   }
 
-  const { entry, usesDOverride } = resolveRenderRoute(state.currentType, bnId);
-  const assetBase = ASSET_BASE_BY_TYPE[state.currentType];
+  const { entry, usesDOverride, assetBaseOverride } = resolveRenderRoute(
+    state.currentType,
+    bnId
+  );
+  const assetBase = assetBaseOverride || ASSET_BASE_BY_TYPE[state.currentType];
 
   if (bnId === "17") {
     const model = state.threshold;
