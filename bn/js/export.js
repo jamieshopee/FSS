@@ -1,11 +1,6 @@
 import { WORKSPACE_FORMAT, WORKSPACE_VERSION, isCCountdownBnId } from "./import.js";
 import { isValidCCountdown } from "./countdown.js";
 import { renderBnToCanvas } from "./render-a.js";
-import {
-  LPBN_BADGE_STATUS,
-  composeLpbnVariantCanvas,
-  resolveLpbnBadges
-} from "./lpbn-badges.js";
 
 // 正式輸出格式（Jamie 最終裁決）：12_LPBN 為 JPG。
 export const EXPORT_ITEMS = Object.freeze([
@@ -52,8 +47,7 @@ export function serializeWorkspace(state) {
     selectedBnId: state.selectedBnId,
     shared: state.shared,
     bnText: state.bnText,
-    threshold: state.threshold,
-    lpbnBadgeMonth: state.lpbnBadgeMonth
+    threshold: state.threshold
   };
   if (state.currentType === "C") {
     data.cCountdownText = isCCountdownBnId(state.selectedBnId)
@@ -332,8 +326,6 @@ export async function exportWorkspace(state) {
   // 該次 Export 只取得一次日期，ZIP 與 JSON 共用同一 MMDD。
   const dateCode = makeDateCode(new Date());
   const zip = new globalThis.JSZip();
-  // A－12 掛標 optional 警告：累積後併入最終成功訊息，避免被結束訊息覆蓋。
-  const warnings = [];
 
   for (const item of EXPORT_ITEMS) {
     const canvas = document.createElement("canvas");
@@ -357,38 +349,11 @@ export async function exportWorkspace(state) {
       }
       zip.file(`${item.name}.png`, blob);
     }
-
-    // A－12 掛標 variants：base 已依既有路徑輸出且不被覆蓋，於其後追加實際可用 slots。
-    // 與 Preview 共用同一個 resolver，確保兩邊 variant 判定一致。
-    if (item.id === "12") {
-      const badges = await resolveLpbnBadges(state.lpbnBadgeMonth);
-
-      if (badges.status === LPBN_BADGE_STATUS.UNKNOWN_GROUP) {
-        warnings.push(
-          `${item.name}：找不到掛標月份「${badges.month}」的掛標素材群組，本次只輸出無掛標版本。`
-        );
-      } else if (badges.status === LPBN_BADGE_STATUS.PARTIAL) {
-        warnings.push(
-          `${item.name}：掛標月份「${badges.month}」缺少第 ${badges.missingSlots.join("、")} 張掛標素材，本次只輸出實際存在的掛標版本。`
-        );
-      }
-
-      for (const variant of badges.variants) {
-        const variantCanvas = composeLpbnVariantCanvas(canvas, variant.image);
-        let variantBlob = await canvasToBlob(
-          variantCanvas,
-          "image/jpeg",
-          JPEG_QUALITY
-        );
-        variantBlob = await setJpegDpi(variantBlob, EXPORT_DPI);
-        zip.file(`${item.name}_${variant.slot}.jpg`, variantBlob);
-      }
-    }
   }
 
   zip.file(`FSS BN_${dateCode}.json`, serializeWorkspace(state));
 
   const zipBlob = await zip.generateAsync({ type: "blob", compression: "DEFLATE" });
   downloadBlob(zipBlob, `FSS BN_${dateCode}.zip`);
-  return Object.freeze({ warnings });
+  return Object.freeze({ warnings: [] });
 }

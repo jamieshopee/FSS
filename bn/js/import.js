@@ -189,19 +189,15 @@ export async function parseExcelFile(file, type, selectedBnId) {
         };
 
   const threshold = parseThresholdModel(worksheet, errors, type);
-  const rawCCountdownText = type === "C" ? cellText(worksheet, "E16") : null;
+  const rawCCountdownText = type === "C" ? cellText(worksheet, "E15") : null;
   const cCountdownText = isValidCCountdown(rawCCountdownText) ? rawCCountdownText : null;
   if (
     type === "C" &&
     isCCountdownBnId(resolvedSelectedBnId) &&
     !isValidCCountdown(rawCCountdownText)
   ) {
-    errors.push("C 工作表 E16 倒數天數只允許完整字串 0天～9天。");
+    errors.push("C 工作表 E15 倒數天數只允許完整字串 0天～9天。");
   }
-
-  // 12_LPBN 專用 optional 值：只讀取與保存，不判斷掛標群組或素材是否存在，
-  // 也不因掛標狀態使 Import 失敗；asset availability 由 Preview／Export runtime 判定。
-  const lpbnBadgeMonth = cellText(worksheet, "E15").trim();
 
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
@@ -213,8 +209,7 @@ export async function parseExcelFile(file, type, selectedBnId) {
     shared,
     bnText,
     threshold,
-    cCountdownText,
-    lpbnBadgeMonth
+    cCountdownText
   };
 }
 
@@ -369,13 +364,6 @@ export function parseWorkspaceJson(text) {
       errors.push("樣式 C 暫存倒數天數只允許完整字串 0天～9天。");
     }
   }
-  // Backward-compatible optional 欄位：既有 v1 暫存檔沒有此欄位時視同空白，
-  // 不 push error、不影響 Restore 合法性（掛標群組是否存在屬 runtime asset 狀態）。
-  const lpbnBadgeMonth =
-    typeof data.lpbnBadgeMonth === "string"
-      ? data.lpbnBadgeMonth
-      : "";
-
   if (errors.length > 0) {
     throw new ImportValidationError(errors);
   }
@@ -386,7 +374,6 @@ export function parseWorkspaceJson(text) {
     shared,
     bnText,
     threshold,
-    cCountdownText,
-    lpbnBadgeMonth
+    cCountdownText
   };
 }

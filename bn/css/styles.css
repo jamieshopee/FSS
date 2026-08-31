@@ -279,16 +279,6 @@ h3 {
   justify-content: center;
 }
 
-/* A－12 掛標 stack：只在 12_LPBN 有可用掛標 variants 時由 app.js 加上 modifier；
-   其他 16 版位與 A－12 無掛標情境完全維持既有單張 Preview 視覺。
-   #preview 改為依內容自然增高，總高度由既有 .preview-column overflow:auto 捲動。 */
-.preview.is-lpbn-stack {
-  flex: 0 0 auto;
-  flex-direction: column;
-  justify-content: flex-start;
-  gap: 22px;
-}
-
 .preview-canvas {
   display: block;
   width: auto;
