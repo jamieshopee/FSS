@@ -1,5 +1,9 @@
 # FSS BN — A－12／12_LPBN 掛標 Requirement Specification v1.0
 
+> **【CURRENT CONTRACT／SUPERSEDING STATUS】** LPBN 掛標功能已由 Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）正式取消，並完成 AI 與 Jamie Manual Verification PASS。現行 A／B／C／D 的 `12_LPBN` Preview 均只顯示單一 base，Export 均只輸出既有 `12_LPBN.jpg`，不再生成 `_1`～`_3` variants。下文第 1～21 節保留為掛標功能曾經成立時的歷史 Requirement／實作紀錄，不再代表 current behavior。
+>
+> 現行 base contract 維持原 filename、1200 × 550、JPG、72 dpi、quality 1.0 與無 byte limit；LPBN renderer／geometry未改。`lpbnBadgeMonth` 已退出 current Workspace／新 JSON，JSON version仍為1；legacy JSON若含該欄位仍可Restore並忽略。`bn/js/lpbn-badges.js`與`bn/assets/LPBN掛標/`僅保留為 dormant歷史實作，未刪除或修改。
+
 **階段**：Phase 1 Requirement
 **主題**：A－12（`12_LPBN`）依工單指定的 LPBN 掛標月份，在保留既有無掛標輸出的前提下，增加最多三張掛標 variants
 **前置**：Phase 0 Investigation 完成、Phase 0 裁決摘要經 Jamie／GPT Review PASS

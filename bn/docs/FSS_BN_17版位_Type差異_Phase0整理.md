@@ -1,5 +1,7 @@
 # FSS BN Generator－固定 17 個 BN 版位與 A／B／C／D Type 差異整理
 
+> **【CURRENT STATE UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已取消 A／B／C／D 的 LPBN 掛標；各Type的BN12只Preview／Export單一base `12_LPBN.jpg`。C－01～14 countdown current source為`C!E15`且只接受`0天`～`9天`，C－15～17不適用；C－12不再有badge month責任。JSON仍為version 1，新JSON不含`lpbnBadgeMonth`，legacy欄位接受但忽略。下文Phase 0與第18～19節的badge／`C!E16`描述保留為當時歷史狀態，已由本註記取代；dormant module／assets仍保留。
+
 **整理日期：**2026-08-11 狀態：Phase 0 需求／架構討論整理 用途：供後續
 GPT／Codex／Claude 接續使用，避免重新討論或誤解已確認內容。
 

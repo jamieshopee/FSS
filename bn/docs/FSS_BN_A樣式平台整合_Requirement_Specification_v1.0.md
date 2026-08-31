@@ -1,5 +1,7 @@
 # FSS BN Generator－A 樣式平台整合 Requirement Specification v1.0
 
+> **【CURRENT CONTRACT UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已取消 A／B／C／D 的 LPBN 掛標。A－12 current Preview／Export均只有單一 base `12_LPBN.jpg`；第26節記錄的 `lpbnBadgeMonth`與 `_1`～`_3` variants屬當時歷史落地狀態，已被本註記取代。Workspace JSON仍為version 1，新JSON不再輸出`lpbnBadgeMonth`，legacy欄位可Restore但會被忽略；base filename、JPG、1200 × 550、quality 1.0、72 dpi與無byte limit不變。
+
 > 階段：Phase 1－Requirement Specification
 >
 > 開發範圍：FSS BN 樣式 A 的正式平台整合（Excel Import → Workspace → 正式 renderer → Preview → Restore → Export）

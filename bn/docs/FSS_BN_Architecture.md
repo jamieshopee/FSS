@@ -1,5 +1,7 @@
 # FSS BN 內部架構基準
 
+> **【CURRENT ARCHITECTURE UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）是目前LPBN／C countdown資料流authority。A／B／C／D 的 BN12 Preview／Export均只產生單一base `12_LPBN.jpg`；`lpbnBadgeMonth`已退出current Workspace與新JSON，version仍為1，legacy欄位Restore時接受但忽略。C－01～14從`C!E15`取得`0天`～`9天`，C－15～17不適用；C－12只有countdown責任。第37、38、48、49節內badge或`C!E16`文字保留為各功能當時落地的歷史architecture record，current state以本註記為準。LPBN／countdown renderer geometry、base export contract與dormant module／assets未改。
+
 > 階段：Phase 0
 >
 > 狀態：Jamie + GPT 目前已確認內容之整理；待 Jamie 與 GPT 審稿

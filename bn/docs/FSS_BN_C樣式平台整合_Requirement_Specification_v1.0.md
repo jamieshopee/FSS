@@ -7,6 +7,8 @@
 > Code Commits：C－01～14 `0c9da10472ba3128ea90b64d2340ac8b178d4514`（`feat(bn): integrate C style 01-14`）；C－15～17 shared integration 與 keyboard fix `78d7718e953b303ec03ecad6328fe6adb17da275`（`feat(bn): complete C style control center integration`）
 >
 > C－15～17：正式 shared reuse 已落地，無 countdown，不建立 C-specific template／wrapper／geometry
+>
+> Current contract update：`8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已取消 A／B／C／D 的 LPBN 掛標，並將 C－01～14 countdown Excel source 由 `C!E16` 改為 `C!E15`；AI 與 Jamie Manual Verification PASS。
 
 ## 1. 文件目的與適用範圍
 
@@ -18,7 +20,7 @@
 
 1. 主標、副標、保護文字的位置、字型樣式、字型大小、顏色與各版正式 A/B 行為相同。
 2. 每個版位額外增加「倒數天數」，位置與 geometry 依版位個別鎖定。
-3. 倒數來源固定為工單 C Sheet 的 `E16`。
+3. 倒數來源固定為工單 C Sheet 的 `E15`；最新工單語意為 `C!D15=倒數天數`、`C!E15=0天`、`C!E16=空白`。
 4. 工單儲存完整文字，例如 `0天`；Import、Editor、renderer 與 Export 不得把純數字自行組成「天」。
 5. 合法值只允許 `0天`～`9天`。
 6. 倒數字型來源為 repository 的 `ShopeeNotoSans(content)-Bold.woff2`，Canvas 正式 family alias 為 `ShopeeNotoSans Bold`。
@@ -37,7 +39,7 @@ C－01～12 沿用既有三欄文字模型：
 - `subheadline`：副標
 - `protectionText`：保護文字
 
-正式工單的既有 mapping 沿用目前 A/B Import 規則；C Sheet 額外以 `E16` 提供完整倒數字串。
+正式工單的既有 mapping 沿用目前 A/B Import 規則；C Sheet 額外以 `E15` 提供完整倒數字串。
 
 ### 3.2 C－13～14
 
@@ -46,17 +48,17 @@ C－13～14 沿用 Skinny banner 的既有兩行文字模型：
 - `line1`：第一行
 - `line2`：第二行
 
-倒數來源同樣固定為 C Sheet `E16`，並以同一完整字串 validation 規則處理。
+倒數來源同樣固定為 C Sheet `E15`，並以同一完整字串 validation 規則處理。
 
-### 3.3 C－12 既有欄位證據
+### 3.3 C－12 現行欄位契約
 
-C－12 沿用既有 LPBN 掛標機制；LPBN month source 為 `C!E15`，倒數天數 source 為 `C!E16`。兩者是不同欄位、不同責任，不得互相替代、混用或推導。
+C－12目前只有 countdown責任，與C－01～14相同由`C!E15`取得完整倒數字串；不再有LPBN badge month責任。`C!E16`目前空白且不再是countdown source。LPBN Preview／Export只保留單一base，既有C－12 renderer與countdown geometry完全不變。
 
 ### 3.4 C－13／14 Import mapping
 
 - C－13 的 `line1`／`line2` 精確讀取 `C!L20`／`C!L21`。
 - C－14 的 `line1`／`line2` 精確讀取 `C!L22`／`C!L23`。
-- 兩版倒數仍只讀取 `C!E16`，不從 Skinny 文字 cells 推導。
+- 兩版倒數仍只讀取 `C!E15`，不從 Skinny 文字 cells 推導。
 
 ## 4. Workspace／Import／Restore／JSON
 
@@ -67,6 +69,7 @@ C－12 沿用既有 LPBN 掛標機制；LPBN month source 為 `C!E15`，倒數�
 5. JSON 維持目前 schema/version 契約，保存 Type、版位既有文字與倒數完整字串。此需求不授權另開 schema version 或建立 C-only JSON 格式。
 6. C－15～17 不新增倒數 state、Import mapping、Restore 欄位或 JSON 欄位；JSON v1 serialization 將 `cCountdownText` 正規化為 `null`。
 7. C－15／16 分別保存與 Restore 既有 `bnText["15"]` 與 `bnText["16"]`；C－17 保存與 Restore 既有 `threshold` model，不新增 workspace state 或 schema version。
+8. JSON version維持`1`；新JSON不再輸出`lpbnBadgeMonth`。Legacy JSON若含該欄位仍可Restore，但欄位會被忽略，不恢復badge行為。
 
 ## 5. Editor／Preview／Export
 
@@ -82,8 +85,8 @@ C－12 沿用既有 LPBN 掛標機制；LPBN month source 為 `C!E15`，倒數�
 
 | 範圍 | 正式狀態 | 倒數需求 | 驗證 |
 |---|---|---|---|
-| C－01～12 | 已實作於 C wrappers | `E16` 完整字串，`0天`～`9天` | Jamie launcher Manual PASS |
-| C－13～14 | 已實作於 Skinny C wrappers | `E16` 完整字串，`0天`～`9天` | Jamie launcher Manual PASS |
+| C－01～12 | 已實作於 C wrappers | `E15` 完整字串，`0天`～`9天` | Jamie launcher／current contract Manual PASS |
+| C－13～14 | 已實作於 Skinny C wrappers | `E15` 完整字串，`0天`～`9天` | Jamie launcher／current contract Manual PASS |
 
 C－14 最終鎖定值為：font `14pt "ShopeeNotoSans Bold"`、color `#ff4c45`、Canvas rotation `-2.1°`、center `(268.5,71.5)`、uniform scale `1.0`。此組值為 Jamie 人工驗證後的最終值。
 
@@ -129,6 +132,7 @@ C－14 最終鎖定值為：font `14pt "ShopeeNotoSans Bold"`、color `#ff4c45`�
 - 不得把目前保留的 C copies 誤寫為已被 runtime 使用。
 - C－15／16 使用 canonical A `15_AR.jpg`／`16_副區.jpg`；C－17 使用 canonical A `17_主標題.png`／`17_VIP.png`。
 - Export 仍使用統一 `renderBnToCanvas()` 與17項 `EXPORT_ITEMS`；format、quality、72 DPI、capacity 與 filename contract 未變。
+- A／B／C／D 的 `12_LPBN`均只Preview／Export單一base `12_LPBN.jpg`，不生成badge variants；dormant module／assets仍保留。
 - Keyboard fix 僅刪除舊 `if (state.currentType === "C") return;`，沒有新增 C-specific handler 或 keyboard array。
 
 ## 9. 非目標

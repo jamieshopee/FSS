@@ -1,5 +1,7 @@
 # FSS BN — 樣式 D Requirement Specification v1.0
 
+> **【CURRENT CONTRACT UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已取消 A／B／C／D 的 LPBN 掛標。D－12 current Preview／Export均只有單一 base `12_LPBN.jpg`；本文件內D－12 badge、E15月份、base＋variants及其驗證文字保留為各Phase當時確實成立的歷史Requirement／完成紀錄，不再代表現行行為。JSON version仍為1，新JSON不輸出`lpbnBadgeMonth`，legacy欄位Restore時接受但忽略；D－12 renderer／geometry與dormant module／assets均未修改。
+
 **文件性質**：樣式 D 跨 `01`～`17` 版位的**持續累積** Requirement，單一總文件
 **文件策略**：樣式 D 不建立逐版位 Requirement 文件；所有 D 版位的 Requirement 集中於本文件（見第 2 節）
 **目前狀態**：D－01、D－02、D－03、D－06、D－07、D－08、D－09、D－10 已確認並完成，皆經 Phase 6 Jamie 人工對位驗證 PASS；D－04、D－05、D－11～17 尚未進入 Phase 1

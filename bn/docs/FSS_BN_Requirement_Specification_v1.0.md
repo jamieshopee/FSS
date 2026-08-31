@@ -1,5 +1,7 @@
 # FSS BN Generator－第一輪開發 Requirement Specification v1.0
 
+> **【CURRENT CONTRACT UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已完成最新正式同步：A／B／C／D 的 BN12均只Preview／Export單一base `12_LPBN.jpg`；C－01～14 countdown Excel source為`C!E15`（`D15=倒數天數`、`E15=0天`、`E16=空白`），C－15～17仍不適用。JSON維持version 1，新JSON不含`lpbnBadgeMonth`，legacy欄位接受但忽略。後文較早完成同步中badge與`C!E16`敘述保留為歷史狀態，已由本註記取代；renderer／geometry、base export contract及dormant module／assets未改。
+
 > 階段：Phase 1－Requirement Specification
 >
 > 第一輪開發範圍：BN Type 選擇頁＋BN 控制台最初骨架

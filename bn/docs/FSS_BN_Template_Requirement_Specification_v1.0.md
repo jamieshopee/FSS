@@ -1,5 +1,7 @@
 # FSS BN Generator－正式 BN Templates Requirement Specification v1.0
 
+> **【CURRENT CONTRACT UPDATE】** Code Commit `8a141c1c905107546c25cd125015e1ec7ee61609`（`fix(bn): remove LPBN badge variants`）已取消 A／B／C／D 的 LPBN 掛標。現行各Type的 `12_LPBN`只生成單一base `12_LPBN.jpg`；第5.1.12.7等badge文字保留為當時實作與驗證的歷史紀錄，不再是current template/export behavior。所有LPBN base templates、geometry、filename、1200 × 550、JPG、quality 1.0、72 dpi與無byte limit均未改；dormant module／assets仍保留。
+
 > 階段：Phase 1－Requirement Specification
 >
 > 文件範圍：固定 17 個正式 BN Templates 與 A／B／C／D Type 真正存在的差異
