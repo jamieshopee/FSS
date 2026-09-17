@@ -3,6 +3,7 @@ import {
   COLOR_OPTIONS,
   LAYOUT_OPTIONS,
   WORKSHEET_SCHEMA,
+  isValidLayoutColor,
   isSafeIdentifier,
 } from "../forms/excel-schema.js";
 import { MAX_BADGES } from "../templates/badge-common.js";
@@ -78,6 +79,12 @@ function parseBadge(blockRows, group, startRowNumber, badgeIndex, errors) {
   if (!COLOR_OPTIONS.includes(color)) {
     errors.push(
       `Excel 第 ${startRowNumber + 1} 列 ${columnLetter(group.valueColumn)} 欄「${group.name}／顏色」必須為紅、綠、黃、藍。`,
+    );
+    return null;
+  }
+  if (!isValidLayoutColor(layout, color)) {
+    errors.push(
+      `Excel 第 ${startRowNumber + 1} 列 ${columnLetter(group.valueColumn)} 欄「${group.name}／顏色」：A、C 文字樣式不可使用黃色。`,
     );
     return null;
   }
@@ -195,6 +202,10 @@ function validateBadgeFromJson(badge, itemIndex, badgeIndex, errors) {
   }
   if (!COLOR_OPTIONS.includes(badge.color)) {
     errors.push(`${label}使用不支援的顏色。`);
+    return null;
+  }
+  if (!isValidLayoutColor(badge.layout, badge.color)) {
+    errors.push(`${label}：A、C 文字樣式不可使用黃色。`);
     return null;
   }
   if (!['excel', 'added'].includes(badge.origin) || typeof badge.id !== "string" || badge.id === "") {

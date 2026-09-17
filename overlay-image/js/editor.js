@@ -1,4 +1,8 @@
-import { COLOR_OPTIONS, LAYOUT_OPTIONS } from "../forms/excel-schema.js";
+import {
+  LAYOUT_OPTIONS,
+  getAllowedColors,
+  isValidLayoutColor,
+} from "../forms/excel-schema.js";
 import { MAX_BADGES, MAX_BADGES_TOTAL_WIDTH } from "../templates/badge-common.js";
 import { parseBadgeContent, validateBadgeContent } from "../templates/index.js";
 import { getItemMeasurements } from "./preview.js";
@@ -134,17 +138,23 @@ function createBadgeCard(item, badge, badgeIndex, actions) {
   return card;
 }
 
-function makeSelect(labelText, options) {
-  const label = document.createElement("label");
-  const text = document.createElement("span");
-  text.textContent = labelText;
-  const select = document.createElement("select");
+function setSelectOptions(select, options, selectedValue = options[0]) {
+  select.replaceChildren();
   for (const optionValue of options) {
     const option = document.createElement("option");
     option.value = optionValue;
     option.textContent = optionValue;
     select.append(option);
   }
+  select.value = options.includes(selectedValue) ? selectedValue : options[0] ?? "";
+}
+
+function makeSelect(labelText, options) {
+  const label = document.createElement("label");
+  const text = document.createElement("span");
+  text.textContent = labelText;
+  const select = document.createElement("select");
+  setSelectOptions(select, options);
   label.append(text, select);
   return { label, select };
 }
@@ -207,7 +217,7 @@ function renderAddRegion(container, item, actions) {
   const toggle = document.createElement("button");
   toggle.type = "button";
   toggle.className = "add-toggle";
-  toggle.textContent = "新增 Badge";
+  toggle.textContent = "新增";
   region.append(toggle);
 
   toggle.addEventListener("click", () => {
@@ -216,15 +226,19 @@ function renderAddRegion(container, item, actions) {
     form.className = "add-form";
     const grid = document.createElement("div");
     grid.className = "add-form-grid";
-    const layoutSelect = makeSelect("Layout", LAYOUT_OPTIONS);
-    const colorSelect = makeSelect("顏色", COLOR_OPTIONS);
+    const layoutSelect = makeSelect("文字樣式", LAYOUT_OPTIONS);
+    const colorSelect = makeSelect("顏色", getAllowedColors(layoutSelect.select.value));
     grid.append(layoutSelect.label, colorSelect.label);
 
     let addFields = createAddFields(layoutSelect.select.value);
     const fieldsHost = document.createElement("div");
     fieldsHost.append(addFields.container);
     layoutSelect.select.addEventListener("change", () => {
-      addFields = createAddFields(layoutSelect.select.value);
+      const layout = layoutSelect.select.value;
+      const currentColor = colorSelect.select.value;
+      const nextColor = isValidLayoutColor(layout, currentColor) ? currentColor : "紅";
+      setSelectOptions(colorSelect.select, getAllowedColors(layout), nextColor);
+      addFields = createAddFields(layout);
       fieldsHost.replaceChildren(addFields.container);
     });
 
@@ -251,12 +265,17 @@ function renderAddRegion(container, item, actions) {
     });
     confirm.addEventListener("click", () => {
       try {
+        const layout = layoutSelect.select.value;
+        const color = colorSelect.select.value;
+        if (!isValidLayoutColor(layout, color)) {
+          throw new Error("A、C 文字樣式不可使用黃色。");
+        }
         const badge = {
           id: `added-${Date.now()}-${addedBadgeSequence += 1}`,
           origin: "added",
-          layout: layoutSelect.select.value,
-          color: colorSelect.select.value,
-          content: contentFromAddFields(layoutSelect.select.value, addFields.fields),
+          layout,
+          color,
+          content: contentFromAddFields(layout, addFields.fields),
         };
         actions.updateItem(item.identifier, (draft) => draft.badges.push(badge));
       } catch (addError) {

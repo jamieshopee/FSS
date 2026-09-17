@@ -21,6 +21,23 @@ export const BADGE_GROUPS = Object.freeze([
 export const LAYOUT_OPTIONS = Object.freeze(["A", "B", "C", "D"]);
 export const COLOR_OPTIONS = Object.freeze(["紅", "綠", "黃", "藍"]);
 
+const COLORS_WITHOUT_YELLOW = Object.freeze(COLOR_OPTIONS.filter((color) => color !== "黃"));
+const EMPTY_COLOR_OPTIONS = Object.freeze([]);
+const ALLOWED_COLORS_BY_LAYOUT = Object.freeze({
+  A: COLORS_WITHOUT_YELLOW,
+  B: COLOR_OPTIONS,
+  C: COLORS_WITHOUT_YELLOW,
+  D: COLOR_OPTIONS,
+});
+
+export function getAllowedColors(layout) {
+  return ALLOWED_COLORS_BY_LAYOUT[layout] ?? EMPTY_COLOR_OPTIONS;
+}
+
+export function isValidLayoutColor(layout, color) {
+  return getAllowedColors(layout).includes(color);
+}
+
 export function isSafeIdentifier(value) {
   if (typeof value !== "string" || value.trim() === "") {
     return false;
