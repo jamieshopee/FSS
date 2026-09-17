@@ -383,42 +383,42 @@ export const BANWORD_RULES = Object.freeze([
     "row": 56,
     "keyword": "一",
     "replacement": "1",
-    "exclude": "一級、一站搞定、一級節能、一級能效、均一價、一日限定、星期一、一日、一鍵、一次、一代",
+    "exclude": "一級、一站搞定、一級節能、一級能效、均一價、一日限定、星期一、一日、一鍵、一次、一代、週一",
     "message": "\"一\"請改用阿拉伯數字呈現"
   },
   {
     "row": 57,
     "keyword": "二",
     "replacement": "2",
-    "exclude": "星期二、二代、不二",
+    "exclude": "星期二、二代、不二、週二",
     "message": "\"二\"請改用阿拉伯數字呈現"
   },
   {
     "row": 58,
     "keyword": "三",
     "replacement": "3",
-    "exclude": "三星、三麗鷗、三得利、三槍牌、三菱、星期三、三代",
+    "exclude": "三星、三麗鷗、三得利、三槍牌、三菱、星期三、三代、週三",
     "message": "\"三\"請改用阿拉伯數字呈現"
   },
   {
     "row": 59,
     "keyword": "四",
     "replacement": "4",
-    "exclude": "星期四、四季、四代",
+    "exclude": "星期四、四季、四代、週四",
     "message": "\"四\"請改用阿拉伯數字呈現"
   },
   {
     "row": 60,
     "keyword": "五",
     "replacement": "5",
-    "exclude": "黑五、星期五、五代、五木",
+    "exclude": "黑五、星期五、五代、五木、週五",
     "message": "\"五\"請改用阿拉伯數字呈現"
   },
   {
     "row": 61,
     "keyword": "六",
     "replacement": "6",
-    "exclude": "星期六、六代",
+    "exclude": "星期六、六代、週六",
     "message": "\"六\"請改用阿拉伯數字呈現"
   },
   {
