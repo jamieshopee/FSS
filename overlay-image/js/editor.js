@@ -104,7 +104,7 @@ function createBadgeCard(item, badge, badgeIndex, actions) {
   const deleteButton = document.createElement("button");
   deleteButton.type = "button";
   deleteButton.className = "delete-badge";
-  deleteButton.textContent = "刪除 Badge";
+  deleteButton.textContent = "刪除";
   deleteButton.addEventListener("click", () => {
     actions.updateItem(item.identifier, (draft) => {
       draft.badges.splice(badgeIndex, 1);
