@@ -13,6 +13,9 @@ const C_COUNTDOWN_FIELD = Object.freeze({
   kind: "countdown"
 });
 
+const CTA_FIELD = Object.freeze({ id: "cta", label: "CTA", limit: 3 });
+const CTA_BN_IDS = Object.freeze(["03", "04", "10", "11"]);
+
 const STORE_FIELDS = [
   { id: "line1", label: "第一行", limit: 5 },
   { id: "line2", label: "第二行", limit: 6 }
@@ -46,13 +49,16 @@ export function getEditorFields(bnId, type = null) {
   }
 
   if (number >= 1 && number <= 12) {
+    const fields = CTA_BN_IDS.includes(bnId) ? [...MAIN_FIELDS, CTA_FIELD] : MAIN_FIELDS;
     if (
       type === "C" &&
       (bnId === "01" || bnId === "02" || bnId === "03" || bnId === "04" || bnId === "05" || bnId === "06" || bnId === "07" || bnId === "08" || bnId === "09" || bnId === "10" || bnId === "11" || bnId === "12")
     ) {
-      return [...MAIN_FIELDS, C_COUNTDOWN_FIELD];
+      return CTA_BN_IDS.includes(bnId)
+        ? [...MAIN_FIELDS, C_COUNTDOWN_FIELD, CTA_FIELD]
+        : [...MAIN_FIELDS, C_COUNTDOWN_FIELD];
     }
-    return MAIN_FIELDS;
+    return fields;
   }
   if (number === 13 || number === 14) return STORE_FIELDS;
   if (number === 15) return PAYMENT_FIELDS;

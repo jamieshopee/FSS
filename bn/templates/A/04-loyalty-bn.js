@@ -3,17 +3,20 @@ export const LOYALTY_BN_HEIGHT = 208;
 
 const MEDIUM_FAMILY = "ShopeeNotoSans Medium";
 const BOLD_FAMILY = "ShopeeNotoSans Bold";
+const REGULAR_FAMILY = "ShopeeNotoSans Regular";
 
 const HEADLINE_FONT = `24pt "${MEDIUM_FAMILY}"`;
 const SUBHEADLINE_FONT = `35pt "${BOLD_FAMILY}"`;
 const SUBHEADLINE_SYMBOL_FONT = `30pt "${BOLD_FAMILY}"`;
 const PROTECTION_FONT = `12pt "${MEDIUM_FAMILY}"`;
+const CTA_FONT = `16pt "${REGULAR_FAMILY}"`;
 
 const FONT_CHECKS = Object.freeze([
   HEADLINE_FONT,
   SUBHEADLINE_FONT,
   SUBHEADLINE_SYMBOL_FONT,
   PROTECTION_FONT,
+  CTA_FONT,
 ]);
 
 const FONT_TEST_TEXT = "商城優選免運$490%";
@@ -44,6 +47,14 @@ export const LOYALTY_BN_LAYOUT = Object.freeze({
     height: 16,
     font: PROTECTION_FONT,
     color: "#a6f4e6",
+  }),
+  cta: Object.freeze({
+    left: 609,
+    top: 177,
+    width: 60,
+    height: 19,
+    font: CTA_FONT,
+    color: "#007661",
   }),
 });
 
@@ -113,6 +124,47 @@ function drawLeftTopText(context, text, box) {
 
   const x = box.left - run.inkLeft;
   const y = box.top - run.inkTop;
+
+  context.font = box.font;
+  context.fillStyle = box.color;
+  context.textAlign = "left";
+  context.textBaseline = "alphabetic";
+  context.fillText(text, x, y);
+  return validation;
+}
+
+function drawCenteredText(context, text, box) {
+  if (text === "") {
+    return Object.freeze({
+      inkWidth: 0,
+      inkHeight: 0,
+      inkLeft: box.left + box.width / 2,
+      inkTop: box.top + box.height / 2,
+      inkRight: box.left + box.width / 2,
+      inkBottom: box.top + box.height / 2,
+      fitsWidth: true,
+      fitsHeight: true,
+    });
+  }
+
+  const run = measureRun(context, text, box.font);
+  const inkWidth = run.inkRight - run.inkLeft;
+  const inkHeight = run.inkBottom - run.inkTop;
+  const inkLeft = box.left + (box.width - inkWidth) / 2;
+  const inkTop = box.top + (box.height - inkHeight) / 2;
+  const validation = Object.freeze({
+    inkWidth,
+    inkHeight,
+    inkLeft,
+    inkTop,
+    inkRight: inkLeft + inkWidth,
+    inkBottom: inkTop + inkHeight,
+    fitsWidth: inkWidth <= box.width,
+    fitsHeight: inkHeight <= box.height,
+  });
+
+  const x = box.left + (box.width - inkWidth) / 2 - run.inkLeft;
+  const y = box.top + box.height / 2 - (run.inkTop + run.inkBottom) / 2;
 
   context.font = box.font;
   context.fillStyle = box.color;
@@ -276,7 +328,7 @@ export async function waitForLoyaltyBnFonts() {
 export function renderLoyaltyBn(
   canvas,
   backgroundImage,
-  { headline = "", subheadline = "", protectionText = "" } = {},
+  { headline = "", subheadline = "", protectionText = "", cta = "" } = {},
 ) {
   if (!(canvas instanceof HTMLCanvasElement)) {
     throw new TypeError("A－04 Template 需要 HTMLCanvasElement。");
@@ -318,10 +370,16 @@ export function renderLoyaltyBn(
     String(subheadline),
     LOYALTY_BN_LAYOUT.subheadline,
   );
+  const ctaValidation = drawCenteredText(
+    context,
+    String(cta),
+    LOYALTY_BN_LAYOUT.cta,
+  );
 
   return Object.freeze({
     headline: mediumTextValidation.headline,
     subheadline: subheadlineValidation,
     protectionText: mediumTextValidation.protectionText,
+    cta: ctaValidation,
   });
 }

@@ -14,12 +14,14 @@ const HEADLINE_FONT = `55pt "${MEDIUM_FAMILY}"`;
 const SUBHEADLINE_FONT = `68pt "${BOLD_FAMILY}"`;
 const SUBHEADLINE_SYMBOL_FONT = `60pt "${BOLD_FAMILY}"`;
 const PROTECTION_FONT = `30pt "${REGULAR_FAMILY}"`;
+const CTA_FONT = `38pt "${REGULAR_FAMILY}"`;
 
 const FONT_CHECKS = Object.freeze([
   HEADLINE_FONT,
   SUBHEADLINE_FONT,
   SUBHEADLINE_SYMBOL_FONT,
   PROTECTION_FONT,
+  CTA_FONT,
 ]);
 
 const FONT_TEST_TEXT = "商城優選免運$490%";
@@ -57,6 +59,14 @@ export const LINE_OA_LAYOUT = Object.freeze({
     height: 37,
     font: PROTECTION_FONT,
     color: "#a6f4e6",
+  }),
+  cta: Object.freeze({
+    left: 430,
+    top: 959,
+    width: 148,
+    height: 47,
+    font: CTA_FONT,
+    color: "#007661",
   }),
 });
 
@@ -343,7 +353,7 @@ export async function waitForLineOaFonts() {
 export function renderLineOa(
   canvas,
   backgroundImage,
-  { headline = "", subheadline = "", protectionText = "" } = {},
+  { headline = "", subheadline = "", protectionText = "", cta = "" } = {},
 ) {
   if (!(canvas instanceof HTMLCanvasElement)) {
     throw new TypeError("A－11 Template 需要 HTMLCanvasElement。");
@@ -396,10 +406,17 @@ export function renderLineOa(
     String(subheadline),
     LINE_OA_LAYOUT.subheadline,
   );
+  const ctaValidation = drawCenteredText(
+    context,
+    String(cta),
+    LINE_OA_LAYOUT.cta,
+    "CTA",
+  );
 
   return Object.freeze({
     headline: headlineValidation,
     subheadline: subheadlineValidation,
     protectionText: protectionTextValidation,
+    cta: ctaValidation,
   });
 }

@@ -82,7 +82,8 @@ export function renderLoyaltyBn(
     headline = "",
     subheadline = "",
     protectionText = "",
-    cCountdownText = null
+    cCountdownText = null,
+    cta = ""
   } = {}
 ) {
   if (!isValidCCountdown(cCountdownText)) {
@@ -93,7 +94,8 @@ export function renderLoyaltyBn(
   renderALoyaltyBn(canvas, backgroundImage, {
     headline,
     subheadline,
-    protectionText
+    protectionText,
+    cta
   });
 
   if (

@@ -82,7 +82,8 @@ export function renderPopUp(
     headline = "",
     subheadline = "",
     protectionText = "",
-    cCountdownText = null
+    cCountdownText = null,
+    cta = ""
   } = {}
 ) {
   if (!isValidCCountdown(cCountdownText)) {
@@ -93,7 +94,8 @@ export function renderPopUp(
   renderAPopUp(canvas, backgroundImage, {
     headline,
     subheadline,
-    protectionText
+    protectionText,
+    cta
   });
 
   if (canvas.width !== POP_UP_WIDTH || canvas.height !== POP_UP_HEIGHT) {

@@ -82,7 +82,8 @@ export function renderCoinPageBn(
     headline = "",
     subheadline = "",
     protectionText = "",
-    cCountdownText = null
+    cCountdownText = null,
+    cta = ""
   } = {}
 ) {
   if (!isValidCCountdown(cCountdownText)) {
@@ -93,7 +94,8 @@ export function renderCoinPageBn(
   renderACoinPageBn(canvas, backgroundImage, {
     headline,
     subheadline,
-    protectionText
+    protectionText,
+    cta
   });
 
   if (

@@ -8,17 +8,20 @@ const BACKGROUND_HEIGHT = 673;
 
 const MEDIUM_FAMILY = "ShopeeNotoSans Medium";
 const BOLD_FAMILY = "ShopeeNotoSans Bold";
+const REGULAR_FAMILY = "ShopeeNotoSans Regular";
 
 const HEADLINE_FONT = `30pt "${MEDIUM_FAMILY}"`;
 const SUBHEADLINE_FONT = `40pt "${BOLD_FAMILY}"`;
 const SUBHEADLINE_SYMBOL_FONT = `35pt "${BOLD_FAMILY}"`;
 const PROTECTION_FONT = `20pt "${MEDIUM_FAMILY}"`;
+const CTA_FONT = `32pt "${REGULAR_FAMILY}"`;
 
 const FONT_CHECKS = Object.freeze([
   HEADLINE_FONT,
   SUBHEADLINE_FONT,
   SUBHEADLINE_SYMBOL_FONT,
   PROTECTION_FONT,
+  CTA_FONT,
 ]);
 
 const FONT_TEST_TEXT = "商城優選免運$490%";
@@ -56,6 +59,14 @@ export const POP_UP_LAYOUT = Object.freeze({
     height: 25,
     font: PROTECTION_FONT,
     color: "#a6f4e6",
+  }),
+  cta: Object.freeze({
+    left: 212,
+    top: 650,
+    width: 125,
+    height: 39,
+    font: CTA_FONT,
+    color: "#007661",
   }),
 });
 
@@ -354,7 +365,7 @@ export async function waitForPopUpFonts() {
 export function renderPopUp(
   canvas,
   backgroundImage,
-  { headline = "", subheadline = "", protectionText = "" } = {},
+  { headline = "", subheadline = "", protectionText = "", cta = "" } = {},
 ) {
   if (!(canvas instanceof HTMLCanvasElement)) {
     throw new TypeError("A－10 Template 需要 HTMLCanvasElement。");
@@ -405,10 +416,12 @@ export function renderPopUp(
     String(subheadline),
     POP_UP_LAYOUT.subheadline,
   );
+  const ctaValidation = drawCenteredText(context, String(cta), POP_UP_LAYOUT.cta);
 
   return Object.freeze({
     headline: mediumTextValidation.headline,
     subheadline: subheadlineValidation,
     protectionText: mediumTextValidation.protectionText,
+    cta: ctaValidation,
   });
 }

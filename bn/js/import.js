@@ -37,6 +37,19 @@ const REQUIRED_LABELS = Object.freeze({
   A16: "副標 (限7字內)",
   A17: "保護文字 (限17字內)"
 });
+const CTA_LABEL = "3.4.10.11 CTA (限3中文字)";
+const CTA_LABEL_ADDRESS_BY_TYPE = Object.freeze({
+  A: "D15",
+  B: "D15",
+  C: "D16",
+  D: "D15"
+});
+const CTA_VALUE_ADDRESS_BY_TYPE = Object.freeze({
+  A: "E15",
+  B: "E15",
+  C: "E16",
+  D: "E15"
+});
 
 function cellText(worksheet, address) {
   const cell = worksheet[address];
@@ -137,11 +150,18 @@ export async function parseExcelFile(file, type, selectedBnId) {
       errors.push(`${type} 工作表 ${address} 必須為「${expected}」，無法確認為正式 ${type} 工單。`);
     }
   });
+  const ctaLabelAddress = CTA_LABEL_ADDRESS_BY_TYPE[type];
+  if (cellText(worksheet, ctaLabelAddress) !== CTA_LABEL) {
+    errors.push(
+      `${type} 工作表 ${ctaLabelAddress} 必須為「${CTA_LABEL}」，無法確認 CTA 正式來源。`
+    );
+  }
 
   const shared = {
     headline: cellText(worksheet, "B15"),
     subheadline: cellText(worksheet, "B16"),
-    protectionText: cellText(worksheet, "B17")
+    protectionText: cellText(worksheet, "B17"),
+    cta: cellText(worksheet, CTA_VALUE_ADDRESS_BY_TYPE[type])
   };
 
   const bnText =
@@ -337,6 +357,18 @@ export function parseWorkspaceJson(text) {
   }
 
   const shared = validateTextFields("01", data.shared, "01～12 共用文字", errors);
+  const rawCta = data.shared ? data.shared.cta : undefined;
+  if (rawCta === undefined) {
+    shared.cta = "";
+  } else if (typeof rawCta !== "string") {
+    errors.push("暫存 03／04／10／11 共用文字缺少有效的「CTA」。");
+    shared.cta = "";
+  } else {
+    if (countTextUnits(rawCta) > 3) {
+      errors.push("暫存 03／04／10／11 共用文字「CTA」超過 3 字上限。");
+    }
+    shared.cta = rawCta;
+  }
   const bnText = {};
   BN_TEXT_IDS.forEach((bnId) => {
     bnText[bnId] = validateTextFields(

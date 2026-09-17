@@ -82,7 +82,8 @@ export function renderLineOa(
     headline = "",
     subheadline = "",
     protectionText = "",
-    cCountdownText = null
+    cCountdownText = null,
+    cta = ""
   } = {}
 ) {
   if (!isValidCCountdown(cCountdownText)) {
@@ -93,7 +94,8 @@ export function renderLineOa(
   renderALineOa(canvas, backgroundImage, {
     headline,
     subheadline,
-    protectionText
+    protectionText,
+    cta
   });
 
   if (canvas.width !== LINE_OA_WIDTH || canvas.height !== LINE_OA_HEIGHT) {

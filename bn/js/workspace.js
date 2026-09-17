@@ -1,11 +1,16 @@
 import { isValidCCountdown } from "./countdown.js";
 
-const SHARED_FIELD_IDS = Object.freeze(["headline", "subheadline", "protectionText"]);
+const SHARED_FIELD_IDS = Object.freeze([
+  "headline",
+  "subheadline",
+  "protectionText",
+  "cta"
+]);
 
 const emptyState = () => ({
   currentType: null,
   selectedBnId: null,
-  shared: { headline: "", subheadline: "", protectionText: "" },
+  shared: { headline: "", subheadline: "", protectionText: "", cta: "" },
   bnText: {
     "13": { line1: "", line2: "" },
     "14": { line1: "", line2: "" },
