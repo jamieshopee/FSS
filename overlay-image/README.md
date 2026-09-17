@@ -23,10 +23,11 @@ Generator 為獨立 HTML、CSS、JavaScript 與 Templates，不依賴 FSS 平台
 ## 已完成功能
 
 - 正式 Excel 工單三列製作區塊解析。
-- Excel Atomic Import 與欄位、編號、Layout、顏色及內容驗證；Badge 總寬超過 1120px 屬於可匯入的 Width Warning，不取消其他資料／格式錯誤的 Atomic Reject。
+- Excel Atomic Import 與欄位、編號、Layout、顏色、Layout／顏色組合及內容驗證；A＋黃或 C＋黃等錯誤採 Atomic Reject，Badge 總寬超過 1120px 則屬於可匯入的 Width Warning。
 - Layout A、B、C、D Canvas 預覽與 Badge 編輯。
-- Badge 新增、刪除及拖曳排序。
-- JSON 暫存檔完整還原與 Atomic Restore；Restore 資料本身超過 1120px 時維持 hard validation，整次拒絕且不修改目前工作區。
+- Badge 新增、刪除及拖曳排序；新增入口顯示「新增」，Layout 欄位顯示「文字樣式」。
+- 新增表單中 A／C 僅提供紅、綠、藍，B／D 提供紅、綠、黃、藍；切換至不支援目前顏色的文字樣式時會改為紅，提交時仍會阻擋非法組合。
+- JSON 暫存檔完整還原與 Atomic Restore；A＋黃、C＋黃或 Restore 資料本身超過 1120px 時，整次拒絕且不修改目前工作區。
 - 1200 × 1200 PNG 與由其等比例縮小的 320 × 320 PNG。
 - 兩種 PNG 均寫入 72 dpi metadata。
 - Preview／Editor 即時顯示超寬 Warning，回到 1120px 以內後立即清除。
@@ -48,6 +49,8 @@ Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整
 
 本次 Layout A／C 與 1120px Width Validation、Preview／Editor Warning、Export Guard 及下載區逐 Item Warning 更新，對應 Code Commit：`9719adc66630c99f974595ca2800e918f6c31e5a`（`feat(overlay-image): update layouts and width validation`）。
 
+黃色 Badge 限制已於 Code Commit `00a70a84f7987caeaa928cf400ff32a37bdab21b`（`fix(overlay-image): restrict yellow badge styles`）完成，並經 Jamie 手動驗證通過：Layout A／C 禁止黃色，Layout B／D 保留黃色；Excel Import 與 JSON Restore 對非法組合採整批拒絕，不做 migration，且不變更 JSON schema 或 version。
+
 ## 第三方程式庫
 
 第三方程式庫固定存放於 `js/vendor/`，執行期間不連線 CDN：
@@ -65,6 +68,6 @@ Layout A～D 已依正式字型與 Canvas 實際 glyph bounds 完成視覺調整
 - 正式工單全部 Overlay Image 的 Badge 總寬均未超過每張 1120 px 上限；Canvas 尺寸仍為 1200 × 1200 px。
 - Preview、1200 PNG 與 320 PNG 的輸出一致性驗證通過。
 - 1200 PNG 與 320 PNG 均確認為 72 dpi metadata。
-- Excel Atomic Import Error／Width Warning 分流、JSON Atomic Restore hard validation、Badge 編輯與新增即時 Warning、超寬 Export Guard、下載區逐 Item Warning、匯出及重設 Regression Test 通過。
+- Excel Atomic Import Error／Width Warning 分流、Layout／顏色組合驗證、JSON Atomic Restore hard validation、Badge 編輯與新增即時 Warning、超寬 Export Guard、下載區逐 Item Warning、匯出及重設 Regression Test 通過。
 - 全部 JavaScript 語法檢查與 `git diff --check` 通過。
 - Layout A、B、C、D Visual Tuning 均通過 Jamie 手動驗證。

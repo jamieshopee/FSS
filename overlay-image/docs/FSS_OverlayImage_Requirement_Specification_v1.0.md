@@ -136,7 +136,8 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 
 ### 6.1 Excel 匯入後
 
-- Excel 匯入採 Atomic Import；Excel 結構、編號、Layout、顏色、Badge 格式或其他既有資料格式任一不符時，拒絕整次匯入，不建立部分 Overlay Image，也不修改目前工作區。
+- Excel 匯入採 Atomic Import；Excel 結構、編號、Layout、顏色、Badge 格式、Layout／顏色組合或其他既有資料格式任一不符時，拒絕整次匯入，不建立部分 Overlay Image，也不修改目前工作區。
+- A＋黃或 C＋黃屬於非法 Layout／顏色組合，必須採 Atomic Reject。
 - 每張 Overlay Image 內全部 Badge 實際量測總寬超過 1120 px 屬於 Width Warning，不是 Atomic Error；系統不因此拒絕 Excel 匯入。
 - 一個已填寫的三列製作區塊產生一張 Overlay Image。
 - Excel 帶入 Overlay Image 編號，以及每個 Badge 的原始 Layout、原始顏色、原始文字與初始順序。
@@ -222,6 +223,17 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 
 上表只記錄兩份正式來源對同一色碼的既有稱呼：操作介面與 Excel 仍顯示「藍」，不因此修改 Layout 文件的「深藍」用語。
 
+Layout 與顏色合法組合如下：
+
+| Layout | 合法顏色 |
+|---|---|
+| A | 紅、綠、藍 |
+| B | 紅、綠、黃、藍 |
+| C | 紅、綠、藍 |
+| D | 紅、綠、黃、藍 |
+
+A＋黃與 C＋黃均為非法組合。
+
 ### 7.5 不存在的欄位
 
 工單不需要：
@@ -253,7 +265,7 @@ FSS Overlay Image 是批次生成器。主要目的為透過 Excel 自動產生�
 
 ### 8.3 顏色與字色
 
-- 背景色由 Excel 指定；新增 Badge 則由使用者選擇。
+- 背景色由 Excel 指定；新增 Badge 則由使用者選擇，且必須符合第 7.4 節的 Layout／顏色合法組合。
 - 黃底固定使用紅字 `#D0011B`。
 - 其他底色固定使用白字 `#FFFFFF`。
 - Layout A 的字色依 Layout A 正式規格，不套用上述共通字色規則。
@@ -344,9 +356,12 @@ Layout 與顏色僅作資訊顯示，不作可編輯控制項。
 
 - 目前 Overlay Image 少於 3 個 Badge 時才允許新增。
 - 新增後仍不得超過 3 個 Badge。
-- 使用者自行選擇 Layout：A、B、C、D。
-- 使用者自行選擇顏色：紅、綠、黃、藍。
-- 選擇 Layout 後，顯示該 Layout 對應的文字輸入介面。
+- 新增入口按鈕顯示「新增」。
+- 新增表單以「文字樣式」作為 Layout 欄位顯示名稱，選項仍為 A、B、C、D。
+- 顏色選項依第 7.4 節動態顯示：A、C 不顯示黃；B、D 顯示紅、綠、黃、藍。
+- 新增表單預設為 A＋紅；切換文字樣式時，若目前顏色仍合法則保留，若不合法則改為紅。
+- 選擇文字樣式後，顯示該 Layout 對應的文字輸入介面。
+- 提交前再次驗證 Layout／顏色組合；非法組合不得新增。
 - 新增完成後可以修改文字、拖曳排序、刪除。
 - 新增 Badge 不需補回原本刪除的固定位置；新增後透過拖曳決定實際順序。
 
@@ -427,12 +442,13 @@ JSON 必須完整保存下載當下工作區的所有內容，包括：
 
 - 匯入格式為 JSON。
 - JSON Restore 採 Atomic Restore；必須先在暫存資料結構中完成完整驗證及正規化，全部成功後才一次替換目前工作區。
+- Restore 資料內含 A＋黃或 C＋黃時，拒絕整次還原；不修改目前工作區，也不自動換色或遷移舊資料。
 - Restore 資料任一 Overlay Image 的 Badge 總寬超過 1120 px 時，拒絕整次還原；不還原部分資料，也不修改目前工作區。
 - 匯入後完全覆蓋目前工作區。
 - 不與目前資料合併。
 - 不追加 Overlay Image。
 - 不保留匯入前的修改。
-- JSON schema 與 version 不變；Width Warning 為執行期間衍生狀態，不保存於 JSON。
+- JSON schema 與 version 不變；Layout／顏色組合限制不建立 migration，Width Warning 為執行期間衍生狀態，不保存於 JSON。
 
 流程固定為：在暫存資料結構中完整驗證及正規化 → 全部通過後一次替換目前工作區 → 回到暫存檔下載當下的狀態。
 
@@ -586,6 +602,7 @@ FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requiremen
 
 - 工單每一個已填寫的三列製作區塊均動態產生對應 Overlay Image。
 - 每張 Overlay Image 正確保留編號、Badge 內容、Layout、顏色與初始順序。
+- Excel 任一資料列使用 A＋黃或 C＋黃時，拒絕整次匯入且不修改目前工作區。
 - 左側顯示全部 1200 × 1200 預覽，並符合響應式排列、編號、點擊回饋與選取外框規則。
 
 ### 18.2 編輯
@@ -593,6 +610,8 @@ FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requiremen
 - 右側只編輯目前選取 Overlay Image。
 - Excel Badge 只能修改文字、拖曳與整格刪除，不能修改 Layout 或顏色。
 - 少於 3 個 Badge 時可依既定選項與欄位新增 Badge，總數不得超過 3。
+- 新增入口顯示「新增」，Layout 欄位顯示「文字樣式」；A、C 僅提供紅、綠、藍，B、D 提供全部四種顏色。
+- 切換文字樣式後若目前顏色不合法則改為紅，且提交時仍會阻擋非法組合。
 - 拖曳、刪除、新增與文字修改均即時更新對應預覽。
 - Badge 的尺寸、總寬、排列與順序符合共通規格。
 - 工作區編輯造成 Badge 總寬超過 1120 px 時，修改保留且 Preview／Editor 顯示 Warning；回到上限內時 Warning 立即消失。
@@ -601,7 +620,7 @@ FSS Overlay Image 只有在下列需求全部成立時，才符合本 Requiremen
 ### 18.3 暫存與還原
 
 - 下載產生的單一 JSON 包含全部 Overlay Image 及下載當下所有工作狀態。
-- 合法 JSON 通過 Atomic Restore 後完全覆蓋目前工作區，並完整還原至下載當下狀態；含有 Badge 總寬超過 1120 px 的 JSON 必須整次拒絕。
+- 合法 JSON 通過 Atomic Restore 後完全覆蓋目前工作區，並完整還原至下載當下狀態；含有 A＋黃、C＋黃或 Badge 總寬超過 1120 px 的 JSON 必須整次拒絕，不做 migration。
 
 ### 18.4 匯出
 

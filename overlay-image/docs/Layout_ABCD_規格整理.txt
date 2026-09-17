@@ -15,11 +15,16 @@ FSS Overlay Image - Layout 規格（討論版）
 -   色塊寬度：依文字內容的實際可見 glyph bounds 自動伸縮
 -   左右 Padding：以實際可見 glyph bounds 計算，各 20px
 -   各段文字完成定位後，以整組實際可見 glyph bounds 垂直置中色塊。
--   背景色由 Excel 指定，目前支援：
+-   背景色色碼目前支援：
     -   紅：#D0011B
     -   綠：#007661
     -   黃：#FFD200
     -   深藍：#113366
+-   Layout 與背景色合法組合：
+    -   Layout A：紅、綠、深藍（禁止黃）
+    -   Layout B：紅、綠、黃、深藍
+    -   Layout C：紅、綠、深藍（禁止黃）
+    -   Layout D：紅、綠、黃、深藍
 -   字色規則：
     -   黃底固定紅字（#D0011B）
     -   其他底色固定白字（#FFFFFF） （Layout A
