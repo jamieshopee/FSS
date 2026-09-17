@@ -6,9 +6,10 @@ const BACKGROUND_TOP = 0;
 const BACKGROUND_WIDTH = 100;
 const BACKGROUND_HEIGHT = 100;
 
+const MEDIUM_FAMILY = "ShopeeNotoSans Medium";
 const BOLD_FAMILY = "ShopeeNotoSans Bold";
 
-const HAN_FONT = `18pt "${BOLD_FAMILY}"`;
+const HAN_FONT = `18pt "${MEDIUM_FAMILY}"`;
 const OTHER_FONT = `18.5pt "${BOLD_FAMILY}"`;
 
 const HAN_PATTERN = /\p{Script=Han}/u;
