@@ -432,6 +432,16 @@ function makeThresholdTextInput(value, placeholder, onInput) {
   return input;
 }
 
+function makeThresholdNameTextarea(value, placeholder, onInput) {
+  const textarea = document.createElement("textarea");
+  textarea.autocomplete = "off";
+  textarea.placeholder = placeholder;
+  textarea.value = value;
+  textarea.rows = 2;
+  textarea.addEventListener("input", () => onInput(textarea.value));
+  return textarea;
+}
+
 // Round 6：刪除（一鍵即刪，無 confirm）。已使用 slot → 單次 commit 內 compact；
 // 純 session 空項 → 只移除顯示、不碰 Workspace。compact 後依最新 threshold 重繪，
 // N/M 與新增按鈕 disabled 由 renderThresholdModal 依新長度自動恢復。
@@ -575,7 +585,7 @@ function buildThresholdRow(threshold, pairIndex) {
   const row = document.createElement("tr");
   const head = document.createElement("th");
   head.append(
-    makeThresholdTextInput(threshold.thresholds[pairIndex].name, "門檻名稱", (value) =>
+    makeThresholdNameTextarea(threshold.thresholds[pairIndex].name, "門檻名稱", (value) =>
       commitThreshold((next) => {
         next.thresholds[pairIndex].name = value;
       })
